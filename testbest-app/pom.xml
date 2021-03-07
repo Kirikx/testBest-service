@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>testbest-root</artifactId>
+    <groupId>ru.testbest</groupId>
+    <version>0.1</version>
+  </parent>
+
+  <artifactId>testbest-app</artifactId>
+  <packaging>jar</packaging>
+
+  <properties>
+    <jdk.version>1.8</jdk.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>ru.testbest</groupId>
+      <artifactId>testbest-rest-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!--        <dependency>-->
+    <!--            <groupId>ru.testbest</groupId>-->
+    <!--            <artifactId>testonline-facade</artifactId>-->
+    <!--            <version>${project.version}</version>-->
+    <!--        </dependency>-->
+
+    <dependency>
+      <groupId>ru.testbest</groupId>
+      <artifactId>testbest-dto</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!--        <dependency>-->
+    <!--            <groupId>ru.testbest</groupId>-->
+    <!--            <artifactId>testonline-dao</artifactId>-->
+    <!--            <version>${project.version}</version>-->
+    <!--        </dependency>-->
+
+    <dependency>
+      <groupId>ru.testbest</groupId>
+      <artifactId>testbest-persistence</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ru.testbest</groupId>
+      <artifactId>testbest-persistence</artifactId>
+      <version>0.1</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>${artifactId}</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+
+            <configuration>
+              <outputDirectory>${project.build.directory}/libs</outputDirectory>
+              <overWriteReleases>true</overWriteReleases>
+              <overWriteSnapshots>true</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+              <excludeScope>provided</excludeScope>
+              <useBaseVersion>false</useBaseVersion>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>2.3.0.RELEASE</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.1.2</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>libs/</classpathPrefix>
+              <mainClass>ru.testbest.App</mainClass>
+            </manifest>
+            <manifestEntries>
+              <!--                            <Class-Path>/libs</Class-Path>-->
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
