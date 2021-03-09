@@ -21,6 +21,7 @@
     <!--        <module>testonline-dao</module>-->
     <module>testbest-persistence</module>
     <module>testbest-app</module>
+    <module>testbest-service</module>
   </modules>
 
   <dependencyManagement>
