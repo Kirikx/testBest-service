@@ -15,7 +15,7 @@ public class AuthenticationRestController {
         return login(username, password);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/signin")
     String login(
             @RequestParam("username") final String username,
             @RequestParam("password") final String password) {

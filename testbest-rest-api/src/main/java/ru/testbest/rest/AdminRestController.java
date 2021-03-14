@@ -9,9 +9,14 @@ public class AdminRestController {
 
     //Подключенные сервисы
 
-    @GetMapping("/topic")
-    public String getTopic(){
+    @GetMapping("/topics")
+    public String getTopics(){
         return tipicRepository.findAll();
+    }
+
+    @GetMapping("/topic")
+    public String getTopic(@PathVariable("id") Long id){
+        return tipicRepository.findById(id);
     }
 
     @PutMapping ("/topic/{id}/edit")
@@ -29,9 +34,14 @@ public class AdminRestController {
         return new Topic;
     }
 
-    @GetMapping("/topic/{id}/question")
-    public String getTipicQuestion(){
+    @GetMapping("/topic/{id}/questions")
+    public String getTopicQuestions(){
         return questionRepository.findAll();
+    }
+
+    @GetMapping("/topic/{id}/question/{id}")
+    public String getTopicQuestion(@PathVariable("id") Long id){
+        return questionRepository.findById(id);
     }
 
     @PutMapping ("/topic/{id}/question/{id}/edit")
@@ -44,17 +54,17 @@ public class AdminRestController {
         return questionRepository.DeleteById(id);
     }
 
-    @PostMapping("/topic/{id}/question/{id}/create")
+    @PostMapping("/topic/{id}/question/create")
     public Question questionCreate(){
         return new Question;
     }
 
-    @GetMapping("allusers")
+    @GetMapping("/allusers")
     public String getUsers(){
         return userRepository.findAll();
     }
 
-    @GetMapping("users/{id}")
+    @GetMapping("/users/{id}")
     public String getUser(@PathVariable("id") Long id){
         return userRepository.findById(id);
     }
