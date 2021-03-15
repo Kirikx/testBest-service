@@ -1,0 +1,18 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE IF EXISTS `user_role`;
+DROP TABLE IF EXISTS `question_chapter`;
+DROP TABLE IF EXISTS `question_answer`;
+DROP TABLE IF EXISTS `selected_answer`;
+DROP TABLE IF EXISTS `user_test_question`;
+DROP TABLE IF EXISTS `user_test`;
+DROP TABLE IF EXISTS `chapter`;
+DROP TABLE IF EXISTS `question`;
+DROP TABLE IF EXISTS `answer`;
+DROP TABLE IF EXISTS `test`;
+DROP TABLE IF EXISTS `topic`;
+DROP TABLE IF EXISTS `question_type`;
+DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `role`;
+
+SET FOREIGN_KEY_CHECKS = 1;
