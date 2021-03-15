@@ -27,6 +27,7 @@ CREATE TABLE `user_role` (
 CREATE TABLE `topic` (
   `id` char(36) NOT NULL,
   `name` varchar(255) NOT NULL,
+  `description` varchar(4096),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -66,6 +67,8 @@ CREATE TABLE `test` (
   `id` char(36) NOT NULL,
   `topic_id` char(36) DEFAULT NULL,
   `author_id` char(36) DEFAULT NULL,
+  `name` varchar(1024) NOT NULL,
+  `description` varchar(4096),
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `duration` smallint NOT NULL,
   `deleted` tinyint DEFAULT '0',
@@ -80,6 +83,7 @@ CREATE TABLE `chapter` (
   `id` char(36) NOT NULL,
   `test_id` char(36) NOT NULL,
   `name` varchar(255) NOT NULL,
+  `description` varchar(4096),
   PRIMARY KEY (`id`),
   KEY `fk_chapter_test_idx` (`test_id`),
   CONSTRAINT `fk_chapter_test` FOREIGN KEY (`test_id`) REFERENCES `test` (`id`) ON DELETE CASCADE
@@ -124,10 +128,9 @@ CREATE TABLE `user_test_question` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `selected_answer` (
-  `id` char(36) NOT NULL,
   `test_question_id` char(36) NOT NULL,
   `answer_id` char(36) NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`test_question_id`, `answer_id`),
   KEY `fk_selected_answer_user_test_question_idx` (`test_question_id`),
   KEY `fk_selected_answer_answer_idx` (`answer_id`),
   CONSTRAINT `fk_selected_answer_answer` FOREIGN KEY (`answer_id`) REFERENCES `answer` (`id`) ON DELETE CASCADE,
