@@ -2,10 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <artifactId>testbest-root</artifactId>
-  <groupId>ru.testbest</groupId>
-  <version>0.1</version>
   <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.4.3</version>
+    <relativePath/> <!-- lookup parent from repository -->
+  </parent>
+
+  <groupId>ru.testbest</groupId>
+  <artifactId>testbest-root</artifactId>
+  <version>0.1</version>
+
   <packaging>pom</packaging>
   <properties>
     <jdk.version>1.8</jdk.version>
@@ -28,75 +37,80 @@
   <dependencyManagement>
     <dependencies>
       <!--spring-boot-->
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot</artifactId>
-        <scope>compile</scope>
-        <version>2.2.4.RELEASE</version>
-      </dependency>
-      <!--spring-boot-starter-security-->
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-security</artifactId>
-        <scope>compile</scope>
-        <version>2.2.4.RELEASE</version>
-      </dependency>
-      <!--spring-boot-autoconfigure-->
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-autoconfigure</artifactId>
-        <scope>compile</scope>
-        <version>2.2.4.RELEASE</version>
-      </dependency>
-      <!--spring-boot-starter-web-->
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
-        <scope>compile</scope>
-        <version>2.2.4.RELEASE</version>
-      </dependency>
-      <!--spring-boot-starter-thymeleaf-->
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        <version>2.2.2.RELEASE</version>
-      </dependency>
-      <!--spring-security-core-->
-      <dependency>
-        <groupId>org.springframework.security</groupId>
-        <artifactId>spring-security-core</artifactId>
-        <scope>compile</scope>
-        <version>5.2.1.RELEASE</version>
-      </dependency>
-      <!--spring-beans-->
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-beans</artifactId>
-        <scope>compile</scope>
-        <version>5.2.3.RELEASE</version>
-      </dependency>
-      <!--spring-context-->
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-context</artifactId>
-        <scope>compile</scope>
-        <version>5.2.3.RELEASE</version>
-      </dependency>
-      <!--spring-jdbc-->
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-jdbc</artifactId>
-        <scope>compile</scope>
-        <version>5.2.3.RELEASE</version>
-      </dependency>
+<!--      <dependency>-->
+<!--        <groupId>org.springframework.boot</groupId>-->
+<!--        <artifactId>spring-boot</artifactId>-->
+<!--        <scope>compile</scope>-->
+<!--        <version>2.2.4.RELEASE</version>-->
+<!--      </dependency>-->
+<!--      <dependency>-->
+<!--        <groupId>org.springframework.boot</groupId>-->
+<!--        <artifactId>spring-boot-starter</artifactId>-->
+<!--      </dependency>-->
+
+<!--      &lt;!&ndash;spring-boot-starter-security&ndash;&gt;-->
+<!--      <dependency>-->
+<!--        <groupId>org.springframework.boot</groupId>-->
+<!--        <artifactId>spring-boot-starter-security</artifactId>-->
+<!--&lt;!&ndash;        <scope>compile</scope>&ndash;&gt;-->
+<!--&lt;!&ndash;        <version>2.2.4.RELEASE</version>&ndash;&gt;-->
+<!--      </dependency>-->
+<!--      &lt;!&ndash;spring-boot-autoconfigure&ndash;&gt;-->
+<!--      <dependency>-->
+<!--        <groupId>org.springframework.boot</groupId>-->
+<!--        <artifactId>spring-boot-autoconfigure</artifactId>-->
+<!--&lt;!&ndash;        <scope>compile</scope>&ndash;&gt;-->
+<!--&lt;!&ndash;        <version>2.2.4.RELEASE</version>&ndash;&gt;-->
+<!--      </dependency>-->
+<!--      &lt;!&ndash;spring-boot-starter-web&ndash;&gt;-->
+<!--      <dependency>-->
+<!--        <groupId>org.springframework.boot</groupId>-->
+<!--        <artifactId>spring-boot-starter-web</artifactId>-->
+<!--&lt;!&ndash;        <scope>compile</scope>&ndash;&gt;-->
+<!--&lt;!&ndash;        <version>2.2.4.RELEASE</version>&ndash;&gt;-->
+<!--      </dependency>-->
+<!--      &lt;!&ndash;spring-boot-starter-thymeleaf&ndash;&gt;-->
+<!--      <dependency>-->
+<!--        <groupId>org.springframework.boot</groupId>-->
+<!--        <artifactId>spring-boot-starter-thymeleaf</artifactId>-->
+<!--&lt;!&ndash;        <version>2.2.2.RELEASE</version>&ndash;&gt;-->
+<!--      </dependency>-->
+<!--      &lt;!&ndash;spring-security-core&ndash;&gt;-->
+<!--      <dependency>-->
+<!--        <groupId>org.springframework.security</groupId>-->
+<!--        <artifactId>spring-security-core</artifactId>-->
+<!--        <scope>compile</scope>-->
+<!--        <version>5.2.1.RELEASE</version>-->
+<!--      </dependency>-->
+<!--&lt;!&ndash;      &lt;!&ndash;spring-beans&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;      <dependency>&ndash;&gt;-->
+<!--&lt;!&ndash;        <groupId>org.springframework</groupId>&ndash;&gt;-->
+<!--&lt;!&ndash;        <artifactId>spring-beans</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;        <scope>compile</scope>&ndash;&gt;-->
+<!--&lt;!&ndash;        <version>5.2.3.RELEASE</version>&ndash;&gt;-->
+<!--&lt;!&ndash;      </dependency>&ndash;&gt;-->
+<!--&lt;!&ndash;      &lt;!&ndash;spring-context&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;      <dependency>&ndash;&gt;-->
+<!--&lt;!&ndash;        <groupId>org.springframework</groupId>&ndash;&gt;-->
+<!--&lt;!&ndash;        <artifactId>spring-context</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;        <scope>compile</scope>&ndash;&gt;-->
+<!--&lt;!&ndash;        <version>5.2.3.RELEASE</version>&ndash;&gt;-->
+<!--&lt;!&ndash;      </dependency>&ndash;&gt;-->
+<!--      &lt;!&ndash;spring-jdbc&ndash;&gt;-->
+<!--      <dependency>-->
+<!--        <groupId>org.springframework</groupId>-->
+<!--        <artifactId>spring-jdbc</artifactId>-->
+<!--        <scope>compile</scope>-->
+<!--        <version>5.2.3.RELEASE</version>-->
+<!--      </dependency>-->
 
       <!-- MySQL Driver -->
-      <dependency>
-        <groupId>mysql</groupId>
-        <artifactId>mysql-connector-java</artifactId>
-        <version>8.0.15</version>
-        <scope>compile</scope>
-      </dependency>
+<!--      <dependency>-->
+<!--        <groupId>mysql</groupId>-->
+<!--        <artifactId>mysql-connector-java</artifactId>-->
+<!--        <version>8.0.15</version>-->
+<!--        <scope>compile</scope>-->
+<!--      </dependency>-->
 
       <!--            <dependency>-->
       <!--                <groupId>org.springframework.boot</groupId>-->
@@ -119,8 +133,42 @@
       <!--                <version>5.2.3.RELEASE</version>-->
       <!--            </dependency>-->
 
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-security</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-thymeleaf</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>org.thymeleaf.extras</groupId>
+        <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-test</artifactId>
+        <scope>test</scope>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
+
   <build>
     <plugins>
       <plugin>

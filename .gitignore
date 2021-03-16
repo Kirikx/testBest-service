@@ -37,3 +37,4 @@ testbest-db/target/
 .idea
 out
 /.mysql-data/
+.gradle/
