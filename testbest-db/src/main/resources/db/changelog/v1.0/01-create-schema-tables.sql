@@ -43,7 +43,11 @@ CREATE TABLE `question` (
   `question_type_id` char(36) NOT NULL,
   `question` varchar(4096) NOT NULL,
   `deleted` tinyint NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `fk_test_user_idx` (`question_type_id`),
+  KEY `fk_test_topic_idx` (`topic_id`),
+  CONSTRAINT `fk_question_topic` FOREIGN KEY (`topic_id`) REFERENCES `topic` (`id`),
+  CONSTRAINT `fk_question_question_type` FOREIGN KEY (`question_type_id`) REFERENCES `question_type` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `answer` (
