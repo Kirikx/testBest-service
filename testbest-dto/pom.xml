@@ -14,9 +14,23 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.16</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>ru.testbest</groupId>
+      <artifactId>testbest-persistence</artifactId>
+      <version>0.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-core</artifactId>
     </dependency>
+
   </dependencies>
 
   <build>
@@ -31,19 +45,9 @@
             </manifest>
             <manifestEntries>
             </manifestEntries>
-
           </archive>
         </configuration>
       </plugin>
-      <!--<plugin>-->
-      <!--<groupId>org.apache.maven.plugins</groupId>-->
-      <!--<artifactId>maven-compiler-plugin</artifactId>-->
-      <!--<version>3.3</version>-->
-      <!--<configuration>-->
-      <!--<source>${jdk.version}</source>-->
-      <!--<target>${jdk.version}</target>-->
-      <!--</configuration>-->
-      <!--</plugin>-->
     </plugins>
   </build>
 

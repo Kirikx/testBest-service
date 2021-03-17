@@ -24,28 +24,29 @@
       <version>${project.version}</version>
     </dependency>
 
-    <!--        <dependency>-->
-    <!--            <groupId>ru.testbest</groupId>-->
-    <!--            <artifactId>testonline-facade</artifactId>-->
-    <!--            <version>${project.version}</version>-->
-    <!--        </dependency>-->
-
     <dependency>
       <groupId>ru.testbest</groupId>
       <artifactId>testbest-dto</artifactId>
       <version>${project.version}</version>
     </dependency>
 
-    <!--        <dependency>-->
-    <!--            <groupId>ru.testbest</groupId>-->
-    <!--            <artifactId>testonline-dao</artifactId>-->
-    <!--            <version>${project.version}</version>-->
-    <!--        </dependency>-->
-
     <dependency>
       <groupId>ru.testbest</groupId>
       <artifactId>testbest-persistence</artifactId>
-      <version>${project.version}</version>
+      <version>0.1</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>ru.testbest</groupId>
+      <artifactId>testbest-db</artifactId>
+      <version>0.1</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-jdbc</artifactId>
     </dependency>
 
     <dependency>
@@ -54,18 +55,11 @@
     </dependency>
 
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-autoconfigure</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-jdbc</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
+      <groupId>org.liquibase</groupId>
+      <artifactId>liquibase-core</artifactId>
+      <!--            <version>4.3.1</version>-->
+      <version>3.5.2</version>
+      <scope>runtime</scope>
     </dependency>
 
     <dependency>
@@ -77,12 +71,28 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-thymeleaf</artifactId>
     </dependency>
+
     <dependency>
-      <groupId>ru.testbest</groupId>
-      <artifactId>testbest-persistence</artifactId>
-      <version>0.1</version>
-      <scope>compile</scope>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.16</version>
+      <scope>provided</scope>
     </dependency>
+
+    <!--    <dependency>-->
+    <!--      <groupId>org.springframework.boot</groupId>-->
+    <!--      <artifactId>spring-boot-autoconfigure</artifactId>-->
+    <!--    </dependency>-->
+
+    <!--    <dependency>-->
+    <!--      <groupId>org.springframework</groupId>-->
+    <!--      <artifactId>spring-jdbc</artifactId>-->
+    <!--    </dependency>-->
+
+    <!--    <dependency>-->
+    <!--      <groupId>mysql</groupId>-->
+    <!--      <artifactId>mysql-connector-java</artifactId>-->
+    <!--    </dependency>-->
   </dependencies>
 
   <build>
