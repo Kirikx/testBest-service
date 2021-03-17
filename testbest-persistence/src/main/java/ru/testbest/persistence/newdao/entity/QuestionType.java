@@ -1,11 +1,14 @@
 package ru.testbest.persistence.newdao.entity;
 
+import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.UUID;
 
+@Data
 @Entity
 @Table(name = "question_type")
 public class QuestionType {
@@ -18,21 +21,5 @@ public class QuestionType {
 
     public QuestionType() {
         id = UUID.randomUUID().toString();
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 }

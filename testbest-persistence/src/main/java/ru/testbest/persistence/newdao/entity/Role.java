@@ -1,8 +1,11 @@
 package ru.testbest.persistence.newdao.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.UUID;
 
+@Data
 @Entity
 @Table(name = "role")
 public class Role {
@@ -15,21 +18,5 @@ public class Role {
 
     public Role() {
         id = UUID.randomUUID().toString();
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 }

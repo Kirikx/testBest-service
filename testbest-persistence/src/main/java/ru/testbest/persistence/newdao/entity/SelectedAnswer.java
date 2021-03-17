@@ -1,8 +1,11 @@
 package ru.testbest.persistence.newdao.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.UUID;
 
+@Data
 @Entity
 @Table(name = "selected_answer")
 public class SelectedAnswer {
@@ -20,29 +23,5 @@ public class SelectedAnswer {
 
     public SelectedAnswer() {
         id = UUID.randomUUID().toString();
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public UserTestQuestion getUserTestQuestion() {
-        return userTestQuestion;
-    }
-
-    public void setUserTestQuestion(UserTestQuestion userTestQuestion) {
-        this.userTestQuestion = userTestQuestion;
-    }
-
-    public Answer getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(Answer answer) {
-        this.answer = answer;
     }
 }

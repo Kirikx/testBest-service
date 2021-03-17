@@ -1,11 +1,14 @@
 package ru.testbest.persistence.newdao.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+@Data
 @Entity
 @Table(name = "user_test_question")
 public class UserTestQuestion {
@@ -48,53 +51,5 @@ public class UserTestQuestion {
     public void removeSelectedAnswer(SelectedAnswer answer) {
         selectedAnswers.remove(answer);
         answer.setUserTestQuestion(null);
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getFreeAnswer() {
-        return freeAnswer;
-    }
-
-    public void setFreeAnswer(String freeAnswer) {
-        this.freeAnswer = freeAnswer;
-    }
-
-    public LocalDateTime getAnswered() {
-        return answered;
-    }
-
-    public void setAnswered(LocalDateTime answered) {
-        this.answered = answered;
-    }
-
-    public Boolean getCorrect() {
-        return isCorrect;
-    }
-
-    public void setCorrect(Boolean correct) {
-        isCorrect = correct;
-    }
-
-    public UserTest getUserTest() {
-        return userTest;
-    }
-
-    public void setUserTest(UserTest userTest) {
-        this.userTest = userTest;
-    }
-
-    public Question getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(Question question) {
-        this.question = question;
     }
 }
