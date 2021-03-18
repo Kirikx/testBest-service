@@ -7,4 +7,5 @@ public class AnswerDto {
 
   private String id;
   private String answerText;
+  private String questionId;
 }

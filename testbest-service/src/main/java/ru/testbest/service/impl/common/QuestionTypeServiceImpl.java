@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import ru.testbest.converter.impl.common.QuestionTypeConverter;
 import ru.testbest.dto.common.QuestionTypeDto;
 import ru.testbest.persistence.dao.QuestionTypeDao;
-import ru.testbest.persistence.entity.QuestionType;
 import ru.testbest.service.QuestionTypeService;
 
 @Service
@@ -26,8 +25,9 @@ public class QuestionTypeServiceImpl implements QuestionTypeService {
 
   @Override
   public QuestionTypeDto getQuestionTypeById(String uuid) {
-    QuestionType questionType = questionTypeDao.findById(uuid).orElseThrow(RuntimeException::new);
-    return questionTypeConverter.convertToDto(questionType);
+    return questionTypeDao.findById(uuid)
+        .map(questionTypeConverter::convertToDto)
+        .orElse(null);
   }
 }
 

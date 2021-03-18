@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.testbest.converter.impl.admin.UserConverter;
 import ru.testbest.dto.admin.UserDto;
 import ru.testbest.persistence.dao.UserDao;
@@ -19,19 +20,23 @@ public class UserServiceImpl implements UserService {
   private final UserConverter userConverter;
 
   @Override
+  @Transactional(readOnly = true)
   public List<UserDto> getUsers() {
-    return userDao.findAll().stream()
+    return userDao.findAllByIsDeletedFalse().stream()
         .map(userConverter::convertToDto)
         .collect(Collectors.toList());
   }
 
   @Override
+  @Transactional(readOnly = true)
   public UserDto getUserById(String uuid) {
-    User user = userDao.findById(uuid).orElseThrow(RuntimeException::new);
-    return userConverter.convertToDto(user);
+    return userDao.findByIdAndIsDeletedFalse(uuid)
+        .map(userConverter::convertToDto)
+        .orElse(null);
   }
 
   @Override
+  @Transactional
   public UserDto createUser(UserDto userDto) {
     return userConverter.convertToDto(
         userDao.save(
@@ -39,6 +44,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional
   public UserDto editUser(UserDto userDto) {
     return userConverter.convertToDto(
         userDao.save(
@@ -46,8 +52,9 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional
   public void deleteUserById(String uuid) {
-    Optional<User> oUser = userDao.findById(uuid);
+    Optional<User> oUser = userDao.findByIdAndIsDeletedFalse(uuid);
     if (oUser.isPresent()) {
       User user = oUser.get();
       user.setIsDeleted(true);
@@ -56,6 +63,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public List<UserDto> getUsersByRoleId(String roleId) {
 //    return userDao.findByRoleId(roleId).stream()
 //        .map(userConverter::convertToDto)

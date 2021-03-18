@@ -1,5 +1,6 @@
 package ru.testbest.converter.impl.test;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.testbest.converter.ConverterTest;
@@ -15,6 +16,8 @@ public class AnswerConverter implements ConverterTest<Answer, AnswerDto> {
     AnswerDto answerDto = new AnswerDto();
     answerDto.setId(entity.getId());
     answerDto.setAnswerText(entity.getAnswer());
+    answerDto.setQuestionId(Optional.ofNullable(entity.getQuestion().getId())
+        .orElseThrow(() -> new RuntimeException("Answer is not contains question link")));
     return answerDto;
   }
 

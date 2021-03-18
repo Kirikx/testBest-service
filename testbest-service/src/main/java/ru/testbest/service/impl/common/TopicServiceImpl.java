@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import ru.testbest.converter.impl.common.TopicConverter;
 import ru.testbest.dto.common.TopicDto;
 import ru.testbest.persistence.dao.TopicDao;
-import ru.testbest.persistence.entity.Topic;
 import ru.testbest.service.TopicService;
 
 @Service
@@ -26,8 +25,9 @@ public class TopicServiceImpl implements TopicService {
 
   @Override
   public TopicDto getTopicById(String uuid) {
-    Topic topic = topicDao.findById(uuid).orElseThrow(RuntimeException::new);
-    return topicConverter.convertToDto(topic);
+    return topicDao.findById(uuid)
+        .map(topicConverter::convertToDto)
+        .orElse(null);
   }
 
   @Override

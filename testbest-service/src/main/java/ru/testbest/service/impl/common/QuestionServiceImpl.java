@@ -20,15 +20,16 @@ public class QuestionServiceImpl implements QuestionService {
 
   @Override
   public List<QuestionDto> getQuestions() {
-    return questionDao.findAll().stream()
+    return questionDao.findAllByIsDeletedFalse().stream()
         .map(questionConverter::convertToDto)
         .collect(Collectors.toList());
   }
 
   @Override
   public QuestionDto getQuestionById(String uuid) {
-    Question question = questionDao.findById(uuid).orElseThrow(RuntimeException::new);
-    return questionConverter.convertToDto(question);
+    return questionDao.findByIdAndIsDeletedFalse(uuid)
+        .map(questionConverter::convertToDto)
+        .orElse(null);
   }
 
   @Override
@@ -47,7 +48,7 @@ public class QuestionServiceImpl implements QuestionService {
 
   @Override
   public void deleteQuestionById(String uuid) {
-    Optional<Question> oQuestion = questionDao.findById(uuid);
+    Optional<Question> oQuestion = questionDao.findByIdAndIsDeletedFalse(uuid);
     if (oQuestion.isPresent()) {
       Question question = oQuestion.get();
       question.setIsDeleted(true);

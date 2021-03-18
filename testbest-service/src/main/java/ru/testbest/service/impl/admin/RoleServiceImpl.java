@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import ru.testbest.converter.impl.admin.RoleConverter;
 import ru.testbest.dto.admin.RoleDto;
 import ru.testbest.persistence.dao.RoleDao;
-import ru.testbest.persistence.entity.Role;
 import ru.testbest.service.RoleService;
 
 @Service
@@ -26,7 +25,8 @@ public class RoleServiceImpl implements RoleService {
 
   @Override
   public RoleDto getRoleById(String uuid) {
-    Role role = roleDao.findById(uuid).orElseThrow(RuntimeException::new);
-    return roleConverter.convertToDto(role);
+    return roleDao.findById(uuid)
+        .map(roleConverter::convertToDto)
+        .orElse(null);
   }
 }

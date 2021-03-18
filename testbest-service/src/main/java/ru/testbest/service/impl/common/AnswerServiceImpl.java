@@ -20,15 +20,16 @@ public class AnswerServiceImpl implements AnswerService {
 
   @Override
   public List<AnswerDto> getAnswers() {
-    return answerDao.findAll().stream()
+    return answerDao.findAllByIsDeletedFalse().stream()
         .map(answerConverter::convertToDto)
         .collect(Collectors.toList());
   }
 
   @Override
   public AnswerDto getAnswerById(String uuid) {
-    Answer answer = answerDao.findById(uuid).orElseThrow(RuntimeException::new);
-    return answerConverter.convertToDto(answer);
+    return answerDao.findByIdAndIsDeletedFalse(uuid)
+        .map(answerConverter::convertToDto)
+        .orElse(null);
   }
 
   @Override
@@ -47,7 +48,7 @@ public class AnswerServiceImpl implements AnswerService {
 
   @Override
   public void deleteAnswerById(String uuid) {
-    Optional<Answer> oAnswer = answerDao.findById(uuid);
+    Optional<Answer> oAnswer = answerDao.findByIdAndIsDeletedFalse(uuid);
     if (oAnswer.isPresent()) {
       Answer answer = oAnswer.get();
       answer.setIsDeleted(true);

@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 import lombok.Data;
 
-
 @Data
 public class QuestionDto {
 
@@ -13,4 +12,6 @@ public class QuestionDto {
   private String topicId;
   private String questionTypeId;
   private Set<AnswerDto> questionAnswers = new HashSet<>();
+  private Boolean isDeleted;
+  private String chapterId;
 }

@@ -6,6 +6,6 @@ import ru.testbest.dto.test.UserTestDto;
 public interface UserTestService {
 
   List<UserTestDto> getUserTests();
-//  В работе
+//  List
 
 }
