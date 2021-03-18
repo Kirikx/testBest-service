@@ -50,7 +50,7 @@ public class QuestionServiceImpl implements QuestionService {
     Optional<Question> oQuestion = questionDao.findById(uuid);
     if (oQuestion.isPresent()) {
       Question question = oQuestion.get();
-      question.setDeleted(true);
+      question.setIsDeleted(true);
       questionDao.save(question);
     }
   }

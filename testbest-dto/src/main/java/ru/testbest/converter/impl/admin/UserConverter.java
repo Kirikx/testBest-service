@@ -20,7 +20,7 @@ public class UserConverter implements ConverterTest<User, UserDto> {
     userDto.setUsername(entity.getUsername());
     userDto.setPhone(entity.getPhone());
     userDto.setEmail(entity.getEmail());
-    userDto.setIsDeleted(entity.getDeleted());
+    userDto.setIsDeleted(entity.getIsDeleted());
     userDto.setRoles(entity.getRoles().stream()
         .map(roleConverter::convertToDto)
         .collect(Collectors.toSet()));
@@ -37,7 +37,7 @@ public class UserConverter implements ConverterTest<User, UserDto> {
     user.setPassword(dto.getPassword());
     user.setPhone(dto.getPhone());
     user.setEmail(dto.getEmail());
-    user.setDeleted(dto.getIsDeleted());
+    user.setIsDeleted(dto.getIsDeleted());
     user.setRoles(dto.getRoles().stream()
         .map(roleConverter::convertToEntity)
         .collect(Collectors.toSet()));

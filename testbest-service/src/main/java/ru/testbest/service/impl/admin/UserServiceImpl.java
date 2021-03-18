@@ -4,9 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.testbest.converter.impl.admin.UserConverter;
 import ru.testbest.dto.admin.UserDto;
@@ -16,15 +13,10 @@ import ru.testbest.service.UserService;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
 
   private final UserDao userDao;
   private final UserConverter userConverter;
-
-  @Override
-  public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-    return userConverter.convertToDto(userDao.findByLogin(userName));
-  }
 
   @Override
   public List<UserDto> getUsers() {
@@ -58,15 +50,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     Optional<User> oUser = userDao.findById(uuid);
     if (oUser.isPresent()) {
       User user = oUser.get();
-      user.setDeleted(true);
+      user.setIsDeleted(true);
       userDao.save(user);
     }
   }
 
   @Override
   public List<UserDto> getUsersByRoleId(String roleId) {
-    return userDao.findByRoleId(roleId).stream()
-        .map(userConverter::convertToDto)
-        .collect(Collectors.toList());
+//    return userDao.findByRoleId(roleId).stream()
+//        .map(userConverter::convertToDto)
+//        .collect(Collectors.toList());
+    return null;
   }
 }

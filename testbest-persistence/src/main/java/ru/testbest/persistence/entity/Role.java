@@ -1,9 +1,11 @@
-package ru.testbest.persistence.newdao.entity;
+package ru.testbest.persistence.entity;
 
-import lombok.Data;
-
-import javax.persistence.*;
 import java.util.UUID;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import lombok.Data;
 
 @Data
 @Entity

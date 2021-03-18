@@ -50,7 +50,7 @@ public class AnswerServiceImpl implements AnswerService {
     Optional<Answer> oAnswer = answerDao.findById(uuid);
     if (oAnswer.isPresent()) {
       Answer answer = oAnswer.get();
-      answer.setDeleted(true);
+      answer.setIsDeleted(true);
       answerDao.save(answer);
     }
   }
