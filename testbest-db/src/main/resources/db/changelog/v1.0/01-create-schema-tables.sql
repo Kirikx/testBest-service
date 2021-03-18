@@ -43,14 +43,21 @@ CREATE TABLE `question` (
   `question_type_id` char(36) NOT NULL,
   `question` varchar(4096) NOT NULL,
   `deleted` tinyint NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `fk_test_user_idx` (`question_type_id`),
+  KEY `fk_test_topic_idx` (`topic_id`),
+  CONSTRAINT `fk_question_topic` FOREIGN KEY (`topic_id`) REFERENCES `topic` (`id`),
+  CONSTRAINT `fk_question_question_type` FOREIGN KEY (`question_type_id`) REFERENCES `question_type` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `answer` (
   `id` char(36) NOT NULL,
+  `question_id` char(36) NOT NULL,
   `answer` varchar(4096) NOT NULL,
   `deleted` tinyint NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `fk_answer_question_idx` (`question_id`) /*!80000 INVISIBLE */,
+  CONSTRAINT `fk_answer_question_idx` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `question_answer` (
@@ -84,6 +91,7 @@ CREATE TABLE `chapter` (
   `test_id` char(36) NOT NULL,
   `name` varchar(255) NOT NULL,
   `description` varchar(4096),
+  `deleted` tinyint DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `fk_chapter_test_idx` (`test_id`),
   CONSTRAINT `fk_chapter_test` FOREIGN KEY (`test_id`) REFERENCES `test` (`id`) ON DELETE CASCADE
@@ -128,11 +136,10 @@ CREATE TABLE `user_test_question` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `selected_answer` (
+  `id` char(36) NOT NULL,
   `test_question_id` char(36) NOT NULL,
   `answer_id` char(36) NOT NULL,
-  PRIMARY KEY (`test_question_id`, `answer_id`),
+  PRIMARY KEY (`id`),
   KEY `fk_selected_answer_user_test_question_idx` (`test_question_id`),
-  KEY `fk_selected_answer_answer_idx` (`answer_id`),
-  CONSTRAINT `fk_selected_answer_answer` FOREIGN KEY (`answer_id`) REFERENCES `answer` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_selected_answer_user_test_question` FOREIGN KEY (`test_question_id`) REFERENCES `user_test_question` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
