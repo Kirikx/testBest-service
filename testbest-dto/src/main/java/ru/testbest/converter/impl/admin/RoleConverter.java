@@ -1,11 +1,13 @@
 package ru.testbest.converter.impl.admin;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.testbest.converter.ConverterTest;
 import ru.testbest.dto.admin.RoleDto;
 import ru.testbest.persistence.entity.Role;
 
 @Component
+@RequiredArgsConstructor
 public class RoleConverter implements ConverterTest<Role, RoleDto> {
 
   @Override

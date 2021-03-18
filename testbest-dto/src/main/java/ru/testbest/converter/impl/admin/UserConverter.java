@@ -1,12 +1,14 @@
 package ru.testbest.converter.impl.admin;
 
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.testbest.converter.ConverterTest;
 import ru.testbest.dto.admin.UserDto;
 import ru.testbest.persistence.entity.User;
 
 @Component
+@RequiredArgsConstructor
 public class UserConverter implements ConverterTest<User, UserDto> {
 
   private static final RoleConverter roleConverter = new RoleConverter();

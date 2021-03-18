@@ -1,11 +1,13 @@
 package ru.testbest.converter.impl.common;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.testbest.converter.ConverterTest;
 import ru.testbest.dto.common.QuestionTypeDto;
 import ru.testbest.persistence.entity.QuestionType;
 
 @Component
+@RequiredArgsConstructor
 public class QuestionTypeConverter implements ConverterTest<QuestionType, QuestionTypeDto> {
 
   @Override

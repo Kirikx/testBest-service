@@ -1,15 +1,17 @@
 package ru.testbest.converter.impl.test;
 
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.testbest.converter.ConverterTest;
 import ru.testbest.dto.test.QuestionDto;
 import ru.testbest.persistence.entity.Question;
 
 @Component
+@RequiredArgsConstructor
 public class QuestionConverter implements ConverterTest<Question, QuestionDto> {
 
-  private static final AnswerConverter answerConverter = new AnswerConverter();
+  private final AnswerConverter answerConverter;
 
   @Override
   public QuestionDto convertToDto(Question entity) {
@@ -22,7 +24,6 @@ public class QuestionConverter implements ConverterTest<Question, QuestionDto> {
         .map(answerConverter::convertToDto)
         .collect(Collectors.toSet()));
     return questionDto;
-
   }
 
   @Override

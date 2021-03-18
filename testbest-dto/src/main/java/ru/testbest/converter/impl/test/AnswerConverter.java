@@ -1,13 +1,14 @@
 package ru.testbest.converter.impl.test;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.testbest.converter.ConverterTest;
 import ru.testbest.dto.test.AnswerDto;
 import ru.testbest.persistence.entity.Answer;
 
 @Component
+@RequiredArgsConstructor
 public class AnswerConverter implements ConverterTest<Answer, AnswerDto> {
-
 
   @Override
   public AnswerDto convertToDto(Answer entity) {

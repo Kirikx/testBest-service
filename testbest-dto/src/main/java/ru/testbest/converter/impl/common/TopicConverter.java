@@ -1,13 +1,14 @@
 package ru.testbest.converter.impl.common;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.testbest.converter.ConverterTest;
 import ru.testbest.dto.common.TopicDto;
 import ru.testbest.persistence.entity.Topic;
 
 @Component
+@RequiredArgsConstructor
 public class TopicConverter implements ConverterTest<Topic, TopicDto> {
-
 
   @Override
   public TopicDto convertToDto(Topic entity) {
