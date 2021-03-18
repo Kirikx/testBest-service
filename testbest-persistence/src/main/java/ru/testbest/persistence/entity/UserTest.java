@@ -53,12 +53,12 @@ public class UserTest {
         userTestQuestions = new HashSet<>();
     }
 
-    public void addSelectedAnswer(UserTestQuestion question) {
+    public void addUserTestQuestion(UserTestQuestion question) {
         userTestQuestions.add(question);
         question.setUserTest(this);
     }
 
-    public void removeSelectedAnswer(UserTestQuestion question) {
+    public void removeUserTestQuestion(UserTestQuestion question) {
         userTestQuestions.remove(question);
         question.setUserTest(null);
     }

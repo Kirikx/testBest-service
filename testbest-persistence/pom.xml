@@ -13,11 +13,42 @@
   <artifactId>testbest-persistence</artifactId>
 
   <dependencies>
+
+    <dependency>
+      <groupId>org.liquibase</groupId>
+      <artifactId>liquibase-core</artifactId>
+      <!--            <version>4.3.1</version>-->
+      <version>3.5.2</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!-- MySQL Driver -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.15</version>
+    </dependency>
+
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <build>
+    <finalName>${project.artifactId}</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.liquibase</groupId>
+        <artifactId>liquibase-maven-plugin</artifactId>
+        <!-- Using the version of Liquibase from Spring boot-->
+        <version>3.5.2</version>
+        <configuration>
+          <propertyFile>src/main/resources/liquibase-maven-plugin.properties</propertyFile>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
