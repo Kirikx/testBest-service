@@ -19,25 +19,25 @@
               <div class="alert-danger" *ngIf="username.errors && f.submitted">
                 <div *ngIf="username.errors.required">Username is required</div>
                 <div *ngIf="username.errors.minlength">
-                  Username must be at least 3 characters
+                  First Name must be at least 3 characters
                 </div>
                 <div *ngIf="username.errors.maxlength">
-                  Username must be at most 20 characters
+                  First Name must be at most 20 characters
                 </div>
               </div>
             </div>
 
             <div class="col-md col-sm-12 form-group" data-for="surname">
               <input id="surname-form5-y" type="text" name="surname"
-                     [(ngModel)]="form.username2" required minlength="3" maxlength="20" #username2="ngModel"
+                     [(ngModel)]="form.surname" required minlength="3" maxlength="20" #surname="ngModel"
                      placeholder="Last Name" data-form-field="name" class="form-control">
-              <div class="alert-danger" *ngIf="username2.errors && f.submitted">
-                <div *ngIf="username2.errors.required">Username is required</div>
-                <div *ngIf="username2.errors.minlength">
-                  Username must be at least 3 characters
+              <div class="alert-danger" *ngIf="surname.errors && f.submitted">
+                <div *ngIf="surname.errors.required">Username is required</div>
+                <div *ngIf="surname.errors.minlength">
+                  Last Name must be at least 3 characters
                 </div>
-                <div *ngIf="username2.errors.maxlength">
-                  Username must be at most 20 characters
+                <div *ngIf="surname.errors.maxlength">
+                  Last Name must be at most 20 characters
                 </div>
               </div>
             </div>
@@ -56,22 +56,26 @@
             <div class="col-md col-sm-12 form-group" data-for="login">
               <input type="text" name="login" placeholder="Login" data-form-field="login"
                      class="form-control" value="" id="login-form5-y" [(ngModel)]="form.login" required #login="ngModel">
-              <div class="alert alert-danger col-12" role="alert" *ngIf="username.errors && f.submitted">Username is required!</div>
+              <div class="alert-danger col-12" role="alert" *ngIf="login.errors && f.submitted">Login is required!</div>
             </div>
 
             <div class="col-md col-sm-12 form-group" data-for="password">
               <input type="password" name="password" placeholder="Password" data-form-field="password"
                      class="form-control" value="" id="password-form5-y"
                      [(ngModel)]="form.password" required minlength="6" #password="ngModel">
-              <div class="alert alert-danger col-12" role="alert" *ngIf="password.errors && f.submitted">
+              <div class="alert-danger col-12" role="alert" *ngIf="password.errors && f.submitted">
                 <div *ngIf="password.errors.required">Password is required</div>
                 <div *ngIf="password.errors.minlength">Password must be at least 6 characters</div>
               </div>
             </div>
 
             <div class="col-12 form-group" data-for="repeat">
-              <input type="password" name="repeat" placeholder="Confirm password" data-form-field="repeat"
-                     class="form-control" value="" id="url-form5-y">
+              <input type="password" name="repeat"  placeholder="Confirm password" data-form-field="repeat"
+                     [(ngModel)]="form.repeat" #repeat="ngModel" pattern="{{password.value}}" required class="form-control" value="" id="url-form5-y">
+              <div class="alert-danger col-12" role="alert" *ngIf="repeat.errors && f.submitted">
+                <div *ngIf="repeat.errors.required">Confirm password is required</div>
+                <div *ngIf="repeat.errors.pattern">Your passwords must match.</div>
+              </div>
             </div>
 
             <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
