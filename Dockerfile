@@ -7,4 +7,4 @@ WORKDIR /usr/src/myapp
 COPY ./testbest-app /usr/src/myapp
 
 EXPOSE 8080
-ENTRYPOINT java -jar ./target/testbest-app.jar
+ENTRYPOINT java -jar ./target/testbest-app-0.1.jar
