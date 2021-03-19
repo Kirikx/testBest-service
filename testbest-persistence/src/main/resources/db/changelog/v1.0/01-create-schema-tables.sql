@@ -54,20 +54,11 @@ CREATE TABLE `answer` (
   `id` char(36) NOT NULL,
   `question_id` char(36) NOT NULL,
   `answer` varchar(4096) NOT NULL,
+  `correct` tinyint NOT NULL DEFAULT '0',
   `deleted` tinyint NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `fk_answer_question_idx` (`question_id`) /*!80000 INVISIBLE */,
   CONSTRAINT `fk_answer_question_idx` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-CREATE TABLE `question_answer` (
-  `question_id` char(36) NOT NULL,
-  `answer_id` char(36) NOT NULL,
-  `correct` tinyint NOT NULL DEFAULT '0',
-  PRIMARY KEY (`question_id`,`answer_id`),
-  KEY `fk_question_answer_answer_idx` (`answer_id`) /*!80000 INVISIBLE */,
-  CONSTRAINT `fk_question_answer_answer` FOREIGN KEY (`answer_id`) REFERENCES `answer` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_question_answer_question` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `test` (

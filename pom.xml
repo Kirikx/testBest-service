@@ -19,11 +19,15 @@
   <packaging>pom</packaging>
 
   <properties>
-<!--    <jdk.version>1.8</jdk.version>-->
+    <!--  Project compiling properties  -->
     <java.version>8</java.version>
     <project.version>0.1</project.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <!--  Override version to project   -->
+    <liquibase.version>4.3.1</liquibase.version>
+    <mysql.version>8.0.15</mysql.version>
   </properties>
 
   <modules>
@@ -32,7 +36,6 @@
     <module>testbest-persistence</module>
     <module>testbest-app</module>
     <module>testbest-service</module>
-    <module>testbest-db</module>
   </modules>
 
   <dependencies>

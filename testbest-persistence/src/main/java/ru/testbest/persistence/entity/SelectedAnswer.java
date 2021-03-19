@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 @Data
 @Entity
@@ -15,6 +16,7 @@ import lombok.Data;
 public class SelectedAnswer {
 
     @Id
+    @Type(type = "char")
     String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
