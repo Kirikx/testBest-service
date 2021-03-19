@@ -1,0 +1,67 @@
+package ru.testbest.persistence.entity;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import lombok.Data;
+
+@Data
+@Entity
+@Table(name = "chapter")
+public class Chapter {
+
+    @Id
+    String id;
+
+    @Column
+    String name;
+
+    @Column
+    String description;
+
+    @Column(name = "deleted")
+    Boolean isDeleted;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "test_id")
+    Test test;
+
+    @ManyToMany
+    @JoinTable(
+            name = "question_chapter",
+            joinColumns = @JoinColumn(name = "chapter_id"),
+            inverseJoinColumns = @JoinColumn(name = "question_id"))
+    Set<Question> questions;
+
+    public Chapter() {
+        id = UUID.randomUUID().toString();
+        questions = new HashSet<>();
+    }
+
+    public void addQuestion(Question question) {
+        questions.add(question);
+        if (!question.hasChapters(this)) {
+            question.addChapter(this);
+        }
+    }
+
+    public void removeQuestion(Question question) {
+        questions.remove(question);
+        if (question.hasChapters(this)) {
+            question.removeChapter(this);
+        }
+    }
+
+    boolean hasQuestion(Question question) {
+        return questions.contains(question);
+    }
+}

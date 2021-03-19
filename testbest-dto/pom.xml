@@ -14,37 +14,10 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-core</artifactId>
+      <groupId>ru.testbest</groupId>
+      <artifactId>testbest-persistence</artifactId>
+      <version>0.1</version>
     </dependency>
   </dependencies>
-
-  <build>
-    <finalName>${artifactId}</finalName>
-    <plugins>
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifest>
-              <addClasspath>true</addClasspath>
-            </manifest>
-            <manifestEntries>
-            </manifestEntries>
-
-          </archive>
-        </configuration>
-      </plugin>
-      <!--<plugin>-->
-      <!--<groupId>org.apache.maven.plugins</groupId>-->
-      <!--<artifactId>maven-compiler-plugin</artifactId>-->
-      <!--<version>3.3</version>-->
-      <!--<configuration>-->
-      <!--<source>${jdk.version}</source>-->
-      <!--<target>${jdk.version}</target>-->
-      <!--</configuration>-->
-      <!--</plugin>-->
-    </plugins>
-  </build>
 
 </project>
