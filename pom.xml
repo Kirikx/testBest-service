@@ -27,6 +27,7 @@
 
     <!--  Override version to project   -->
     <liquibase.version>4.3.1</liquibase.version>
+    <mysql.version>8.0.15</mysql.version>
   </properties>
 
   <modules>

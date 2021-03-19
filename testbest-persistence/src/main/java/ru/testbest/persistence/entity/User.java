@@ -11,6 +11,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 @Data
 @Entity
@@ -18,6 +19,7 @@ import lombok.Data;
 public class User {
 
     @Id
+    @Type(type = "char")
     private String id;
 
     @Column(name = "first_name")
@@ -32,19 +34,20 @@ public class User {
     @Column
     private String password;
 
-    @Column
-    private String phone;
+//    @Column
+//    private String phone;
 
     @Column
     private String email;
 
-    @Column(name = "deleted")
+    @Column(name = "deleted",
+        columnDefinition = "TINYINT(1)")
     private Boolean isDeleted;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
     public User() {

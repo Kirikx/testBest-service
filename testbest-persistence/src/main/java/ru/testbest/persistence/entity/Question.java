@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 @Data
 @Entity
@@ -21,12 +22,14 @@ import lombok.Data;
 public class Question {
 
     @Id
+    @Type(type = "char")
     String id;
 
     @Column
     String question;
 
-    @Column(name = "deleted")
+    @Column(name = "deleted",
+        columnDefinition = "TINYINT(1)")
     Boolean isDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
