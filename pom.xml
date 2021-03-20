@@ -36,6 +36,7 @@
     <module>testbest-persistence</module>
     <module>testbest-app</module>
     <module>testbest-service</module>
+    <module>testbest-front</module>
   </modules>
 
   <dependencies>
