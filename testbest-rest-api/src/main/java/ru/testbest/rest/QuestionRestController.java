@@ -23,21 +23,25 @@ public class QuestionRestController {
 
     @GetMapping("/questions/{id}")
     public QuestionDto getQuestion(@PathVariable("id") String id){
+        log.info("Get by id question");
         return questionService.getQuestionById(id);
     }
 
     @PutMapping("/questions/{id}")
     public QuestionDto editQuestion(@RequestBody QuestionDto questionDto){
+        log.info("Edit by id question");
         return questionService.editQuestion(questionDto);
     }
 
     @DeleteMapping("/questions/{id}")
     public void deleteQuestion(@PathVariable("id") String id){
+        log.info("Delete by id question");
         questionService.deleteQuestionById(id);
     }
 
     @PostMapping("/questions/create")
     public QuestionDto createQuestion(@RequestBody QuestionDto questionDto){
+        log.info("Create question");
         return questionService.createQuestion(questionDto);
     }
 
