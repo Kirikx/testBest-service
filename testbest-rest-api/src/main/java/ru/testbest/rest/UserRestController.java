@@ -1,43 +1,30 @@
 package ru.testbest.rest;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class UserRestController {
 
-    @GetMapping("/topics")
-    public String getTopics(){
-        return topicRepository.findAll();
+
+    @PostMapping("/answers/create")
+    public Answer createAnswer(){
+        return null;
     }
 
-    @GetMapping("/topic/{id}")
-    public String getTopic(@PathVariable("id") Long id){
-        return topicRepository.findById(id);
-    }
-
-    @GetMapping("/topic/{id}/question/{id}")
-    public String getTopicQuestion(@PathVariable("id") Long id){
-        return questionRepository.findById(id);
-    }
-
-    @GetMapping("/topic/{id}/questions")
-    public String getTopicQuestions(){
-        return questionRepository.findAll();
-    }
-
-    @GetMapping("/topic/{id}/question/{id}/answer/{id}")
-    public String getTopicQuestionAnswer(@PathVariable("id") Long id){
-        return answerRepository.findById(id);
-    }
-
-    @PostMapping("/topic/{id}/question/{id}/answer/{id}/edit")
-    public String getTopicQuestionAnswerEdit(@PathVariable("id") Long id){
-        return answerRepository.findById(id);
+    @PutMapping("/answer/{id}/edit")
+    public String editAnswerEdit(@PathVariable("id") Long id){
+        return null;
     }
 
     @GetMapping("/answers")
-    public String getAnswers(){
-        return answerRepository.findAll();
+    public List<Anser> getListAnswers(){
+        return null;
+    }
+
+    @GetMapping("/answers/{id}")
+    public Anser getAnswer(@PathVariable String id){
+        return null;
     }
 }
