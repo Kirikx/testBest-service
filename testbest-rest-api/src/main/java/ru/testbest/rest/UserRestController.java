@@ -13,7 +13,7 @@ public class UserRestController {
         return null;
     }
 
-    @PutMapping("/answer/{id}/edit")
+    @PutMapping("/answers/{id}/edit")
     public String editAnswerEdit(@PathVariable("id") Long id){
         return null;
     }

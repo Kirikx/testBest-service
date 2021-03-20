@@ -35,7 +35,7 @@
 | GET | /topics | application/json | Список тем тестирования |
 | POST | /topics/create | application/json | Создание новой темы |
 | GET| /topics/{id} | application/json | Найти тему по id |
-| PUT | /topic/{id}/edit | application/json | Изменение записи темы по id |
+| PUT | /topics/{id}/edit | application/json | Изменение записи темы по id |
 | DELETE | /topic/{id} | application/json | Удаление темы по id |
 
 Описание сервисов Авторизации
