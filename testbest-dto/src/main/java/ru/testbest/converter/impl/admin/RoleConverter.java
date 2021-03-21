@@ -1,5 +1,6 @@
 package ru.testbest.converter.impl.admin;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.testbest.converter.ConverterTest;
@@ -21,7 +22,8 @@ public class RoleConverter implements ConverterTest<Role, RoleDto> {
   @Override
   public Role convertToEntity(RoleDto dto) {
     Role role = new Role();
-    role.setId(dto.getId());
+    Optional.ofNullable(dto.getId())
+        .ifPresent(role::setId);
     role.setName(dto.getName());
     return role;
   }

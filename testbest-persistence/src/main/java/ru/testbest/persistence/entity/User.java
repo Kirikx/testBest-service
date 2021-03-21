@@ -11,7 +11,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import lombok.Data;
-import org.hibernate.annotations.Type;
 
 @Data
 @Entity
@@ -19,7 +18,7 @@ import org.hibernate.annotations.Type;
 public class User {
 
     @Id
-    @Type(type = "char")
+    @Column(columnDefinition = "char")
     private String id;
 
     @Column(name = "first_name")

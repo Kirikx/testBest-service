@@ -1,5 +1,6 @@
 package ru.testbest.converter.impl.test;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.testbest.converter.ConverterTest;
@@ -28,7 +29,8 @@ public class SelectedAnswerConverter implements ConverterTest<SelectedAnswer, Se
   @Override
   public SelectedAnswer convertToEntity(SelectedAnswerDto dto) {
     SelectedAnswer selectedAnswer = new SelectedAnswer();
-    selectedAnswer.setId(dto.getId());
+    Optional.ofNullable(dto.getId())
+        .ifPresent(selectedAnswer::setId);
     selectedAnswer.setUserTestQuestion(
         userTestQuestionDao.findById(dto.getUserTestQuestionId()).orElse(null));
     selectedAnswer.setAnswer(answerDao.findById(dto.getAnswerId()).orElse(null));

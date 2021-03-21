@@ -1,5 +1,6 @@
 package ru.testbest.converter.impl.admin;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -32,7 +33,8 @@ public class UserConverter implements ConverterTest<User, UserDto> {
   @Override
   public User convertToEntity(UserDto dto) {
     User user = new User();
-    user.setId(dto.getId());
+    Optional.ofNullable(dto.getId())
+        .ifPresent(user::setId);
     user.setFirstName(dto.getFirstName());
     user.setLastName(dto.getLastName());
     user.setUsername(dto.getUsername());

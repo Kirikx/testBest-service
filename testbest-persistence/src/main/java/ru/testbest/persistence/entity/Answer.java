@@ -9,7 +9,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Data;
-import org.hibernate.annotations.Type;
 
 @Data
 @Entity
@@ -17,11 +16,15 @@ import org.hibernate.annotations.Type;
 public class Answer {
 
   @Id
-  @Type(type = "char")
+  @Column(columnDefinition = "char")
   String id;
 
   @Column
   String answer;
+
+  @Column(name = "correct",
+      columnDefinition = "TINYINT(1)")
+  Boolean isCorrect;
 
   @Column(name = "deleted",
       columnDefinition = "TINYINT(1)")

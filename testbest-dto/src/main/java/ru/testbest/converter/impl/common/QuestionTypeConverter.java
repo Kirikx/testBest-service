@@ -1,5 +1,6 @@
 package ru.testbest.converter.impl.common;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.testbest.converter.ConverterTest;
@@ -21,7 +22,8 @@ public class QuestionTypeConverter implements ConverterTest<QuestionType, Questi
   @Override
   public QuestionType convertToEntity(QuestionTypeDto dto) {
     QuestionType questionType = new QuestionType();
-    questionType.setId(dto.getId());
+    Optional.ofNullable(dto.getId())
+        .ifPresent(questionType::setId);
     questionType.setName(dto.getName());
     return questionType;
   }
