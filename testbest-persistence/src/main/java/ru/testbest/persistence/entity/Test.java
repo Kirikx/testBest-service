@@ -4,15 +4,8 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.Data;
 import org.hibernate.annotations.Type;
 
@@ -22,32 +15,33 @@ import org.hibernate.annotations.Type;
 public class Test {
 
     @Id
-    @Type(type = "char")
-    String id;
+    @GeneratedValue
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @Column
-    String name;
+    private String name;
 
     @Column
-    String description;
+    private String description;
 
     @Column
-    LocalDateTime created;
+    private LocalDateTime created;
 
     @Column
-    Short duration;
+    private Short duration;
 
     @Column(name = "deleted",
         columnDefinition = "TINYINT(1)")
-    Boolean isDeleted;
+    private Boolean isDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id")
-    Topic topic;
+    private Topic topic;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
-    User author;
+    private User author;
 
     @OneToMany(mappedBy = "test",
             fetch = FetchType.LAZY,
@@ -55,7 +49,6 @@ public class Test {
     private Set<Chapter> chapters;
 
     public Test() {
-        id = UUID.randomUUID().toString();
         chapters = new HashSet<>();
     }
 

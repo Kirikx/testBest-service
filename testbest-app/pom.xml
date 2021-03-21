@@ -30,6 +30,7 @@
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <scope>test</scope>
+<!--      <scope>compile</scope>-->
     </dependency>
     <dependency>
       <groupId>org.liquibase</groupId>

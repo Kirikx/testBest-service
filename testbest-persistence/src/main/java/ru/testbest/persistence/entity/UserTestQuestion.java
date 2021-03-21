@@ -4,15 +4,8 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.Data;
 import org.hibernate.annotations.Type;
 
@@ -22,44 +15,44 @@ import org.hibernate.annotations.Type;
 public class UserTestQuestion {
 
     @Id
-    @Type(type = "char")
-    String id;
+    @GeneratedValue
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @Column(name = "user_answer")
-    String freeAnswer;
+    private String freeAnswer;
 
     @Column
-    LocalDateTime answered;
+    private LocalDateTime answered;
 
     @Column(name = "correct",
         columnDefinition = "TINYINT(1)")
-    Boolean isCorrect;
+    private Boolean isCorrect;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_test_id")
-    UserTest userTest;
+    private UserTest userTest;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
-    Question question;
+    private Question question;
 
-    @OneToMany(mappedBy = "userTestQuestion",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
-    private Set<SelectedAnswer> selectedAnswers;
+    @ManyToMany
+    @JoinTable(
+            name = "selected_answer",
+            joinColumns = @JoinColumn(name = "test_question_id"),
+            inverseJoinColumns = @JoinColumn(name = "answer_id"))
+    private Set<Answer> answers;
 
     public UserTestQuestion() {
-        id = UUID.randomUUID().toString();
-        selectedAnswers = new HashSet<>();
+        answers = new HashSet<>();
     }
 
-    public void addSelectedAnswer(SelectedAnswer answer) {
-        selectedAnswers.add(answer);
-        answer.setUserTestQuestion(this);
+    public void addSelectedAnswer(Answer answer) {
+        answers.add(answer);
     }
 
-    public void removeSelectedAnswer(SelectedAnswer answer) {
-        selectedAnswers.remove(answer);
-        answer.setUserTestQuestion(null);
+    public void removeSelectedAnswer(Answer answer) {
+        answers.remove(answer);
     }
 }

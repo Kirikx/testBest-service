@@ -1,10 +1,8 @@
 package ru.testbest.persistence.entity;
 
 import java.util.UUID;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.Data;
 import org.hibernate.annotations.Type;
 
@@ -14,13 +12,10 @@ import org.hibernate.annotations.Type;
 public class Role {
 
     @Id
-    @Type(type = "char")
-    private String id;
+    @GeneratedValue
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @Column
     private String name;
-
-    public Role() {
-        id = UUID.randomUUID().toString();
-    }
 }

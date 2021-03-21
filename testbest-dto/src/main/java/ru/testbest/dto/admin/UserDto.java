@@ -1,12 +1,14 @@
 package ru.testbest.dto.admin;
 
 import java.util.Set;
+import java.util.UUID;
+
 import lombok.Data;
 
 @Data
 public class UserDto {
 
-  private String id;
+  private UUID id;
   private String firstName;
   private String lastName;
   private String username;

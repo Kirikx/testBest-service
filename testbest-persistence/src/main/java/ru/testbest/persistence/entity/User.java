@@ -2,14 +2,8 @@ package ru.testbest.persistence.entity;
 
 import java.util.Set;
 import java.util.UUID;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.Data;
 import org.hibernate.annotations.Type;
 
@@ -19,8 +13,9 @@ import org.hibernate.annotations.Type;
 public class User {
 
     @Id
-    @Type(type = "char")
-    private String id;
+    @GeneratedValue
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @Column(name = "first_name")
     private String firstName;
@@ -34,9 +29,6 @@ public class User {
     @Column
     private String password;
 
-//    @Column
-//    private String phone;
-
     @Column
     private String email;
 
@@ -49,8 +41,4 @@ public class User {
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
-
-    public User() {
-        id = UUID.randomUUID().toString();
-    }
 }

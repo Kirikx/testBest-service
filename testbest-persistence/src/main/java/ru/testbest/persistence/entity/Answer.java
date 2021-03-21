@@ -1,15 +1,9 @@
 package ru.testbest.persistence.entity;
 
 import java.util.UUID;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.Data;
-import org.hibernate.annotations.Type;
 
 @Data
 @Entity
@@ -17,21 +11,18 @@ import org.hibernate.annotations.Type;
 public class Answer {
 
   @Id
-  @Type(type = "char")
-  String id;
+  @GeneratedValue
+  @Column(columnDefinition = "BINARY(16)")
+  private UUID id;
 
   @Column
-  String answer;
+  private String answer;
 
   @Column(name = "deleted",
-      columnDefinition = "TINYINT(1)")
-  Boolean isDeleted;
+      columnDefinition = "TINYINT")
+  private Boolean isDeleted;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "question_id")
-  Question question;
-
-  public Answer() {
-    id = UUID.randomUUID().toString();
-  }
+  private Question question;
 }
