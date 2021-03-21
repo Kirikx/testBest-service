@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 @Data
 @Entity
@@ -21,6 +22,7 @@ import lombok.Data;
 public class UserTest {
 
     @Id
+    @Type(type = "char")
     String id;
 
     @Column
@@ -32,7 +34,8 @@ public class UserTest {
     @Column
     Short score;
 
-    @Column(name = "passed")
+    @Column(name = "passed",
+        columnDefinition = "TINYINT(1)")
     Boolean isPassed;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -53,12 +56,12 @@ public class UserTest {
         userTestQuestions = new HashSet<>();
     }
 
-    public void addSelectedAnswer(UserTestQuestion question) {
+    public void addUserTestQuestion(UserTestQuestion question) {
         userTestQuestions.add(question);
         question.setUserTest(this);
     }
 
-    public void removeSelectedAnswer(UserTestQuestion question) {
+    public void removeUserTestQuestion(UserTestQuestion question) {
         userTestQuestions.remove(question);
         question.setUserTest(null);
     }

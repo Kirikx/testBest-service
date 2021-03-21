@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../_services/auth.service';
+import {Component, OnInit} from '@angular/core';
+import {AuthService} from '../_services/auth.service';
+import {Router} from "@angular/router";
+import {TokenStorageService} from "../_services/token-storage.service";
 
 @Component({
   selector: 'app-register',
@@ -18,13 +20,16 @@ export class RegisterComponent implements OnInit {
   isSignUpFailed = false;
   errorMessage = '';
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router, private tokenStorage: TokenStorageService) {
+    if (tokenStorage.getToken() != null) router.navigate(["/home"])
+  }
 
   ngOnInit(): void {
   }
 
   onSubmit(): void {
-    const {username, surname, email, login, password } = this.form;
+    //const {username, surname, email, login, password} = this.form;
+    const {username, email, password} = this.form;
 
     this.authService.register(username, email, password).subscribe(
       data => {
@@ -32,8 +37,14 @@ export class RegisterComponent implements OnInit {
         this.isSuccessful = true;
         this.isSignUpFailed = false;
       },
-      err => {
-        this.errorMessage = err.error.message;
+      error => {
+        if (error.statusText == "Unknown Error") {
+          this.errorMessage = "Server is not responding";
+        } else if (error.statusCode == "401") {
+          this.errorMessage = "Incorrect logs or password";
+        } else {
+          this.errorMessage = error.message;
+        }
         this.isSignUpFailed = true;
       }
     );

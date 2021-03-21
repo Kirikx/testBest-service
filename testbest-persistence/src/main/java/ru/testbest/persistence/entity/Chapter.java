@@ -13,6 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 @Data
 @Entity
@@ -20,6 +21,7 @@ import lombok.Data;
 public class Chapter {
 
     @Id
+    @Type(type = "char")
     String id;
 
     @Column
@@ -28,7 +30,8 @@ public class Chapter {
     @Column
     String description;
 
-    @Column(name = "deleted")
+    @Column(name = "deleted",
+        columnDefinition = "TINYINT(1)")
     Boolean isDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,8 +40,8 @@ public class Chapter {
 
     @ManyToMany
     @JoinTable(
-            name = "question_chapter",
-            joinColumns = @JoinColumn(name = "chapter_id"),
+        name = "question_chapter",
+        joinColumns = @JoinColumn(name = "chapter_id"),
             inverseJoinColumns = @JoinColumn(name = "question_id"))
     Set<Question> questions;
 

@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 @Data
 @Entity
@@ -21,6 +22,7 @@ import lombok.Data;
 public class UserTestQuestion {
 
     @Id
+    @Type(type = "char")
     String id;
 
     @Column(name = "user_answer")
@@ -29,7 +31,8 @@ public class UserTestQuestion {
     @Column
     LocalDateTime answered;
 
-    @Column(name = "correct")
+    @Column(name = "correct",
+        columnDefinition = "TINYINT(1)")
     Boolean isCorrect;
 
     @ManyToOne(fetch = FetchType.LAZY)

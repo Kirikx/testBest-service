@@ -9,26 +9,29 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 @Data
 @Entity
 @Table(name = "answer")
 public class Answer {
 
-    @Id
-    String id;
+  @Id
+  @Type(type = "char")
+  String id;
 
-    @Column
-    String answer;
+  @Column
+  String answer;
 
-    @Column(name = "deleted")
-    Boolean isDeleted;
+  @Column(name = "deleted",
+      columnDefinition = "TINYINT(1)")
+  Boolean isDeleted;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_id")
-    Question question;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "question_id")
+  Question question;
 
-    public Answer() {
-        id = UUID.randomUUID().toString();
-    }
+  public Answer() {
+    id = UUID.randomUUID().toString();
+  }
 }
