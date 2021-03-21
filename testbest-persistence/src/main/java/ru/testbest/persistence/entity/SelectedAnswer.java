@@ -1,14 +1,9 @@
 package ru.testbest.persistence.entity;
 
 import java.util.UUID;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.Data;
-import org.hibernate.annotations.Type;
 
 @Data
 @Entity
@@ -16,7 +11,7 @@ import org.hibernate.annotations.Type;
 public class SelectedAnswer {
 
     @Id
-    @Type(type = "char")
+    @Column(columnDefinition = "char")
     String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
