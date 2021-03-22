@@ -28,6 +28,7 @@
     <!--  Override version to project   -->
     <liquibase.version>4.3.1</liquibase.version>
     <mysql.version>8.0.15</mysql.version>
+    <docker.compose.plugin.version>3.0.0</docker.compose.plugin.version>
   </properties>
 
   <modules>
@@ -73,5 +74,52 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.dkanejs.maven.plugins</groupId>
+        <artifactId>docker-compose-maven-plugin</artifactId>
+        <version>${docker.compose.plugin.version}</version>
+        <inherited>false</inherited>
+        <configuration>
+          <composeFile>${project.basedir}/testbest-app/docker-compose.yml</composeFile>
+          <detachedMode>true</detachedMode>
+        </configuration>
+        <!--        <executions>-->
+        <!--          <execution>-->
+        <!--            <id>pull</id>-->
+        <!--            <phase>verify</phase>-->
+        <!--            <goals>-->
+        <!--              <goal>pull</goal>-->
+        <!--            </goals>-->
+        <!--            <configuration>-->
+        <!--              <ignorePullFailures>true</ignorePullFailures>-->
+        <!--            </configuration>-->
+        <!--          </execution>-->
+        <!--          <execution>-->
+        <!--            <id>up</id>-->
+        <!--            <phase>verify</phase>-->
+        <!--            <goals>-->
+        <!--              <goal>up</goal>-->
+        <!--            </goals>-->
+        <!--            <configuration>-->
+        <!--              <composeFile>${project.basedir}/testbest-app/docker-compose.yml</composeFile>-->
+        <!--            </configuration>-->
+        <!--          </execution>-->
+        <!--          <execution>-->
+        <!--            <id>down</id>-->
+        <!--            <phase>verify</phase>-->
+        <!--            <goals>-->
+        <!--              <goal>down</goal>-->
+        <!--            </goals>-->
+        <!--            <configuration>-->
+        <!--              <removeVolumes>true</removeVolumes>-->
+        <!--            </configuration>-->
+        <!--          </execution>-->
+        <!--        </executions>-->
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

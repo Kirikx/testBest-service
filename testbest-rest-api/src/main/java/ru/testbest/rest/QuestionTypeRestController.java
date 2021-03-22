@@ -1,14 +1,14 @@
 package ru.testbest.rest;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-import ru.testbest.dto.common.QuestionTypeDto;
-import ru.testbest.dto.test.QuestionDto;
-import ru.testbest.service.QuestionTypeService;
-
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+import ru.testbest.dto.common.QuestionTypeDto;
+import ru.testbest.service.QuestionTypeService;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,8 +25,8 @@ public class QuestionTypeRestController {
 
     @GetMapping("/type_questions/{id}")
     public QuestionTypeDto getTypeQuestion(@PathVariable("id") String id){
-        log.info("Get by id type question");
-        return questionTypeDto.getQuestionTypeById(id);
+        log.info("Get question type by id {} ", id);
+        return questionTypeDto.getQuestionTypeById(UUID.fromString(id));
     }
 
 }

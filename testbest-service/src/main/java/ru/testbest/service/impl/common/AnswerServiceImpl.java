@@ -27,8 +27,8 @@ public class AnswerServiceImpl implements AnswerService {
   }
 
   @Override
-  public AnswerDto getAnswerById(String uuid) {
-    return answerDao.findByIdAndIsDeletedFalse(UUID.fromString(uuid))
+  public AnswerDto getAnswerById(UUID uuid) {
+    return answerDao.findByIdAndIsDeletedFalse(uuid)
         .map(answerConverter::convertToDto)
         .orElse(null);
   }
@@ -48,8 +48,8 @@ public class AnswerServiceImpl implements AnswerService {
   }
 
   @Override
-  public void deleteAnswerById(String uuid) {
-    Optional<Answer> oAnswer = answerDao.findByIdAndIsDeletedFalse(UUID.fromString(uuid));
+  public void deleteAnswerById(UUID uuid) {
+    Optional<Answer> oAnswer = answerDao.findByIdAndIsDeletedFalse(uuid);
     if (oAnswer.isPresent()) {
       Answer answer = oAnswer.get();
       answer.setIsDeleted(true);

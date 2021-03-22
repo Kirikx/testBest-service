@@ -30,8 +30,8 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional(readOnly = true)
-  public UserDto getUserById(String uuid) {
-    return userDao.findByIdAndIsDeletedFalse(UUID.fromString(uuid))
+  public UserDto getUserById(UUID uuid) {
+    return userDao.findByIdAndIsDeletedFalse(uuid)
         .map(userConverter::convertToDto)
         .orElse(null);
   }
@@ -54,8 +54,8 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public void deleteUserById(String uuid) {
-    Optional<User> oUser = userDao.findByIdAndIsDeletedFalse(UUID.fromString(uuid));
+  public void deleteUserById(UUID uuid) {
+    Optional<User> oUser = userDao.findByIdAndIsDeletedFalse(uuid);
     if (oUser.isPresent()) {
       User user = oUser.get();
       user.setIsDeleted(true);
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional(readOnly = true)
-  public List<UserDto> getUsersByRoleId(String roleId) {
+  public List<UserDto> getUsersByRoleId(UUID roleId) {
 //    return userDao.findByRoleId(roleId).stream()
 //        .map(userConverter::convertToDto)
 //        .collect(Collectors.toList());

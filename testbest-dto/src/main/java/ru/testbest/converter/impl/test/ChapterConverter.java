@@ -1,5 +1,6 @@
 package ru.testbest.converter.impl.test;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -33,7 +34,8 @@ public class ChapterConverter implements ConverterTest<Chapter, ChapterDto> {
   @Override
   public Chapter convertToEntity(ChapterDto dto) {
     Chapter chapter = new Chapter();
-    chapter.setId(dto.getId());
+    Optional.ofNullable(dto.getId())
+        .ifPresent(chapter::setId);
     chapter.setName(dto.getName());
     chapter.setDescription(dto.getDescription());
     chapter.setIsDeleted(dto.getIsDeleted());

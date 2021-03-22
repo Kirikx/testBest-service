@@ -25,7 +25,7 @@ public class RoleRestController {
 
     @GetMapping("/roles/{id}")
     public RoleDto getRole(@PathVariable("id") String id){
-        log.info("Get by id role");
+        log.info("Get role by id {}", id);
         return roleService.getRoleById(UUID.fromString(id));
     }
 }
