@@ -1,6 +1,7 @@
 package ru.testbest.service.impl.test;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class UserTestServiceImpl implements UserTestService {
 
   @Override
   public List<UserTestDto> getUserTests(String userId) {
-    return userTestDao.findAllByUserId(userId).stream()
+    return userTestDao.findAllByUserId(UUID.fromString(userId)).stream()
         .map(userTestConverter::convertToDto)
         .collect(Collectors.toList());
   }

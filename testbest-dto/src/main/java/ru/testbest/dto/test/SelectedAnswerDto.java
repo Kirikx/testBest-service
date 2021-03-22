@@ -2,10 +2,12 @@ package ru.testbest.dto.test;
 
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
 public class SelectedAnswerDto {
-
-  private String id;
-  private String userTestQuestionId;
-  private String answerId;
+//
+//  private UUID id;
+//  private UUID userTestQuestionId;
+//  private UUID answerId;
 }

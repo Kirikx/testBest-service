@@ -3,16 +3,10 @@ package ru.testbest.persistence.entity;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 @Data
 @Entity
@@ -20,32 +14,32 @@ import lombok.Data;
 public class Chapter {
 
     @Id
-    @Column(columnDefinition = "char")
-    String id;
+    @GeneratedValue
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @Column
-    String name;
+    private String name;
 
     @Column
-    String description;
+    private String description;
 
     @Column(name = "deleted",
-        columnDefinition = "TINYINT(1)")
-    Boolean isDeleted;
+        columnDefinition = "TINYINT")
+    private Boolean isDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "test_id")
-    Test test;
+    private Test test;
 
     @ManyToMany
     @JoinTable(
         name = "question_chapter",
         joinColumns = @JoinColumn(name = "chapter_id"),
             inverseJoinColumns = @JoinColumn(name = "question_id"))
-    Set<Question> questions;
+    private Set<Question> questions;
 
     public Chapter() {
-        id = UUID.randomUUID().toString();
         questions = new HashSet<>();
     }
 

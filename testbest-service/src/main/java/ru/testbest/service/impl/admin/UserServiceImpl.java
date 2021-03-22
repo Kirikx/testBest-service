@@ -2,6 +2,7 @@ package ru.testbest.service.impl.admin;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional(readOnly = true)
   public UserDto getUserById(String uuid) {
-    return userDao.findByIdAndIsDeletedFalse(uuid)
+    return userDao.findByIdAndIsDeletedFalse(UUID.fromString(uuid))
         .map(userConverter::convertToDto)
         .orElse(null);
   }
@@ -54,7 +55,7 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public void deleteUserById(String uuid) {
-    Optional<User> oUser = userDao.findByIdAndIsDeletedFalse(uuid);
+    Optional<User> oUser = userDao.findByIdAndIsDeletedFalse(UUID.fromString(uuid));
     if (oUser.isPresent()) {
       User user = oUser.get();
       user.setIsDeleted(true);

@@ -4,16 +4,10 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 @Data
 @Entity
@@ -21,29 +15,30 @@ import lombok.Data;
 public class UserTest {
 
     @Id
-    @Column(columnDefinition = "char")
-    String id;
+    @GeneratedValue
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @Column
-    LocalDateTime started;
+    private LocalDateTime started;
 
     @Column
-    LocalDateTime finished;
+    private LocalDateTime finished;
 
     @Column
-    Short score;
+    private Short score;
 
     @Column(name = "passed",
         columnDefinition = "TINYINT(1)")
-    Boolean isPassed;
+    private Boolean isPassed;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "test_id")
-    Test test;
+    private Test test;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    User user;
+    private User user;
 
     @OneToMany(mappedBy = "userTest",
             fetch = FetchType.LAZY,
@@ -51,7 +46,6 @@ public class UserTest {
     private Set<UserTestQuestion> userTestQuestions;
 
     public UserTest() {
-        id = UUID.randomUUID().toString();
         userTestQuestions = new HashSet<>();
     }
 
