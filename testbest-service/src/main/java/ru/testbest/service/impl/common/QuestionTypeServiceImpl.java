@@ -1,6 +1,7 @@
 package ru.testbest.service.impl.common;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class QuestionTypeServiceImpl implements QuestionTypeService {
   }
 
   @Override
-  public QuestionTypeDto getQuestionTypeById(String uuid) {
+  public QuestionTypeDto getQuestionTypeById(UUID uuid) {
     return questionTypeDao.findById(uuid)
         .map(questionTypeConverter::convertToDto)
         .orElse(null);

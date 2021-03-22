@@ -1,13 +1,14 @@
 package ru.testbest.dto.test;
 
+import java.util.UUID;
 import lombok.Data;
 
-import java.util.UUID;
-
 @Data
-public class AnswerDto {
+public class AnswerFullDto {
 
   private UUID id;
   private String answerText;
   private UUID questionId;
+  private Boolean isCorrect;
+  private Boolean isDeleted;
 }

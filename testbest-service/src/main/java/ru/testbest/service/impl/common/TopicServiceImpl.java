@@ -1,6 +1,7 @@
 package ru.testbest.service.impl.common;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class TopicServiceImpl implements TopicService {
   }
 
   @Override
-  public TopicDto getTopicById(String uuid) {
+  public TopicDto getTopicById(UUID uuid) {
     return topicDao.findById(uuid)
         .map(topicConverter::convertToDto)
         .orElse(null);
@@ -45,7 +46,7 @@ public class TopicServiceImpl implements TopicService {
   }
 
   @Override
-  public void deleteTopicById(String uuid) {
+  public void deleteTopicById(UUID uuid) {
     topicDao.deleteById(uuid);
   }
 }

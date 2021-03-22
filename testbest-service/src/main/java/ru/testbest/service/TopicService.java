@@ -1,17 +1,18 @@
 package ru.testbest.service;
 
 import java.util.List;
+import java.util.UUID;
 import ru.testbest.dto.common.TopicDto;
 
 public interface TopicService {
 
   List<TopicDto> getTopics();
 
-  TopicDto getTopicById(String uuid);
+  TopicDto getTopicById(UUID uuid);
 
   TopicDto createTopic(TopicDto topicDto);
 
   TopicDto editTopic(TopicDto topicDto);
 
-  void deleteTopicById(String uuid);
+  void deleteTopicById(UUID uuid);
 }

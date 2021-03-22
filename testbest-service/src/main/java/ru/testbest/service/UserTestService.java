@@ -1,16 +1,22 @@
 package ru.testbest.service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import ru.testbest.dto.test.QuestionDto;
 import ru.testbest.dto.test.UserTestDto;
 import ru.testbest.dto.test.UserTestQuestionDto;
 
 public interface UserTestService {
 
-  List<UserTestDto> getUserTests(String userId);
+  List<UserTestDto> getUserTests(UUID userId);
 
-  List<QuestionDto> startUserTestByTestId(String testId);
+  UserTestDto getActiveUserTestByUserId(UUID userId);
 
-  QuestionDto createUserAnswer(UserTestQuestionDto userTestQuestionDto);
+  Optional<QuestionDto> startUserTest(UUID testId, UUID userId);
+
+  Optional<QuestionDto> createUserAnswer(UserTestQuestionDto userTestQuestionDto);
+
+  UserTestDto finishUserTest(UUID userTestId);
 
 }

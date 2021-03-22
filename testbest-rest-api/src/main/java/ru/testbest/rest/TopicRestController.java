@@ -7,6 +7,7 @@ import ru.testbest.dto.common.TopicDto;
 import ru.testbest.service.impl.common.TopicServiceImpl;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,25 +24,25 @@ public class TopicRestController {
 
     @GetMapping("/topics/{id}")
     public TopicDto getTopic(@PathVariable("id") String id){
-        log.info("Get by id topic");
-        return topicService.getTopicById(id);
+        log.info("Get topic by id {}", id);
+        return topicService.getTopicById(UUID.fromString(id));
     }
 
-    @PutMapping("/topics/{id}")
+    @PutMapping("/topics")
     public TopicDto editTopics(@RequestBody TopicDto topicDto){
-        log.info("Edit by id topic");
+        log.info("Edit topic {}", topicDto);
         return topicService.editTopic(topicDto);
     }
 
     @DeleteMapping("/topics/{id}")
     public void deleteTopics(@PathVariable("id") String id){
-        log.info("Delete by id topic");
-        topicService.deleteTopicById(id);
+        log.info("Delete topic by id {}", id);
+        topicService.deleteTopicById(UUID.fromString(id));
     }
 
     @PostMapping("/topics/create")
     public TopicDto createTopics(@RequestBody TopicDto topicDto){
-        log.info("Create topic");
+        log.info("Create topic {}", topicDto);
         return topicService.createTopic(topicDto);
     }
 

@@ -1,5 +1,6 @@
 package ru.testbest.converter.impl.common;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.testbest.converter.ConverterTest;
@@ -22,7 +23,8 @@ public class TopicConverter implements ConverterTest<Topic, TopicDto> {
   @Override
   public Topic convertToEntity(TopicDto dto) {
     Topic topic = new Topic();
-    topic.setId(dto.getId());
+    Optional.ofNullable(dto.getId())
+        .ifPresent(topic::setId);
     topic.setName(dto.getName());
     topic.setDescription(dto.getDescription());
     return topic;

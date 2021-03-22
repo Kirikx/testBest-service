@@ -2,6 +2,7 @@ package ru.testbest.service.impl.common;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class AnswerServiceImpl implements AnswerService {
   }
 
   @Override
-  public AnswerDto getAnswerById(String uuid) {
+  public AnswerDto getAnswerById(UUID uuid) {
     return answerDao.findByIdAndIsDeletedFalse(uuid)
         .map(answerConverter::convertToDto)
         .orElse(null);
@@ -47,7 +48,7 @@ public class AnswerServiceImpl implements AnswerService {
   }
 
   @Override
-  public void deleteAnswerById(String uuid) {
+  public void deleteAnswerById(UUID uuid) {
     Optional<Answer> oAnswer = answerDao.findByIdAndIsDeletedFalse(uuid);
     if (oAnswer.isPresent()) {
       Answer answer = oAnswer.get();
