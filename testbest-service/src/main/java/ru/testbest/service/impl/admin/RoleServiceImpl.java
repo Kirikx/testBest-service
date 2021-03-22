@@ -2,6 +2,7 @@ package ru.testbest.service.impl.admin;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,5 +30,11 @@ public class RoleServiceImpl implements RoleService {
     return roleDao.findById(UUID.fromString(uuid))
         .map(roleConverter::convertToDto)
         .orElse(null);
+  }
+
+  @Override
+  public Optional<RoleDto> getRoleByName(String name) {
+    return roleDao.findByName(name)
+            .map(roleConverter::convertToDto);
   }
 }

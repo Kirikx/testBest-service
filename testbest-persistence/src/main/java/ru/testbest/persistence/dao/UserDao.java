@@ -15,6 +15,12 @@ public interface UserDao extends JpaRepository<User, UUID> {
 
   List<User> findAllByIsDeletedFalse();
 
-  Optional<User> findByUsernameAndIsDeletedFalse(String login);
+  Optional<User> findByUsernameAndIsDeletedFalse(String username);
+
+  //Optional<User> findByUsername(String username);- удалить
+
+  Boolean existsByUsernameAndIsDeletedFalse(String username);
+
+  Boolean existsByEmailAndIsDeletedFalse(String email);
 
 }

@@ -14,21 +14,16 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>ru.testbest</groupId>
       <artifactId>testbest-service</artifactId>
-      <version>${project.version}</version>
+      <version>0.1</version>
       <scope>compile</scope>
     </dependency>
 
     <dependency>
       <groupId>ru.testbest</groupId>
       <artifactId>testbest-dto</artifactId>
-      <version>${project.version}</version>
+      <version>0.1</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>

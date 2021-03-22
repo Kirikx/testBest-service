@@ -71,4 +71,14 @@ public class UserServiceImpl implements UserService {
 //        .collect(Collectors.toList());
     return null;
   }
+
+  @Override
+  public Boolean existEmailUser(String email) {
+    return userDao.existsByEmailAndIsDeletedFalse(email);
+  }
+
+  @Override
+  public Boolean existNameUser(String username) {
+    return userDao.existsByUsernameAndIsDeletedFalse(username);
+  }
 }
