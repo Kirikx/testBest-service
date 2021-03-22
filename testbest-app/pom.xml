@@ -72,6 +72,45 @@
           </dependency>
         </dependencies>
       </plugin>
+
+      <plugin>
+        <groupId>com.dkanejs.maven.plugins</groupId>
+        <artifactId>docker-compose-maven-plugin</artifactId>
+        <version>${docker.compose.plugin.version}</version>
+        <configuration>
+          <composeFile>${project.basedir}/docker-compose.yml</composeFile>
+          <detachedMode>true</detachedMode>
+        </configuration>
+        <executions>
+          <execution>
+            <id>pull</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>pull</goal>
+            </goals>
+            <configuration>
+              <ignorePullFailures>true</ignorePullFailures>
+            </configuration>
+          </execution>
+          <execution>
+            <id>up</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>up</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>down</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>down</goal>
+            </goals>
+            <configuration>
+              <removeVolumes>true</removeVolumes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
