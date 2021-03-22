@@ -1,16 +1,17 @@
 package ru.testbest.dto.admin.security.response;
 
 import java.util.List;
+import java.util.UUID;
 
 public class Jwt {
   private String type = "Bearer";
   private String token;
-  private String id;
+  private UUID id;
   private String username;
   private String email;
   private List<String> roles;
 
-  public Jwt(String accessToken, String id, String username, String email, List<String> roles) {
+  public Jwt(String accessToken, UUID id, String username, String email, List<String> roles) {
     this.token = accessToken;
     this.id = id;
     this.username = username;
@@ -34,11 +35,11 @@ public class Jwt {
     this.type = tokenType;
   }
 
-  public String getId() {
+  public UUID getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 

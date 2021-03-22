@@ -1,5 +1,10 @@
 package ru.testbest.service.impl.security;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,17 +12,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.testbest.persistence.entity.User;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
   private static final long serialVersionUID = 1L;
 
   @Getter
-  private final String id;
+  private final UUID id;
   @Getter
   private final String firstName;
   @Getter

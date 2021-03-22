@@ -1,8 +1,8 @@
 package ru.testbest.service.impl.admin;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,8 +26,8 @@ public class RoleServiceImpl implements RoleService {
   }
 
   @Override
-  public RoleDto getRoleById(String uuid) {
-    return roleDao.findById(UUID.fromString(uuid))
+  public RoleDto getRoleById(UUID uuid) {
+    return roleDao.findById(uuid)
         .map(roleConverter::convertToDto)
         .orElse(null);
   }
