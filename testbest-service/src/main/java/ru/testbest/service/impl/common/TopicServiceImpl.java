@@ -25,8 +25,8 @@ public class TopicServiceImpl implements TopicService {
   }
 
   @Override
-  public TopicDto getTopicById(String uuid) {
-    return topicDao.findById(UUID.fromString(uuid))
+  public TopicDto getTopicById(UUID uuid) {
+    return topicDao.findById(uuid)
         .map(topicConverter::convertToDto)
         .orElse(null);
   }
@@ -46,8 +46,8 @@ public class TopicServiceImpl implements TopicService {
   }
 
   @Override
-  public void deleteTopicById(String uuid) {
-    topicDao.deleteById(UUID.fromString(uuid));
+  public void deleteTopicById(UUID uuid) {
+    topicDao.deleteById(uuid);
   }
 }
 

@@ -27,8 +27,8 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
-  public QuestionDto getQuestionById(String uuid) {
-    return questionDao.findByIdAndIsDeletedFalse(UUID.fromString(uuid))
+  public QuestionDto getQuestionById(UUID uuid) {
+    return questionDao.findByIdAndIsDeletedFalse(uuid)
         .map(questionConverter::convertToDto)
         .orElse(null);
   }
@@ -48,8 +48,8 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
-  public void deleteQuestionById(String uuid) {
-    Optional<Question> oQuestion = questionDao.findByIdAndIsDeletedFalse(UUID.fromString(uuid));
+  public void deleteQuestionById(UUID uuid) {
+    Optional<Question> oQuestion = questionDao.findByIdAndIsDeletedFalse(uuid);
     if (oQuestion.isPresent()) {
       Question question = oQuestion.get();
       question.setIsDeleted(true);

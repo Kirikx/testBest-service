@@ -19,7 +19,7 @@ public class AnswerFullConverter implements ConverterTest<Answer, AnswerFullDto>
     AnswerFullDto answerFullDto = new AnswerFullDto();
     answerFullDto.setId(entity.getId());
     answerFullDto.setAnswerText(entity.getAnswer());
-    answerFullDto.setIsCorrect(entity.getIsCorrect());
+//    answerFullDto.setIsCorrect(entity.getIsCorrect());
     answerFullDto.setQuestionId(Optional.ofNullable(entity.getQuestion().getId())
         .orElseThrow(() -> new RuntimeException("Answer is not contains question link")));
     return answerFullDto;
@@ -30,7 +30,7 @@ public class AnswerFullConverter implements ConverterTest<Answer, AnswerFullDto>
     Answer answer = new Answer();
     answer.setId(dto.getId());
     answer.setAnswer(dto.getAnswerText());
-    answer.setIsCorrect(dto.getIsCorrect());
+//    answer.setIsCorrect(dto.getIsCorrect());
     answer.setIsDeleted(dto.getIsDeleted());
     answer.setQuestion(questionDao.findById(dto.getQuestionId())
         .orElseThrow(() -> new RuntimeException("Answer is not contains question link")));

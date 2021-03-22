@@ -25,8 +25,8 @@ public class QuestionTypeServiceImpl implements QuestionTypeService {
   }
 
   @Override
-  public QuestionTypeDto getQuestionTypeById(String uuid) {
-    return questionTypeDao.findById(UUID.fromString(uuid))
+  public QuestionTypeDto getQuestionTypeById(UUID uuid) {
+    return questionTypeDao.findById(uuid)
         .map(questionTypeConverter::convertToDto)
         .orElse(null);
   }

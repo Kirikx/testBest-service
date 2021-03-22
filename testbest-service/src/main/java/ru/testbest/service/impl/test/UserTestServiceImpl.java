@@ -3,17 +3,17 @@ package ru.testbest.service.impl.test;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.testbest.converter.impl.test.QuestionConverter;
 import ru.testbest.converter.impl.test.UserTestConverter;
 import ru.testbest.converter.impl.test.UserTestQuestionConverter;
+import ru.testbest.dto.test.AnswerDto;
 import ru.testbest.dto.test.QuestionDto;
-import ru.testbest.dto.test.SelectedAnswerDto;
 import ru.testbest.dto.test.UserTestDto;
 import ru.testbest.dto.test.UserTestQuestionDto;
 import ru.testbest.persistence.dao.QuestionDao;
@@ -41,17 +41,17 @@ public class UserTestServiceImpl implements UserTestService {
   private final UserTestQuestionConverter userTestQuestionConverter;
 
   @Override
-  public List<UserTestDto> getUserTests(String userId) {
+  public List<UserTestDto> getUserTests(UUID userId) {
     return userTestDao.findAllByUserId(userId).stream()
         .map(userTestConverter::convertToDto)
         .collect(Collectors.toList());
   }
 
   @Override
-  public UserTestDto getActiveUserTestByUserId(String userId) {
+  public UserTestDto getActiveUserTestByUserId(UUID userId) {
     Optional<UserTest> oActiveUserTest = userTestDao
         .findAllByUserIdAndFinishedIsNull(userId).stream()
-        .findFirst(); // TODO продумать механизм получения активного теста
+        .findFirst(); // TODO продумать механизм получения активного теста. Пока берем крайний
 
     return oActiveUserTest
         .map(userTestConverter::convertToDto)
@@ -59,7 +59,7 @@ public class UserTestServiceImpl implements UserTestService {
   }
 
   @Override
-  public Optional<QuestionDto> startUserTest(String testId, String userId) {
+  public Optional<QuestionDto> startUserTest(UUID testId, UUID userId) {
     UserTestDto findActiveUserTest = getActiveUserTestByUserId(userId);
     UserTestDto activeUserTest;
     if (findActiveUserTest != null) {
@@ -77,7 +77,7 @@ public class UserTestServiceImpl implements UserTestService {
     return getNextQuestion(activeUserTest.getId());
   }
 
-  private Optional<QuestionDto> getNextQuestion(String userTestId) {
+  private Optional<QuestionDto> getNextQuestion(UUID userTestId) {
     UserTest userTest = userTestDao.findById(userTestId)
         .orElseThrow(
             () -> new RuntimeException(String.format("User test id %s not found", userTestId)));
@@ -133,12 +133,12 @@ public class UserTestServiceImpl implements UserTestService {
 
     switch (questionType) {
       case SET:
-        Optional<String> oSelectedAnswerId = userTestQuestionDto.getSelectedAnswers().stream()
-            .map(SelectedAnswerDto::getId)
+        Optional<UUID> oSelectedAnswerId = userTestQuestionDto.getAnswers().stream()
+            .map(AnswerDto::getId)
             .findFirst();
         if (oSelectedAnswerId.isPresent()) {
-          String correctAnswerId = question.getAnswers().stream()
-              .filter(Answer::getIsCorrect)
+          UUID correctAnswerId = question.getAnswers().stream()
+//              .filter(Answer::getIsCorrect) // TODO добавить в entity такое поле
               .map(Answer::getId)
               .findFirst()
               .orElseThrow(() -> new RuntimeException("Question answer no contain correct answer"));
@@ -147,12 +147,12 @@ public class UserTestServiceImpl implements UserTestService {
         break;
 
       case MALTY:
-        Set<String> selectedAnswerIds = userTestQuestionDto.getSelectedAnswers().stream()
-            .map(SelectedAnswerDto::getId)
+        Set<UUID> selectedAnswerIds = userTestQuestionDto.getAnswers().stream()
+            .map(AnswerDto::getId)
             .collect(Collectors.toSet());
         if (!selectedAnswerIds.isEmpty()) {
-          Set<String> correctAnswerIds = question.getAnswers().stream()
-              .filter(Answer::getIsCorrect)
+          Set<UUID> correctAnswerIds = question.getAnswers().stream()
+//              .filter(Answer::getIsCorrect) // TODO добавить в entity такое поле
               .map(Answer::getId)
               .collect(Collectors.toSet());
           correct = selectedAnswerIds.containsAll(correctAnswerIds);
@@ -179,7 +179,7 @@ public class UserTestServiceImpl implements UserTestService {
   }
 
   @Override
-  public UserTestDto finishUserTest(String userTestId) {
+  public UserTestDto finishUserTest(UUID userTestId) {
     UserTest userTest = userTestDao.findById(userTestId)
         .orElseThrow(
             () -> new RuntimeException(String.format("User test id %s not found", userTestId)));
@@ -189,8 +189,9 @@ public class UserTestServiceImpl implements UserTestService {
     userTestDto.setScore((short) userTestDto.getUserTestQuestions().stream()
         .filter(UserTestQuestionDto::getIsCorrect)
         .count());
-    userTestDto.setIsPassed(
-        true); // TODO Добавить логику расчета признака что тест пройден (все правильные)
+    userTestDto.setIsPassed(userTest.getTest().getChapters().stream()
+        .mapToLong(ch -> ch.getQuestions().size())
+        .sum() <= userTestDto.getScore()); // TODO Тест пройден если все ответы правильные
 
     return userTestConverter.convertToDto(
         userTestDao.save(
