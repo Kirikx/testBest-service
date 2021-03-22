@@ -188,7 +188,8 @@ public class UserTestServiceImpl implements UserTestService {
     userTestDto.setScore((short) userTestDto.getUserTestQuestions().stream()
         .filter(UserTestQuestionDto::getIsCorrect)
         .count());
-    userTestDto.setIsPassed(true); // TODO Добавить логику расчета признака что тест пройден
+    userTestDto.setIsPassed(
+        true); // TODO Добавить логику расчета признака что тест пройден (все правильные)
 
     return userTestConverter.convertToDto(
         userTestDao.save(
