@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Data;
-import org.hibernate.annotations.Type;
 
 @Data
 @Entity
@@ -14,7 +13,7 @@ import org.hibernate.annotations.Type;
 public class Role {
 
     @Id
-    @Type(type = "char")
+    @Column(columnDefinition = "char")
     private String id;
 
     @Column

@@ -16,4 +16,8 @@ public interface UserService {
   void deleteUserById(String uuid);
 
   List<UserDto> getUsersByRoleId(String roleId);
+
+  Boolean existEmailUser(String email);
+
+  Boolean existNameUser(String username);
 }

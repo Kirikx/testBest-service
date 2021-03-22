@@ -13,7 +13,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Data;
-import org.hibernate.annotations.Type;
 
 @Data
 @Entity
@@ -21,7 +20,7 @@ import org.hibernate.annotations.Type;
 public class Chapter {
 
     @Id
-    @Type(type = "char")
+    @Column(columnDefinition = "char")
     String id;
 
     @Column
