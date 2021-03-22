@@ -3,17 +3,10 @@ package ru.testbest.persistence.entity;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 @Data
 @Entity
@@ -21,8 +14,9 @@ import lombok.Data;
 public class Question {
 
     @Id
-    @Column(columnDefinition = "char")
-    String id;
+    @GeneratedValue
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @Column
     String question;
@@ -48,7 +42,6 @@ public class Question {
     Set<Chapter> chapters;
 
     public Question() {
-        id = UUID.randomUUID().toString();
         answers = new HashSet<>();
     }
 

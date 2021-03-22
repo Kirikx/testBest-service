@@ -32,6 +32,8 @@ testbest-service/target/
 testbest-dto/target/
 testbest-persistence/target/
 testbest-db/target/
+testbest-front/target/
+testbest-front/node/
 # IntellijIdea files
 *.iml
 .idea

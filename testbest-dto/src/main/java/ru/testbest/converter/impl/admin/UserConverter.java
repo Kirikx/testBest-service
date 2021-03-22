@@ -1,6 +1,5 @@
 package ru.testbest.converter.impl.admin;
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -12,7 +11,7 @@ import ru.testbest.persistence.entity.User;
 @RequiredArgsConstructor
 public class UserConverter implements ConverterTest<User, UserDto> {
 
-  private static final RoleConverter roleConverter = new RoleConverter();
+  private final RoleConverter roleConverter;
 
   @Override
   public UserDto convertToDto(User entity) {
@@ -21,7 +20,6 @@ public class UserConverter implements ConverterTest<User, UserDto> {
     userDto.setFirstName(entity.getFirstName());
     userDto.setLastName(entity.getLastName());
     userDto.setUsername(entity.getUsername());
-//    userDto.setPhone(entity.getPhone());
     userDto.setEmail(entity.getEmail());
     userDto.setIsDeleted(entity.getIsDeleted());
     userDto.setRoles(entity.getRoles().stream()
@@ -39,7 +37,6 @@ public class UserConverter implements ConverterTest<User, UserDto> {
     user.setLastName(dto.getLastName());
     user.setUsername(dto.getUsername());
     user.setPassword(dto.getPassword());
-//    user.setPhone(dto.getPhone());
     user.setEmail(dto.getEmail());
     user.setIsDeleted(dto.getIsDeleted());
     user.setRoles(dto.getRoles().stream()

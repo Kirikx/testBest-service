@@ -1,6 +1,8 @@
 package ru.testbest.service;
 
 import java.util.List;
+import java.util.UUID;
+
 import ru.testbest.dto.admin.UserDto;
 
 public interface UserService {
@@ -16,4 +18,8 @@ public interface UserService {
   void deleteUserById(String uuid);
 
   List<UserDto> getUsersByRoleId(String roleId);
+
+  Boolean existEmailUser(String email);
+
+  Boolean existNameUser(String username);
 }
