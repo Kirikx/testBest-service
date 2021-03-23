@@ -13,9 +13,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import ru.testbest.service.impl.admin.UserServiceImpl;
 import ru.testbest.service.impl.security.jwt.AuthEntryPointJwt;
 import ru.testbest.service.impl.security.jwt.AuthTokenFilter;
-import ru.testbest.service.impl.security.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -23,7 +23,7 @@ import ru.testbest.service.impl.security.UserDetailsServiceImpl;
 @AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserServiceImpl userDetailsService;
     private final AuthEntryPointJwt unauthorizedHandler;
 
     @Bean
