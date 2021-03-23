@@ -40,8 +40,11 @@ export class LoginComponent implements OnInit {
         this.isLoginFailed = false;
         this.isLoggedIn = true;
         this.roles = this.tokenStorage.getUser().roles;
-        this.router.navigate(["/test"])
         //this.reloadPage();
+        //setTimeout(()=>{
+          this.router.navigate(["/tests"]);
+        //}, 5000);
+
       },
       error => {
         if (error.statusText == "Unknown Error") {
@@ -54,7 +57,7 @@ export class LoginComponent implements OnInit {
     );
   }
 
-  reloadPage(): void {
+  reloadPage() {
     window.location.reload();
   }
 }

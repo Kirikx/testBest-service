@@ -3,17 +3,16 @@
   <div class="align-center container-fluid">
     <div class="row justify-content-center">
       <div class="col-12 col-lg-9">
-        <h1 class="mbr-section-title mbr-fonts-style mb-3 display-1"><strong>Full Screen Intro</strong></h1>
-        <h2 class="mbr-section-title mbr-fonts-style mb-3 display-2">{{ content }}</h2>
-        <p class="mbr-text mbr-fonts-style display-7">This is a default project. Click any text to edit or style
-          it. Select text to insert a <a href="#">link</a>. Click the blue "Gear" icon at
-          the top right corner to hide/show buttons, text, title, and change the block background. Click the
-          red "+" button at the bottom right corner to add a new block. Use the top left menu to create new
-          pages, sites, and add new themes and extensions.</p>
-        <div class="mbr-section-btn mt-3">
-          <a class="btn btn-success display-4" href="#">Button 1</a>
-          <a class="btn btn-success-outline display-4" href="#">Button 2 &gt;</a>
-        </div>
+        <h1 class="mbr-section-title mbr-fonts-style mb-3 display-1"><strong>Сервис онлайн тестирования</strong></h1>
+        <h2 class="mbr-section-title mbr-fonts-style mb-3 display-2">Добро пожаловать!</h2>
+        <p class="mbr-text mbr-fonts-style display-7">
+          Дрогой друг, мы рады приветствовать Вас на нашем портале онлайн тестирования.
+          Данный ресурс позволит Вам проверить свои знания во всем многообразии окружающего мира.
+          Вы сможете создать собственный тест и пригласить людей для его прохождения.
+          И это все абсолютно бесплатно!</p>
+          <p class="mbr-text mbr-fonts-style display-7" *ngIf="!isLoggedIn">
+          Все что от Вас требует это войти в <a routerLink="/login">личный кабинет</a>
+          </p>
       </div>
     </div>
   </div>
