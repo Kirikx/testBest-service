@@ -22,6 +22,10 @@ public class Answer {
       columnDefinition = "TINYINT")
   private Boolean isDeleted;
 
+  @Column(name = "correct",
+      columnDefinition = "TINYINT")
+  private Boolean isCorrect;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "question_id")
   private Question question;

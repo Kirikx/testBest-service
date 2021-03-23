@@ -6,8 +6,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.testbest.converter.impl.manage.QuestionFullConverter;
 import ru.testbest.converter.impl.test.QuestionConverter;
 import ru.testbest.dto.test.QuestionDto;
+import ru.testbest.dto.test.QuestionFullDto;
 import ru.testbest.persistence.dao.QuestionDao;
 import ru.testbest.persistence.entity.Question;
 import ru.testbest.service.QuestionService;
@@ -18,11 +20,19 @@ public class QuestionServiceImpl implements QuestionService {
 
   private final QuestionDao questionDao;
   private final QuestionConverter questionConverter;
+  private final QuestionFullConverter questionFullConverter;
 
   @Override
   public List<QuestionDto> getQuestions() {
     return questionDao.findAllByIsDeletedFalse().stream()
         .map(questionConverter::convertToDto)
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<QuestionFullDto> getFullQuestions() {
+    return questionDao.findAllByIsDeletedFalse().stream()
+        .map(questionFullConverter::convertToDto)
         .collect(Collectors.toList());
   }
 
@@ -34,17 +44,24 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
-  public QuestionDto createQuestion(QuestionDto questionDto) {
-    return questionConverter.convertToDto(
-        questionDao.save(
-            questionConverter.convertToEntity(questionDto)));
+  public QuestionFullDto getQuestionFullById(UUID uuid) {
+    return questionDao.findByIdAndIsDeletedFalse(uuid)
+        .map(questionFullConverter::convertToDto)
+        .orElse(null);
   }
 
   @Override
-  public QuestionDto editQuestion(QuestionDto questionDto) {
-    return questionConverter.convertToDto(
+  public QuestionFullDto createQuestion(QuestionFullDto questionDto) {
+    return questionFullConverter.convertToDto(
         questionDao.save(
-            questionConverter.convertToEntity(questionDto)));
+            questionFullConverter.convertToEntity(questionDto)));
+  }
+
+  @Override
+  public QuestionFullDto editQuestion(QuestionFullDto questionDto) {
+    return questionFullConverter.convertToDto(
+        questionDao.save(
+            questionFullConverter.convertToEntity(questionDto)));
   }
 
   @Override

@@ -138,7 +138,7 @@ public class UserTestServiceImpl implements UserTestService {
             .findFirst();
         if (oSelectedAnswerId.isPresent()) {
           UUID correctAnswerId = question.getAnswers().stream()
-//              .filter(Answer::getIsCorrect) // TODO добавить в entity такое поле
+              .filter(Answer::getIsCorrect)
               .map(Answer::getId)
               .findFirst()
               .orElseThrow(() -> new RuntimeException("Question answer no contain correct answer"));
@@ -152,7 +152,7 @@ public class UserTestServiceImpl implements UserTestService {
             .collect(Collectors.toSet());
         if (!selectedAnswerIds.isEmpty()) {
           Set<UUID> correctAnswerIds = question.getAnswers().stream()
-//              .filter(Answer::getIsCorrect) // TODO добавить в entity такое поле
+              .filter(Answer::getIsCorrect)
               .map(Answer::getId)
               .collect(Collectors.toSet());
           correct = selectedAnswerIds.containsAll(correctAnswerIds);

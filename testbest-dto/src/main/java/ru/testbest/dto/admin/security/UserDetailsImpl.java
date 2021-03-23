@@ -1,4 +1,4 @@
-package ru.testbest.service.impl.security;
+package ru.testbest.dto.admin.security;
 
 import java.util.Collection;
 import java.util.List;

@@ -6,8 +6,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.testbest.converter.impl.manage.AnswerFullConverter;
 import ru.testbest.converter.impl.test.AnswerConverter;
 import ru.testbest.dto.test.AnswerDto;
+import ru.testbest.dto.test.AnswerFullDto;
 import ru.testbest.persistence.dao.AnswerDao;
 import ru.testbest.persistence.entity.Answer;
 import ru.testbest.service.AnswerService;
@@ -18,6 +20,7 @@ public class AnswerServiceImpl implements AnswerService {
 
   private final AnswerDao answerDao;
   private final AnswerConverter answerConverter;
+  private final AnswerFullConverter answerFullConverter;
 
   @Override
   public List<AnswerDto> getAnswers() {
@@ -34,17 +37,31 @@ public class AnswerServiceImpl implements AnswerService {
   }
 
   @Override
-  public AnswerDto createAnswer(AnswerDto answerDto) {
-    return answerConverter.convertToDto(
-        answerDao.save(
-            answerConverter.convertToEntity(answerDto)));
+  public List<AnswerFullDto> getAnswersFull() {
+    return answerDao.findAllByIsDeletedFalse().stream()
+        .map(answerFullConverter::convertToDto)
+        .collect(Collectors.toList());
   }
 
   @Override
-  public AnswerDto editAnswer(AnswerDto answerDto) {
-    return answerConverter.convertToDto(
+  public AnswerFullDto getAnswerFullById(UUID uuid) {
+    return answerDao.findByIdAndIsDeletedFalse(uuid)
+        .map(answerFullConverter::convertToDto)
+        .orElse(null);
+  }
+
+  @Override
+  public AnswerFullDto createAnswer(AnswerFullDto answerDto) {
+    return answerFullConverter.convertToDto(
         answerDao.save(
-            answerConverter.convertToEntity(answerDto)));
+            answerFullConverter.convertToEntity(answerDto)));
+  }
+
+  @Override
+  public AnswerFullDto editAnswer(AnswerFullDto answerDto) {
+    return answerFullConverter.convertToDto(
+        answerDao.save(
+            answerFullConverter.convertToEntity(answerDto)));
   }
 
   @Override

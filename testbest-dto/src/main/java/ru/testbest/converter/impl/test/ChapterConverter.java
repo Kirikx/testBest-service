@@ -5,14 +5,19 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.testbest.converter.ConverterTest;
+import ru.testbest.converter.impl.WrapperHelper;
+import ru.testbest.dto.Wrapper;
 import ru.testbest.dto.test.ChapterDto;
+import ru.testbest.dto.test.ChapterWrapDto;
+import ru.testbest.persistence.dao.ChapterDao;
 import ru.testbest.persistence.dao.TestDao;
 import ru.testbest.persistence.entity.Chapter;
 
 @Component
 @RequiredArgsConstructor
-public class ChapterConverter implements ConverterTest<Chapter, ChapterDto> {
+public class ChapterConverter implements ConverterTest<Chapter, ChapterDto>, WrapperHelper<Chapter> {
 
+  private final ChapterDao chapterDao;
   private final TestDao testDao;
   private final QuestionConverter questionConverter;
 
@@ -45,5 +50,19 @@ public class ChapterConverter implements ConverterTest<Chapter, ChapterDto> {
         .collect(Collectors.toSet()));
     return chapter;
 
+  }
+
+  @Override
+  public ChapterWrapDto wrapDto(Chapter entity) {
+    ChapterWrapDto chapterWrapDto = new ChapterWrapDto();
+    chapterWrapDto.setId(entity.getId());
+    chapterWrapDto.setName(entity.getName());
+    chapterWrapDto.setDescription(entity.getDescription());
+    return chapterWrapDto;
+  }
+
+  @Override
+  public Chapter unwrapDto(Wrapper dto) {
+    return chapterDao.findById(dto.getId()).orElse(null);
   }
 }
