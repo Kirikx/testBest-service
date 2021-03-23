@@ -30,7 +30,6 @@ export class RegisterComponent implements OnInit {
   onSubmit(): void {
     const {firstName, lastName, username, password, email} = this.form;
 
-
     this.authService.register(firstName, lastName, username, password, email).subscribe(
       data => {
         console.log(data);
