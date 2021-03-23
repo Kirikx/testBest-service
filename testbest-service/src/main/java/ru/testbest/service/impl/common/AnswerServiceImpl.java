@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.testbest.converter.impl.manage.AnswerFullConverter;
 import ru.testbest.converter.impl.test.AnswerConverter;
 import ru.testbest.dto.test.AnswerDto;
@@ -23,6 +24,7 @@ public class AnswerServiceImpl implements AnswerService {
   private final AnswerFullConverter answerFullConverter;
 
   @Override
+  @Transactional(readOnly = true)
   public List<AnswerDto> getAnswers() {
     return answerDao.findAllByIsDeletedFalse().stream()
         .map(answerConverter::convertToDto)
@@ -30,6 +32,7 @@ public class AnswerServiceImpl implements AnswerService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public AnswerDto getAnswerById(UUID uuid) {
     return answerDao.findByIdAndIsDeletedFalse(uuid)
         .map(answerConverter::convertToDto)
@@ -37,6 +40,7 @@ public class AnswerServiceImpl implements AnswerService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public List<AnswerFullDto> getAnswersFull() {
     return answerDao.findAllByIsDeletedFalse().stream()
         .map(answerFullConverter::convertToDto)
@@ -44,6 +48,7 @@ public class AnswerServiceImpl implements AnswerService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public AnswerFullDto getAnswerFullById(UUID uuid) {
     return answerDao.findByIdAndIsDeletedFalse(uuid)
         .map(answerFullConverter::convertToDto)
@@ -51,6 +56,7 @@ public class AnswerServiceImpl implements AnswerService {
   }
 
   @Override
+  @Transactional
   public AnswerFullDto createAnswer(AnswerFullDto answerDto) {
     return answerFullConverter.convertToDto(
         answerDao.save(
@@ -58,6 +64,7 @@ public class AnswerServiceImpl implements AnswerService {
   }
 
   @Override
+  @Transactional
   public AnswerFullDto editAnswer(AnswerFullDto answerDto) {
     return answerFullConverter.convertToDto(
         answerDao.save(
@@ -65,6 +72,7 @@ public class AnswerServiceImpl implements AnswerService {
   }
 
   @Override
+  @Transactional
   public void deleteAnswerById(UUID uuid) {
     Optional<Answer> oAnswer = answerDao.findByIdAndIsDeletedFalse(uuid);
     if (oAnswer.isPresent()) {

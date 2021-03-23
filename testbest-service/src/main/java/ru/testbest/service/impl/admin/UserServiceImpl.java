@@ -77,17 +77,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Boolean existEmailUser(String email) {
     return userDao.existsByEmailAndIsDeletedFalse(email);
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Boolean existNameUser(String username) {
     return userDao.existsByUsernameAndIsDeletedFalse(username);
   }
 
   @Override
-  @javax.transaction.Transactional
+  @Transactional(readOnly = true)
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     User user = userDao.findByUsernameAndIsDeletedFalse(username)
         .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));

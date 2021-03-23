@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.testbest.converter.impl.test.ChapterConverter;
 import ru.testbest.dto.common.TopicDto;
 import ru.testbest.dto.test.ChapterDto;
@@ -19,6 +20,7 @@ public class ChapterServiceImpl implements ChapterService {
   private final ChapterConverter chapterConverter;
 
   @Override
+  @Transactional(readOnly = true)
   public List<ChapterDto> getChapters() {
     return chapterDao.findAll().stream()
         .map(chapterConverter::convertToDto)
@@ -26,6 +28,7 @@ public class ChapterServiceImpl implements ChapterService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ChapterDto getChapterById(UUID uuid) {
     return chapterDao.findById(uuid)
         .map(chapterConverter::convertToDto)
@@ -33,6 +36,7 @@ public class ChapterServiceImpl implements ChapterService {
   }
 
   @Override
+  @Transactional
   public ChapterDto createChapter(ChapterDto topicDto) {
     return chapterConverter.convertToDto(
         chapterDao.save(
@@ -40,6 +44,7 @@ public class ChapterServiceImpl implements ChapterService {
   }
 
   @Override
+  @Transactional
   public ChapterDto editChapter(ChapterDto topicDto) {
     return chapterConverter.convertToDto(
         chapterDao.save(
@@ -47,6 +52,7 @@ public class ChapterServiceImpl implements ChapterService {
   }
 
   @Override
+  @Transactional
   public void deleteChapterById(UUID uuid) {
     chapterDao.deleteById(uuid);
   }
