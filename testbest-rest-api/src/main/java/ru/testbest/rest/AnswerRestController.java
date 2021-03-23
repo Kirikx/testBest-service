@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.testbest.dto.test.AnswerDto;
+import ru.testbest.dto.test.AnswerFullDto;
 import ru.testbest.service.impl.common.AnswerServiceImpl;
 
 
@@ -22,20 +23,32 @@ public class AnswerRestController {
     private final AnswerServiceImpl answerService;
 
     @PostMapping("/answers/create")
-    public AnswerDto createAnswer(@RequestBody AnswerDto answerDto){
+    public AnswerFullDto createAnswer(@RequestBody AnswerFullDto answerDto){
         log.info("Create answer {}", answerDto);
         return answerService.createAnswer(answerDto);
     }
 
     @PutMapping("/answers")
-    public AnswerDto editAnswer(@RequestBody AnswerDto answerDto){
+    public AnswerFullDto editAnswer(@RequestBody AnswerFullDto answerDto){
         log.info("Edit answer {}", answerDto);
         return answerService.editAnswer(answerDto);
     }
 
+    @GetMapping("/answers/full")
+    public List<AnswerFullDto> getListFullAnswers(){
+        log.info("Get list answer");
+        return answerService.getAnswersFull();
+    }
+
+    @GetMapping("/answers/full/{id}")
+    public AnswerDto getAnswerFull(@PathVariable String id){
+        log.info("Get full answer by id {}", id);
+        return answerService.getAnswerById(UUID.fromString(id));
+    }
+
     @GetMapping("/answers")
     public List<AnswerDto> getListAnswers(){
-        log.info("Get list answer");
+        log.info("Get full list answer");
         return answerService.getAnswers();
     }
 

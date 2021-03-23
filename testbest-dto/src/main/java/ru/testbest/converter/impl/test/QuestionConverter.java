@@ -23,8 +23,6 @@ public class QuestionConverter implements ConverterTest<Question, QuestionDto> {
     questionDto.setQuestionAnswers(entity.getAnswers().stream()
         .map(answerConverter::convertToDto)
         .collect(Collectors.toSet()));
-    questionDto.setIsDeleted(entity.getIsDeleted());
-//    questionDto.setChapterId(entity.getChapters()); TODO Уточнить необходимость списка
     return questionDto;
   }
 

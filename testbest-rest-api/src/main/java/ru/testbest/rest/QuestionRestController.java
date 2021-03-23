@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.testbest.dto.test.QuestionDto;
+import ru.testbest.dto.test.QuestionFullDto;
 import ru.testbest.service.impl.common.QuestionServiceImpl;
 
 @Slf4j
@@ -33,8 +34,20 @@ public class QuestionRestController {
         return questionService.getQuestionById(UUID.fromString(id));
     }
 
+    @GetMapping("/questions/full")
+    public List<QuestionDto> getFullQuestions(){
+        log.info("Get all full question");
+        return questionService.getQuestions();
+    }
+
+    @GetMapping("/questions/full/{id}")
+    public QuestionDto getFullQuestion(@PathVariable("id") String id){
+        log.info("Get full question by id {}", id);
+        return questionService.getQuestionById(UUID.fromString(id));
+    }
+
     @PutMapping("/questions")
-    public QuestionDto editQuestion(@RequestBody QuestionDto questionDto){
+    public QuestionFullDto editQuestion(@RequestBody QuestionFullDto questionDto){
         log.info("Edit question {}", questionDto);
         return questionService.editQuestion(questionDto);
     }
@@ -46,7 +59,7 @@ public class QuestionRestController {
     }
 
     @PostMapping("/questions/create")
-    public QuestionDto createQuestion(@RequestBody QuestionDto questionDto){
+    public QuestionFullDto createQuestion(@RequestBody QuestionFullDto questionDto){
         log.info("Create question {}", questionDto);
         return questionService.createQuestion(questionDto);
     }

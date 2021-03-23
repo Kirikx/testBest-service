@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.testbest.converter.impl.common.TopicConverter;
 import ru.testbest.dto.common.TopicDto;
 import ru.testbest.persistence.dao.TopicDao;
@@ -18,6 +19,7 @@ public class TopicServiceImpl implements TopicService {
   private final TopicConverter topicConverter;
 
   @Override
+  @Transactional(readOnly = true)
   public List<TopicDto> getTopics() {
     return topicDao.findAll().stream()
         .map(topicConverter::convertToDto)
@@ -25,6 +27,7 @@ public class TopicServiceImpl implements TopicService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public TopicDto getTopicById(UUID uuid) {
     return topicDao.findById(uuid)
         .map(topicConverter::convertToDto)
@@ -32,6 +35,7 @@ public class TopicServiceImpl implements TopicService {
   }
 
   @Override
+  @Transactional
   public TopicDto createTopic(TopicDto topicDto) {
     return topicConverter.convertToDto(
         topicDao.save(
@@ -39,6 +43,7 @@ public class TopicServiceImpl implements TopicService {
   }
 
   @Override
+  @Transactional
   public TopicDto editTopic(TopicDto topicDto) {
     return topicConverter.convertToDto(
         topicDao.save(
@@ -46,6 +51,7 @@ public class TopicServiceImpl implements TopicService {
   }
 
   @Override
+  @Transactional
   public void deleteTopicById(UUID uuid) {
     topicDao.deleteById(uuid);
   }

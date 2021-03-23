@@ -9,6 +9,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.testbest.converter.impl.test.QuestionConverter;
 import ru.testbest.converter.impl.test.UserTestConverter;
 import ru.testbest.converter.impl.test.UserTestQuestionConverter;
@@ -41,6 +42,7 @@ public class UserTestServiceImpl implements UserTestService {
   private final UserTestQuestionConverter userTestQuestionConverter;
 
   @Override
+  @Transactional(readOnly = true)
   public List<UserTestDto> getUserTests(UUID userId) {
     return userTestDao.findAllByUserId(userId).stream()
         .map(userTestConverter::convertToDto)
@@ -48,6 +50,7 @@ public class UserTestServiceImpl implements UserTestService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public UserTestDto getActiveUserTestByUserId(UUID userId) {
     Optional<UserTest> oActiveUserTest = userTestDao
         .findAllByUserIdAndFinishedIsNull(userId).stream()
@@ -59,6 +62,7 @@ public class UserTestServiceImpl implements UserTestService {
   }
 
   @Override
+  @Transactional
   public Optional<QuestionDto> startUserTest(UUID testId, UUID userId) {
     UserTestDto findActiveUserTest = getActiveUserTestByUserId(userId);
     UserTestDto activeUserTest;
@@ -76,6 +80,7 @@ public class UserTestServiceImpl implements UserTestService {
     }
     return getNextQuestion(activeUserTest.getId());
   }
+
 
   private Optional<QuestionDto> getNextQuestion(UUID userTestId) {
     UserTest userTest = userTestDao.findById(userTestId)
@@ -106,6 +111,7 @@ public class UserTestServiceImpl implements UserTestService {
   }
 
   @Override
+  @Transactional
   public Optional<QuestionDto> createUserAnswer(UserTestQuestionDto userTestQuestionDto) {
     userTestQuestionDto.setAnswered(LocalDateTime.now());
     userTestQuestionDto.setIsCorrect(
@@ -138,7 +144,7 @@ public class UserTestServiceImpl implements UserTestService {
             .findFirst();
         if (oSelectedAnswerId.isPresent()) {
           UUID correctAnswerId = question.getAnswers().stream()
-//              .filter(Answer::getIsCorrect) // TODO добавить в entity такое поле
+              .filter(Answer::getIsCorrect)
               .map(Answer::getId)
               .findFirst()
               .orElseThrow(() -> new RuntimeException("Question answer no contain correct answer"));
@@ -152,7 +158,7 @@ public class UserTestServiceImpl implements UserTestService {
             .collect(Collectors.toSet());
         if (!selectedAnswerIds.isEmpty()) {
           Set<UUID> correctAnswerIds = question.getAnswers().stream()
-//              .filter(Answer::getIsCorrect) // TODO добавить в entity такое поле
+              .filter(Answer::getIsCorrect)
               .map(Answer::getId)
               .collect(Collectors.toSet());
           correct = selectedAnswerIds.containsAll(correctAnswerIds);
@@ -179,6 +185,7 @@ public class UserTestServiceImpl implements UserTestService {
   }
 
   @Override
+  @Transactional
   public UserTestDto finishUserTest(UUID userTestId) {
     UserTest userTest = userTestDao.findById(userTestId)
         .orElseThrow(

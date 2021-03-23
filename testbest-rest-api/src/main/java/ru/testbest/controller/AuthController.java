@@ -14,7 +14,7 @@ import ru.testbest.dto.admin.UserDto;
 import ru.testbest.dto.admin.security.request.Auth;
 import ru.testbest.dto.admin.security.response.Jwt;
 import ru.testbest.dto.MessageResponse;
-import ru.testbest.service.impl.security.UserDetailsImpl;
+import ru.testbest.dto.admin.security.UserDetailsImpl;
 import ru.testbest.service.impl.admin.RoleServiceImpl;
 import ru.testbest.service.impl.admin.UserServiceImpl;
 import ru.testbest.service.impl.security.jwt.JwtUtils;
