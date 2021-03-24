@@ -4,7 +4,7 @@ services:
     image: mysql:latest
     volumes:
       #      Монтируем внешнюю папку для хранения данных
-      - .mysql-data/db:/var/lib/mysql
+      - /db/.mysql-data/db:/var/lib/mysql
       #      Инициализация БД из дампа при старте
 #      - ./sqlinit:/docker-entrypoint-initdb.d
 
