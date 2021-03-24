@@ -12,7 +12,6 @@ import {Router} from "@angular/router";
 export class BoardUserComponent implements OnInit {
   content?: string;
 
-  // constructor(private userService: UserService) { }
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private renderer2: Renderer2,
@@ -28,7 +27,6 @@ export class BoardUserComponent implements OnInit {
     if (!this.tokenStorage.getToken()) {
       this.router.navigate(["/home"])
     }
-
 
     //TODO Будут запросы на получение данных:
     //      список тестов
