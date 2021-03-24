@@ -18,7 +18,9 @@ services:
       MYSQL_PASSWORD: 12345678
 
   test_app:
-    build: .
+    build:
+      context: .
+      dockerfile: ./Dockerfile.app
     restart: always
     ports:
       - 8080:8080
@@ -26,3 +28,11 @@ services:
       - mysql_db
     links:
       - mysql_db
+
+  nginx_front:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.front
+    restart: always
+    ports:
+      - 80:80
