@@ -10,8 +10,8 @@ export class AppComponent implements OnInit {
   private roles: string[] = [];
   title = "testbest-front";
   isLoggedIn = false;
-  showAdminBoard = false;
-  showModeratorBoard = false;
+  // showAdminBoard = false;
+  // showModeratorBoard = false;
   username?: string;
 
   constructor(private tokenStorageService: TokenStorageService) {
@@ -23,9 +23,9 @@ export class AppComponent implements OnInit {
     if (this.isLoggedIn) {
       const user = this.tokenStorageService.getUser();
       this.roles = user.roles;
-
-      this.showAdminBoard = this.roles.includes('ROLE_ADMIN');
-      this.showModeratorBoard = this.roles.includes('ROLE_MANAGER');
+      //
+      // this.showAdminBoard = this.roles.includes('ROLE_ADMIN');
+      // this.showModeratorBoard = this.roles.includes('ROLE_MANAGER');
 
       this.username = user.username;
     }
