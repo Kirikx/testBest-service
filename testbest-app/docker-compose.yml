@@ -4,7 +4,7 @@ services:
     image: mysql:latest
     volumes:
       #      Монтируем внешнюю папку для хранения данных
-      - /home/.mysql-data/db:/var/lib/mysql
+      - .mysql-data/db:/var/lib/mysql
       #      Инициализация БД из дампа при старте
 #      - ./sqlinit:/docker-entrypoint-initdb.d
 
@@ -18,7 +18,6 @@ services:
       MYSQL_PASSWORD: 12345678
 
   test_app:
-    #    image: test_app
     build: .
     #    restart: always
     ports:
