@@ -24,11 +24,21 @@
 
     <changeSet id="2" author="author">
         <sqlFile dbms="mysql, h2"
-                 encoding="utf8"
-                 path="01-insert-initial-data.sql"
-                 relativeToChangelogFile="true"
-                 splitStatements="true"
-                 stripComments="true"/>
+          encoding="utf8"
+          path="01-insert-initial-data.sql"
+          relativeToChangelogFile="true"
+          splitStatements="true"
+          stripComments="true"/>
+        <rollback/>
+    </changeSet>
+
+    <changeSet id="3" author="KVSemenov">
+        <sqlFile dbms="mysql, h2"
+          encoding="utf8"
+          path="01-insert-role-and-test.sql"
+          relativeToChangelogFile="true"
+          splitStatements="true"
+          stripComments="true"/>
         <rollback/>
     </changeSet>
 
