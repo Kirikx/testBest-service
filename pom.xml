@@ -87,38 +87,6 @@
           <detachedMode>true</detachedMode>
           <build>true</build>
         </configuration>
-        <!--        <executions>-->
-        <!--          <execution>-->
-        <!--            <id>pull</id>-->
-        <!--            <phase>verify</phase>-->
-        <!--            <goals>-->
-        <!--              <goal>pull</goal>-->
-        <!--            </goals>-->
-        <!--            <configuration>-->
-        <!--              <ignorePullFailures>true</ignorePullFailures>-->
-        <!--            </configuration>-->
-        <!--          </execution>-->
-        <!--          <execution>-->
-        <!--            <id>up</id>-->
-        <!--            <phase>verify</phase>-->
-        <!--            <goals>-->
-        <!--              <goal>up</goal>-->
-        <!--            </goals>-->
-        <!--            <configuration>-->
-        <!--              <composeFile>${project.basedir}/testbest-app/docker-compose.yml</composeFile>-->
-        <!--            </configuration>-->
-        <!--          </execution>-->
-        <!--          <execution>-->
-        <!--            <id>down</id>-->
-        <!--            <phase>verify</phase>-->
-        <!--            <goals>-->
-        <!--              <goal>down</goal>-->
-        <!--            </goals>-->
-        <!--            <configuration>-->
-        <!--              <removeVolumes>true</removeVolumes>-->
-        <!--            </configuration>-->
-        <!--          </execution>-->
-        <!--        </executions>-->
       </plugin>
     </plugins>
   </build>
