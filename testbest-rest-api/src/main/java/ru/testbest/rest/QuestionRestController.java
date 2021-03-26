@@ -35,15 +35,15 @@ public class QuestionRestController {
     }
 
     @GetMapping("/questions/full")
-    public List<QuestionDto> getFullQuestions(){
+    public List<QuestionFullDto> getFullQuestions() {
         log.info("Get all full question");
-        return questionService.getQuestions();
+        return questionService.getFullQuestions();
     }
 
     @GetMapping("/questions/full/{id}")
-    public QuestionDto getFullQuestion(@PathVariable("id") String id){
+    public QuestionFullDto getFullQuestion(@PathVariable("id") String id) {
         log.info("Get full question by id {}", id);
-        return questionService.getQuestionById(UUID.fromString(id));
+        return questionService.getQuestionFullById(UUID.fromString(id));
     }
 
     @PutMapping("/questions")
