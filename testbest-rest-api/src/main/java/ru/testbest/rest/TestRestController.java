@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.testbest.dto.test.QuestionDto;
-import ru.testbest.dto.test.QuestionFullDto;
 import ru.testbest.dto.test.TestDto;
 import ru.testbest.service.impl.common.TestServiceImpl;
 
@@ -25,31 +23,31 @@ public class TestRestController {
 
     @GetMapping("/tests")
     public List<TestDto> getQuestions(){
-        log.info("Get all question");
+        log.info("Get all tests");
         return testService.getTests();
     }
 
     @GetMapping("/tests/{id}")
     public TestDto getQuestion(@PathVariable("id") String id){
-        log.info("Get question by id {}", id);
+        log.info("Get test by id {}", id);
         return testService.getTestById(UUID.fromString(id));
     }
 
     @PutMapping("/tests")
     public TestDto editQuestion(@RequestBody TestDto testDto){
-        log.info("Edit question {}", testDto);
+        log.info("Edit test {}", testDto);
         return testService.editTest(testDto);
     }
 
     @DeleteMapping("/tests/{id}")
     public void deleteQuestion(@PathVariable("id") String id){
-        log.info("Delete question by id {}", id);
+        log.info("Delete test by id {}", id);
         testService.deleteTestById(UUID.fromString(id));
     }
 
     @PostMapping("/tests/create")
     public TestDto createQuestion(@RequestBody TestDto testDto){
-        log.info("Create question {}", testDto);
+        log.info("Create test {}", testDto);
         return testService.createTest(testDto);
     }
 

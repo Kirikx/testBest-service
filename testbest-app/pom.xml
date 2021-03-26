@@ -13,30 +13,12 @@
   <artifactId>testbest-app</artifactId>
 
   <dependencies>
-<!--    <dependency>-->
-<!--      <groupId>org.springframework.boot</groupId>-->
-<!--      <artifactId>spring-boot</artifactId>-->
-<!--    </dependency>-->
-<!--    <dependency>-->
-<!--      <groupId>org.springframework.boot</groupId>-->
-<!--      <artifactId>spring-boot-autoconfigure</artifactId>-->
-<!--    </dependency>-->
-<!--    <dependency>-->
-<!--      <groupId>org.springframework.boot</groupId>-->
-<!--      <artifactId>spring-boot-starter-thymeleaf</artifactId>-->
-<!--    </dependency>-->
 
-<!--    <dependency>-->
-<!--      <groupId>com.h2database</groupId>-->
-<!--      <artifactId>h2</artifactId>-->
-<!--      <scope>test</scope>-->
-<!--&lt;!&ndash;      <scope>compile</scope>&ndash;&gt;-->
-<!--    </dependency>-->
-<!--    <dependency>-->
-<!--      <groupId>org.liquibase</groupId>-->
-<!--      <artifactId>liquibase-core</artifactId>-->
-<!--      <scope>runtime</scope>-->
-<!--    </dependency>-->
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-boot-starter</artifactId>
+      <version>3.0.0</version>
+    </dependency>
 
     <dependency>
       <groupId>ru.testbest</groupId>
