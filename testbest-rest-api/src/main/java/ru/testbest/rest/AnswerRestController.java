@@ -41,9 +41,9 @@ public class AnswerRestController {
     }
 
     @GetMapping("/answers/full/{id}")
-    public AnswerDto getAnswerFull(@PathVariable String id){
+    public AnswerFullDto getAnswerFull(@PathVariable String id) {
         log.info("Get full answer by id {}", id);
-        return answerService.getAnswerById(UUID.fromString(id));
+        return answerService.getAnswerFullById(UUID.fromString(id));
     }
 
     @GetMapping("/answers")
