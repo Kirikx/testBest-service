@@ -23,39 +23,51 @@ import ru.testbest.service.impl.security.jwt.AuthTokenFilter;
 @AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserServiceImpl userDetailsService;
-    private final AuthEntryPointJwt unauthorizedHandler;
+  private final UserServiceImpl userDetailsService;
+  private final AuthEntryPointJwt unauthorizedHandler;
+  private static final String[] AUTH_SWAGGER_WHITELIST = {
+    // -- swagger ui
+    "/swagger-resources/**",
+    "/swagger-ui/**",
+    "/v2/api-docs",
+    "/webjars/**",
+    "/configuration/**"
+  };
 
-    @Bean
-    public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter();
-    }
+  @Bean
+  public AuthTokenFilter authenticationJwtTokenFilter() {
+    return new AuthTokenFilter();
+  }
 
-    @Override
-    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-    }
+  @Override
+  public void configure(AuthenticationManagerBuilder authenticationManagerBuilder)
+    throws Exception {
+    authenticationManagerBuilder.userDetailsService(userDetailsService)
+      .passwordEncoder(passwordEncoder());
+  }
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+  @Bean
+  @Override
+  public AuthenticationManager authenticationManagerBean() throws Exception {
+    return super.authenticationManagerBean();
+  }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("/api/auth/**").permitAll()
-                .antMatchers("/api/test/**").permitAll()
-                .anyRequest().authenticated();
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.cors().and().csrf().disable()
+      .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+      .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+      .authorizeRequests().antMatchers("/api/auth/**").permitAll()
+      .antMatchers("/api/test/**").permitAll()
+      .antMatchers(AUTH_SWAGGER_WHITELIST).permitAll()
+      .anyRequest().authenticated();
 
-        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-    }
+    http
+      .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+  }
 }
