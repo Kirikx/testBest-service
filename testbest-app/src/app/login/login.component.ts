@@ -40,24 +40,7 @@ export class LoginComponent implements OnInit {
         this.isLoginFailed = false;
         this.isLoggedIn = true;
         this.roles = this.tokenStorage.getUser().roles;
-     //   this.reloadPage();
-
-    //    setTimeout(()=>{
-     //     if (this.roles.length > 1) {
-    //        this.reloadComponent("/home")
-            this.router.navigate(["/home"]);
-    /*      } else if (this.roles[0] == 'ROLE_USER') {
-            this.reloadComponent("/tests")
-          //  this.router.navigate(["/tests"]);
-          } else if (this.roles[0] == 'ROLE_MANAGER') {
-            this.reloadComponent("/manager")
-            this.router.navigate(["/manager"]);
-          } else if (this.roles[0] == 'ROLE_ADMIN') {
-            this.router.navigate(["/admin"]);
-     //       this.reloadComponent("/admin")
-          }*/
-     //   }, 5000);
-
+        this.reloadPage();
       },
       error => {
         if (error.statusText == "Unknown Error") {
@@ -73,10 +56,4 @@ export class LoginComponent implements OnInit {
   reloadPage() {
     window.location.reload();
   }
-
-  // reloadComponent(path) {
-  //   this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-  //   this.router.onSameUrlNavigation = 'reload';
-  //   this.router.navigate([path]);
-  // }
 }
