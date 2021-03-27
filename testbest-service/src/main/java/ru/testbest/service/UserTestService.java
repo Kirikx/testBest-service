@@ -11,12 +11,16 @@ public interface UserTestService {
 
   List<UserTestDto> getUserTests(UUID userId);
 
-  UserTestDto getActiveUserTestByUserId(UUID userId);
+  UserTestDto getActiveUserTest(UUID userId);
 
   Optional<QuestionDto> startUserTest(UUID testId, UUID userId);
 
-  Optional<QuestionDto> createUserAnswer(UserTestQuestionDto userTestQuestionDto);
+  Optional<QuestionDto> createUserAnswer(UserTestQuestionDto userTestQuestionDto, UUID userId);
+
+  Optional<QuestionDto> getNextQuestion(UUID userTestId);
 
   UserTestDto finishUserTest(UUID userTestId);
+
+  List<UserTestQuestionDto> getFailQuestionsByUserTestId(UUID userTestId);
 
 }

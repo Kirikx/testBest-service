@@ -2,8 +2,6 @@ package ru.testbest.service;
 
 import java.util.List;
 import java.util.UUID;
-import ru.testbest.dto.test.QuestionDto;
-import ru.testbest.dto.test.QuestionFullDto;
 import ru.testbest.dto.test.TestDto;
 
 public interface TestService {
@@ -17,5 +15,7 @@ public interface TestService {
   TestDto createTest(TestDto questionDto);
 
   TestDto editTest(TestDto questionDto);
+
+  List<TestDto> getTestsByAuthorId(UUID authorId);
 
 }
