@@ -1,4 +1,4 @@
-package ru.testbest.controller;
+package ru.testbest.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

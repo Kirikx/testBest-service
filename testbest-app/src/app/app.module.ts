@@ -14,6 +14,11 @@ import {BoardManagerComponent} from './board-manager/board-manager.component';
 import {BoardUserComponent} from './board-user/board-user.component';
 
 import {authInterceptorProviders} from './_helpers/auth.interceptor';
+import { ModalOutletComponent } from './_modals/modal-outlet/modal-outlet.component';
+import { PortalToDirective } from './_modals/portal/portal.directive';
+import { ModalComponent } from './_modals/modal/modal.component';
+import {CommonModule} from "@angular/common";
+import {PortalModule} from "./_modals/portal/portal.module";
 
 @NgModule({
   declarations: [
@@ -24,13 +29,22 @@ import {authInterceptorProviders} from './_helpers/auth.interceptor';
     ProfileComponent,
     BoardAdminComponent,
     BoardManagerComponent,
-    BoardUserComponent
+    BoardUserComponent,
+    ModalOutletComponent,
+    PortalToDirective,
+    ModalComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    CommonModule,
+    PortalModule
+  ],
+  exports: [
+    ModalOutletComponent,
+    ModalComponent
   ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]
