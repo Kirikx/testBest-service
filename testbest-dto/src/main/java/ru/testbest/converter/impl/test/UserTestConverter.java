@@ -43,8 +43,12 @@ public class UserTestConverter implements ConverterTest<UserTest, UserTestDto> {
     userTest.setFinished(dto.getFinished());
     userTest.setScore(dto.getScore());
     userTest.setIsPassed(dto.getIsPassed());
-    userTest.setTest(testDao.findById(dto.getUserId()).orElse(null));
-    userTest.setUser(userDao.findById(dto.getUserId()).orElse(null));
+    userTest.setTest(
+        dto.getTestId() != null ?
+            testDao.findById(dto.getTestId()).orElse(null) : null);
+    userTest.setUser(
+        dto.getUserId() != null ?
+            userDao.findById(dto.getUserId()).orElse(null) : null);
     userTest.setUserTestQuestions(dto.getUserTestQuestions().stream()
         .map(userTestQuestionConverter::convertToEntity)
         .collect(Collectors.toSet()));

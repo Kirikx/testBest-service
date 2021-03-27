@@ -15,7 +15,7 @@ import ru.testbest.persistence.entity.UserTestQuestion;
 public class UserTestQuestionConverter implements
     ConverterTest<UserTestQuestion, UserTestQuestionDto> {
 
-//  private final SelectedAnswerConverter selectedAnswerConverter;
+  //  private final SelectedAnswerConverter selectedAnswerConverter;
   private final AnswerConverter answerConverter;
   private final UserTestDao userTestDao;
   private final QuestionDao questionDao;
@@ -32,8 +32,8 @@ public class UserTestQuestionConverter implements
     userTestQuestionDto
         .setQuestionId(entity.getQuestion() == null ? null : entity.getQuestion().getId());
     userTestQuestionDto.setAnswers(entity.getAnswers().stream()
-            .map(answerConverter::convertToDto)
-            .collect(Collectors.toSet()));
+        .map(answerConverter::convertToDto)
+        .collect(Collectors.toSet()));
     return userTestQuestionDto;
 
   }
@@ -46,11 +46,15 @@ public class UserTestQuestionConverter implements
     userTestQuestion.setFreeAnswer(dto.getFreeAnswer());
     userTestQuestion.setAnswered(dto.getAnswered());
     userTestQuestion.setIsCorrect(dto.getIsCorrect());
-    userTestQuestion.setUserTest(userTestDao.findById(dto.getUserTestId()).orElse(null));
-    userTestQuestion.setQuestion(questionDao.findById(dto.getQuestionId()).orElse(null));
+    userTestQuestion.setUserTest(
+        dto.getUserTestId() != null ?
+            userTestDao.findById(dto.getUserTestId()).orElse(null) : null);
+    userTestQuestion.setQuestion(
+        dto.getQuestionId() != null ?
+            questionDao.findById(dto.getQuestionId()).orElse(null) : null);
     userTestQuestion.setAnswers(dto.getAnswers().stream()
-            .map(answerConverter::convertToEntity)
-            .collect(Collectors.toSet()));
+        .map(answerConverter::convertToEntity)
+        .collect(Collectors.toSet()));
     return userTestQuestion;
 
   }

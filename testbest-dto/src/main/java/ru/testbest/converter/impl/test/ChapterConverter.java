@@ -44,7 +44,9 @@ public class ChapterConverter implements ConverterTest<Chapter, ChapterDto>, Wra
     chapter.setName(dto.getName());
     chapter.setDescription(dto.getDescription());
     chapter.setIsDeleted(dto.getIsDeleted());
-    chapter.setTest(testDao.findById(dto.getTestId()).orElse(null));
+    chapter.setTest(
+        dto.getTestId() != null ?
+            testDao.findById(dto.getTestId()).orElse(null) : null);
     chapter.setQuestions(dto.getQuestions().stream()
         .map(questionConverter::convertToEntity)
         .collect(Collectors.toSet()));

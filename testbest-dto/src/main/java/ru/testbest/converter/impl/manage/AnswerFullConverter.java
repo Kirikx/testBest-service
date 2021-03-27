@@ -33,8 +33,8 @@ public class AnswerFullConverter implements ConverterTest<Answer, AnswerFullDto>
     answer.setAnswer(dto.getAnswerText());
     answer.setIsCorrect(dto.getIsCorrect());
     answer.setIsDeleted(dto.getIsDeleted());
-    answer.setQuestion(questionDao.findById(dto.getQuestionId())
-        .orElseThrow(() -> new RuntimeException("Answer is not contains question link")));
+    answer.setQuestion(dto.getQuestionId() != null ? questionDao.findById(dto.getQuestionId())
+        .orElseThrow(() -> new RuntimeException("Answer is not contains question link")) : null);
     return answer;
 
   }

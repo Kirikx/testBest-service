@@ -45,8 +45,12 @@ public class TestConverter implements ConverterTest<Test, TestDto> {
     test.setCreated(dto.getCreated());
     test.setDuration(dto.getDuration());
     test.setIsDeleted(dto.getIsDeleted());
-    test.setTopic(topicDao.findById(dto.getTopicId()).orElse(null));
-    test.setAuthor(userDao.findById(dto.getAuthorId()).orElse(null));
+    test.setTopic(
+        dto.getTopicId() != null ?
+            topicDao.findById(dto.getTopicId()).orElse(null) : null);
+    test.setAuthor(
+        dto.getAuthorId() != null ?
+            userDao.findById(dto.getAuthorId()).orElse(null) : null);
     test.setChapters(dto.getChapters().stream()
         .map(chapterConverter::convertToEntity)
         .collect(Collectors.toSet()));

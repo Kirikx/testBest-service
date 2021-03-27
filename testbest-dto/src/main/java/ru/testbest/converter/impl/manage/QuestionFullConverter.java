@@ -42,8 +42,12 @@ public class QuestionFullConverter implements ConverterTest<Question, QuestionFu
     question.setId(dto.getId());
     question.setQuestion(dto.getQuestionText());
     question.setIsDeleted(dto.getIsDeleted());
-    question.setTopic(topicDao.findById(dto.getTopicId()).orElse(null));
-    question.setQuestionType(questionTypeDao.findById(dto.getQuestionTypeId()).orElse(null));
+    question.setTopic(
+        dto.getTopicId() != null ?
+            topicDao.findById(dto.getTopicId()).orElse(null) : null);
+    question.setQuestionType(
+        dto.getQuestionTypeId() != null ?
+            questionTypeDao.findById(dto.getQuestionTypeId()).orElse(null) : null);
     question.setAnswers(dto.getQuestionAnswers().stream()
         .map(answerFullConverter::convertToEntity)
         .collect(Collectors.toSet()));
