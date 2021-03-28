@@ -1,6 +1,7 @@
 package ru.testbest.converter.impl.test;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 import org.modelmapper.ModelMapper;
@@ -61,8 +62,12 @@ public class TestConverter extends AbstractMapper<Test, TestDto> {
 
   @Override
   public void mapSpecificFields(TestDto source, Test destination) {
-    destination.setAuthor(userDao.findById(source.getAuthorId()).orElse(null));
-    destination.setTopic(topicDao.findById(source.getTopicId()).orElse(null));
+    Optional.ofNullable(source.getAuthorId()).ifPresent(id ->
+        destination.setAuthor(userDao.findById(id).orElse(null))
+    );
+    Optional.ofNullable(source.getTopicId()).ifPresent(id ->
+        destination.setTopic(topicDao.findById(source.getTopicId()).orElse(null))
+    );
   }
 
 }
