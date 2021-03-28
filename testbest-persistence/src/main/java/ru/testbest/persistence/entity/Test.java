@@ -76,5 +76,6 @@ public class Test implements BaseEntity {
     @PrePersist
     public void toCreate() {
         setCreated(LocalDateTime.now());
+        setIsDeleted(false);
     }
 }
