@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -70,5 +71,10 @@ public class Test implements BaseEntity {
     public void removeChapter(Chapter chapter) {
         chapters.remove(chapter);
         chapter.setTest(null);
+    }
+
+    @PrePersist
+    public void toCreate() {
+        setCreated(LocalDateTime.now());
     }
 }
