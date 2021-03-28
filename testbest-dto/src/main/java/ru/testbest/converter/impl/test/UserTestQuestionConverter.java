@@ -1,57 +1,73 @@
 package ru.testbest.converter.impl.test;
 
+import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
+import java.util.UUID;
+import javax.annotation.PostConstruct;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.testbest.converter.ConverterTest;
+import ru.testbest.converter.impl.AbstractMapper;
 import ru.testbest.dto.test.UserTestQuestionDto;
 import ru.testbest.persistence.dao.QuestionDao;
 import ru.testbest.persistence.dao.UserTestDao;
 import ru.testbest.persistence.entity.UserTestQuestion;
 
 @Component
-@RequiredArgsConstructor
-public class UserTestQuestionConverter implements
-    ConverterTest<UserTestQuestion, UserTestQuestionDto> {
+public class UserTestQuestionConverter extends
+    AbstractMapper<UserTestQuestion, UserTestQuestionDto> {
 
-//  private final SelectedAnswerConverter selectedAnswerConverter;
-  private final AnswerConverter answerConverter;
+  private final ModelMapper mapper;
   private final UserTestDao userTestDao;
   private final QuestionDao questionDao;
 
-  @Override
-  public UserTestQuestionDto convertToDto(UserTestQuestion entity) {
-    UserTestQuestionDto userTestQuestionDto = new UserTestQuestionDto();
-    userTestQuestionDto.setId(entity.getId());
-    userTestQuestionDto.setFreeAnswer(entity.getFreeAnswer());
-    userTestQuestionDto.setAnswered(entity.getAnswered());
-    userTestQuestionDto.setIsCorrect(entity.getIsCorrect());
-    userTestQuestionDto
-        .setUserTestId(entity.getUserTest() == null ? null : entity.getUserTest().getId());
-    userTestQuestionDto
-        .setQuestionId(entity.getQuestion() == null ? null : entity.getQuestion().getId());
-    userTestQuestionDto.setAnswers(entity.getAnswers().stream()
-            .map(answerConverter::convertToDto)
-            .collect(Collectors.toSet()));
-    return userTestQuestionDto;
+  @Autowired
+  public UserTestQuestionConverter(
+      ModelMapper mapper,
+      UserTestDao userTestDao,
+      QuestionDao questionDao
+  ) {
+    super(UserTestQuestion.class, UserTestQuestionDto.class);
+    this.mapper = mapper;
+    this.userTestDao = userTestDao;
+    this.questionDao = questionDao;
+  }
 
+  @PostConstruct
+  public void setupMapper() {
+    mapper.createTypeMap(UserTestQuestion.class, UserTestQuestionDto.class)
+        .addMappings(m -> m.skip(UserTestQuestionDto::setUserTestId))
+        .addMappings(m -> m.skip(UserTestQuestionDto::setQuestionId))
+        .setPostConverter(toDtoConverter());
+    mapper.createTypeMap(UserTestQuestionDto.class, UserTestQuestion.class)
+        .addMappings(m -> m.skip(UserTestQuestion::setUserTest))
+        .addMappings(m -> m.skip(UserTestQuestion::setQuestion))
+        .setPostConverter(toEntityConverter());
   }
 
   @Override
-  public UserTestQuestion convertToEntity(UserTestQuestionDto dto) {
-    UserTestQuestion userTestQuestion = new UserTestQuestion();
-    Optional.ofNullable(dto.getId())
-        .ifPresent(userTestQuestion::setId);
-    userTestQuestion.setFreeAnswer(dto.getFreeAnswer());
-    userTestQuestion.setAnswered(dto.getAnswered());
-    userTestQuestion.setIsCorrect(dto.getIsCorrect());
-    userTestQuestion.setUserTest(userTestDao.findById(dto.getUserTestId()).orElse(null));
-    userTestQuestion.setQuestion(questionDao.findById(dto.getQuestionId()).orElse(null));
-    userTestQuestion.setAnswers(dto.getAnswers().stream()
-            .map(answerConverter::convertToEntity)
-            .collect(Collectors.toSet()));
-    return userTestQuestion;
+  public void mapSpecificFields(UserTestQuestion source, UserTestQuestionDto destination) {
+    destination.setUserTestId(getUserTestId(source));
+    destination.setQuestionId(getQuestionId(source));
+  }
 
+  private UUID getUserTestId(UserTestQuestion source) {
+    return Objects.isNull(source) || Objects.isNull(source.getUserTest()) ? null
+        : source.getUserTest().getId();
+  }
+
+  private UUID getQuestionId(UserTestQuestion source) {
+    return Objects.isNull(source) || Objects.isNull(source.getQuestion()) ? null
+        : source.getQuestion().getId();
+  }
+
+  @Override
+  public void mapSpecificFields(UserTestQuestionDto source, UserTestQuestion destination) {
+    Optional.ofNullable(source.getUserTestId()).ifPresent(id ->
+        destination.setUserTest(userTestDao.findById(id).orElse(null))
+    );
+    Optional.ofNullable(source.getQuestionId()).ifPresent(id ->
+        destination.setQuestion(questionDao.findById(source.getQuestionId()).orElse(null))
+    );
   }
 }

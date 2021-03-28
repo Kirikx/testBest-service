@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.testbest.dto.test.TestDto;
+import ru.testbest.dto.test.UserTestDto;
+import ru.testbest.service.UserTestService;
 import ru.testbest.service.impl.common.TestServiceImpl;
 
 @Slf4j
@@ -16,8 +18,9 @@ import ru.testbest.service.impl.common.TestServiceImpl;
 public class TestRestController {
 
     private final TestServiceImpl testService;
+    private final UserTestService userTestService;
 
-    @GetMapping("/")
+    @GetMapping
     public List<TestDto> getTests(){
         log.info("Get all tests");
         return testService.getTests();
@@ -29,7 +32,7 @@ public class TestRestController {
         return testService.getTestById(UUID.fromString(id));
     }
 
-    @PutMapping("/")
+    @PutMapping
     public TestDto editTest(@RequestBody TestDto testDto){
         log.info("Edit test {}", testDto);
         return testService.editTest(testDto);
@@ -45,6 +48,12 @@ public class TestRestController {
     public TestDto createTest(@RequestBody TestDto testDto){
         log.info("Create test {}", testDto);
         return testService.createTest(testDto);
+    }
+
+    @GetMapping("/user/{id}")
+    public List<UserTestDto> getAllTestOfUser(@PathVariable("id") UUID id){
+        log.info("Get all test for user {}", id);
+        return userTestService.getUserTests(id);
     }
 
 }
