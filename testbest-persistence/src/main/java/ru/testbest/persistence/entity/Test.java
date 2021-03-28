@@ -16,12 +16,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import ru.testbest.persistence.BaseEntity;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "test")
-public class Test {
+public class Test implements BaseEntity {
 
     @Id
     @GeneratedValue
@@ -34,7 +35,7 @@ public class Test {
     @Column
     private String description;
 
-    @Column
+    @Column(updatable = false)
     private LocalDateTime created;
 
     @Column

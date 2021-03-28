@@ -1,12 +1,11 @@
 package ru.testbest.converter.impl;
 
-import ru.testbest.dto.Wrapper;
-import ru.testbest.dto.test.ChapterWrapDto;
+import ru.testbest.dto.BaseDTO;
 
 public interface WrapperHelper<E> {
 
-  Wrapper wrapDto(E entity);
+  BaseDTO wrapDto(E entity);
 
-  E unwrapDto(Wrapper dto);
+  E unwrapDto(BaseDTO dto);
 
 }

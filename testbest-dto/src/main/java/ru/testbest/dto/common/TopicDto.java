@@ -1,11 +1,11 @@
 package ru.testbest.dto.common;
 
-import lombok.Data;
-
 import java.util.UUID;
+import lombok.Data;
+import ru.testbest.dto.BaseDTO;
 
 @Data
-public class TopicDto {
+public class TopicDto implements BaseDTO {
 
   private UUID id;
   private String name;

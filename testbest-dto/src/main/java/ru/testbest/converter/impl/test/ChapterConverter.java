@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.testbest.converter.ConverterTest;
 import ru.testbest.converter.impl.WrapperHelper;
-import ru.testbest.dto.Wrapper;
+import ru.testbest.dto.BaseDTO;
 import ru.testbest.dto.test.ChapterDto;
 import ru.testbest.dto.test.ChapterWrapDto;
 import ru.testbest.persistence.dao.ChapterDao;
@@ -64,7 +64,7 @@ public class ChapterConverter implements ConverterTest<Chapter, ChapterDto>, Wra
   }
 
   @Override
-  public Chapter unwrapDto(Wrapper dto) {
+  public Chapter unwrapDto(BaseDTO dto) {
     return chapterDao.findById(dto.getId()).orElse(null);
   }
 }

@@ -16,12 +16,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import ru.testbest.persistence.BaseEntity;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "user_test")
-public class UserTest {
+public class UserTest implements BaseEntity {
 
     @Id
     @GeneratedValue

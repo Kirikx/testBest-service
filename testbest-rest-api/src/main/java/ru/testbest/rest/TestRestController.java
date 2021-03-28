@@ -22,31 +22,31 @@ public class TestRestController {
     private final TestServiceImpl testService;
 
     @GetMapping("/tests")
-    public List<TestDto> getQuestions(){
+    public List<TestDto> getTests() {
         log.info("Get all tests");
         return testService.getTests();
     }
 
     @GetMapping("/tests/{id}")
-    public TestDto getQuestion(@PathVariable("id") String id){
+    public TestDto getTest(@PathVariable("id") String id) {
         log.info("Get test by id {}", id);
         return testService.getTestById(UUID.fromString(id));
     }
 
     @PutMapping("/tests")
-    public TestDto editQuestion(@RequestBody TestDto testDto){
+    public TestDto editTest(@RequestBody TestDto testDto) {
         log.info("Edit test {}", testDto);
         return testService.editTest(testDto);
     }
 
     @DeleteMapping("/tests/{id}")
-    public void deleteQuestion(@PathVariable("id") String id){
+    public void deleteTest(@PathVariable("id") String id) {
         log.info("Delete test by id {}", id);
         testService.deleteTestById(UUID.fromString(id));
     }
 
     @PostMapping("/tests/create")
-    public TestDto createQuestion(@RequestBody TestDto testDto){
+    public TestDto createTest(@RequestBody TestDto testDto) {
         log.info("Create test {}", testDto);
         return testService.createTest(testDto);
     }
