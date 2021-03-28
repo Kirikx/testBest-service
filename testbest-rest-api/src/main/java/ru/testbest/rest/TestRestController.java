@@ -20,7 +20,7 @@ public class TestRestController {
     private final TestServiceImpl testService;
     private final UserTestService userTestService;
 
-    @GetMapping("/")
+    @GetMapping
     public List<TestDto> getTests(){
         log.info("Get all tests");
         return testService.getTests();
@@ -32,7 +32,7 @@ public class TestRestController {
         return testService.getTestById(UUID.fromString(id));
     }
 
-    @PutMapping("/")
+    @PutMapping
     public TestDto editTest(@RequestBody TestDto testDto){
         log.info("Edit test {}", testDto);
         return testService.editTest(testDto);
@@ -50,7 +50,7 @@ public class TestRestController {
         return testService.createTest(testDto);
     }
 
-    @GetMapping("/tests/user/{id}")
+    @GetMapping("/user/{id}")
     public List<UserTestDto> getAllTestOfUser(@PathVariable("id") UUID id){
         log.info("Get all test for user {}", id);
         return userTestService.getUserTests(id);

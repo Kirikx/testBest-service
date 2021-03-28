@@ -8,12 +8,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import ru.testbest.persistence.BaseEntity;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "question_type")
-public class QuestionType {
+public class QuestionType implements BaseEntity {
 
     @Id
     @GeneratedValue

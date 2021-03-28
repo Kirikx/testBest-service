@@ -15,12 +15,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import ru.testbest.persistence.BaseEntity;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "chapter")
-public class Chapter {
+public class Chapter implements BaseEntity {
 
     @Id
     @GeneratedValue

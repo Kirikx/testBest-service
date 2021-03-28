@@ -13,15 +13,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import ru.testbest.persistence.BaseEntity;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "test")
-public class Test {
+public class Test implements BaseEntity {
 
     @Id
     @GeneratedValue
@@ -34,7 +36,7 @@ public class Test {
     @Column
     private String description;
 
-    @Column
+    @Column(updatable = false)
     private LocalDateTime created;
 
     @Column
@@ -69,5 +71,11 @@ public class Test {
     public void removeChapter(Chapter chapter) {
         chapters.remove(chapter);
         chapter.setTest(null);
+    }
+
+    @PrePersist
+    public void toCreate() {
+        setCreated(LocalDateTime.now());
+        setIsDeleted(false);
     }
 }

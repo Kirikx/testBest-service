@@ -1,32 +1,16 @@
 package ru.testbest.converter.impl.common;
 
-import java.util.Optional;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.testbest.converter.ConverterTest;
+import ru.testbest.converter.impl.AbstractMapper;
 import ru.testbest.dto.common.TopicDto;
 import ru.testbest.persistence.entity.Topic;
 
 @Component
-@RequiredArgsConstructor
-public class TopicConverter implements ConverterTest<Topic, TopicDto> {
+public class TopicConverter extends AbstractMapper<Topic, TopicDto> {
 
-  @Override
-  public TopicDto convertToDto(Topic entity) {
-    TopicDto topicDto = new TopicDto();
-    topicDto.setId(entity.getId());
-    topicDto.setName(entity.getName());
-    topicDto.setDescription(entity.getDescription());
-    return topicDto;
-  }
-
-  @Override
-  public Topic convertToEntity(TopicDto dto) {
-    Topic topic = new Topic();
-    Optional.ofNullable(dto.getId())
-        .ifPresent(topic::setId);
-    topic.setName(dto.getName());
-    topic.setDescription(dto.getDescription());
-    return topic;
+  @Autowired
+  public TopicConverter() {
+    super(Topic.class, TopicDto.class);
   }
 }

@@ -2,6 +2,7 @@ package ru.testbest.dto;
 
 import java.util.UUID;
 
-public interface Wrapper {
+public interface BaseDTO {
+
   UUID getId();
 }
