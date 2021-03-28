@@ -1,13 +1,13 @@
 package ru.testbest.service.impl.common;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.testbest.converter.impl.test.ChapterConverter;
-import ru.testbest.dto.common.TopicDto;
 import ru.testbest.dto.test.ChapterDto;
 import ru.testbest.persistence.dao.ChapterDao;
 import ru.testbest.service.ChapterService;
@@ -38,6 +38,9 @@ public class ChapterServiceImpl implements ChapterService {
   @Override
   @Transactional
   public ChapterDto createChapter(ChapterDto topicDto) {
+    if (topicDto.getId() != null) {
+      throw new RuntimeException();
+    }
     return chapterConverter.convertToDto(
         chapterDao.save(
             chapterConverter.convertToEntity(topicDto)));
@@ -46,6 +49,8 @@ public class ChapterServiceImpl implements ChapterService {
   @Override
   @Transactional
   public ChapterDto editChapter(ChapterDto topicDto) {
+    Optional.ofNullable(topicDto.getId())
+        .orElseThrow(RuntimeException::new);
     return chapterConverter.convertToDto(
         chapterDao.save(
             chapterConverter.convertToEntity(topicDto)));

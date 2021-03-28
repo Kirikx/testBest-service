@@ -1,6 +1,7 @@
 package ru.testbest.service.impl.common;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,9 @@ public class TopicServiceImpl implements TopicService {
   @Override
   @Transactional
   public TopicDto createTopic(TopicDto topicDto) {
+    if (topicDto.getId() != null) {
+      throw new RuntimeException();
+    }
     return topicConverter.convertToDto(
         topicDao.save(
             topicConverter.convertToEntity(topicDto)));
@@ -45,6 +49,8 @@ public class TopicServiceImpl implements TopicService {
   @Override
   @Transactional
   public TopicDto editTopic(TopicDto topicDto) {
+    Optional.ofNullable(topicDto.getId())
+        .orElseThrow(RuntimeException::new);
     return topicConverter.convertToDto(
         topicDao.save(
             topicConverter.convertToEntity(topicDto)));

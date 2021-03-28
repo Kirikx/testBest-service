@@ -4,7 +4,17 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import ru.testbest.dto.admin.security.UserDetailsImpl;
 import ru.testbest.dto.test.TestDto;
 import ru.testbest.dto.test.UserTestDto;
 import ru.testbest.service.UserTestService;
@@ -45,9 +55,10 @@ public class TestRestController {
     }
 
     @PostMapping("/create")
-    public TestDto createTest(@RequestBody TestDto testDto){
+    public TestDto createTest(@RequestBody TestDto testDto, Authentication authentication) {
         log.info("Create test {}", testDto);
-        return testService.createTest(testDto);
+        UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+        return testService.createTest(testDto, currentUser.getId());
     }
 
     @GetMapping("/user/{id}")

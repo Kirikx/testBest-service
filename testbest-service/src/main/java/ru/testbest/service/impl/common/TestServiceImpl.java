@@ -38,7 +38,11 @@ public class TestServiceImpl implements TestService {
 
   @Override
   @Transactional
-  public TestDto createTest(TestDto questionDto) {
+  public TestDto createTest(TestDto questionDto, UUID userId) {
+    if (userId == null && questionDto.getId() != null) {
+      throw new RuntimeException();
+    }
+    questionDto.setAuthorId(userId);
     return testConverter.convertToDto(
         testDao.save(
             testConverter.convertToEntity(questionDto)));
@@ -47,6 +51,8 @@ public class TestServiceImpl implements TestService {
   @Override
   @Transactional
   public TestDto editTest(TestDto questionDto) {
+    Optional.ofNullable(questionDto.getId())
+        .orElseThrow(RuntimeException::new);
     return testConverter.convertToDto(
         testDao.save(
             testConverter.convertToEntity(questionDto)));

@@ -58,6 +58,9 @@ public class AnswerServiceImpl implements AnswerService {
   @Override
   @Transactional
   public AnswerFullDto createAnswer(AnswerFullDto answerDto) {
+    if (answerDto.getId() != null) {
+      throw new RuntimeException();
+    }
     return answerFullConverter.convertToDto(
         answerDao.save(
             answerFullConverter.convertToEntity(answerDto)));
@@ -66,6 +69,8 @@ public class AnswerServiceImpl implements AnswerService {
   @Override
   @Transactional
   public AnswerFullDto editAnswer(AnswerFullDto answerDto) {
+    Optional.ofNullable(answerDto.getId())
+        .orElseThrow(RuntimeException::new);
     return answerFullConverter.convertToDto(
         answerDao.save(
             answerFullConverter.convertToEntity(answerDto)));

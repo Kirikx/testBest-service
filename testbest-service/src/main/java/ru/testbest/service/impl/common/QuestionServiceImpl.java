@@ -58,6 +58,9 @@ public class QuestionServiceImpl implements QuestionService {
   @Override
   @Transactional
   public QuestionFullDto createQuestion(QuestionFullDto questionDto) {
+    if (questionDto.getId() != null) {
+      throw new RuntimeException();
+    }
     return questionFullConverter.convertToDto(
         questionDao.save(
             questionFullConverter.convertToEntity(questionDto)));
@@ -66,6 +69,8 @@ public class QuestionServiceImpl implements QuestionService {
   @Override
   @Transactional
   public QuestionFullDto editQuestion(QuestionFullDto questionDto) {
+    Optional.ofNullable(questionDto.getId())
+        .orElseThrow(RuntimeException::new);
     return questionFullConverter.convertToDto(
         questionDao.save(
             questionFullConverter.convertToEntity(questionDto)));
