@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -14,11 +14,12 @@ import {BoardManagerComponent} from './board-manager/board-manager.component';
 import {BoardUserComponent} from './board-user/board-user.component';
 
 import {authInterceptorProviders} from './_helpers/auth.interceptor';
-import { ModalOutletComponent } from './_modals/modal-outlet/modal-outlet.component';
-import { PortalToDirective } from './_modals/portal/portal.directive';
-import { ModalComponent } from './_modals/modal/modal.component';
+import {ModalOutletComponent} from './_modals/modal-outlet/modal-outlet.component';
+import {PortalToDirective} from './_modals/portal/portal.directive';
+import {ModalComponent} from './_modals/modal/modal.component';
 import {CommonModule} from "@angular/common";
 import {PortalModule} from "./_modals/portal/portal.module";
+import {BoardTestComponent} from './board-test/board-test.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import {PortalModule} from "./_modals/portal/portal.module";
     BoardUserComponent,
     ModalOutletComponent,
     PortalToDirective,
-    ModalComponent
+    ModalComponent,
+    BoardTestComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,7 +42,8 @@ import {PortalModule} from "./_modals/portal/portal.module";
     FormsModule,
     HttpClientModule,
     CommonModule,
-    PortalModule
+    PortalModule,
+    ReactiveFormsModule
   ],
   exports: [
     ModalOutletComponent,

@@ -1,25 +1,28 @@
-import {Component, Inject, OnInit, Renderer2} from '@angular/core';
+import {Component, Inject, OnChanges, OnInit, Renderer2, SimpleChanges} from '@angular/core';
 import {Router} from "@angular/router";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {DOCUMENT} from "@angular/common";
 import {Test} from "../_models/test";
-import {ManagerService} from "../_services/manager.service";
+import {TestService} from "../_services/test.service";
 import {TopicService} from "../_services/topic.service";
 import {Topic} from "../_models/topic";
 
 @Component({
   selector: 'app-board-moderator',
   templateUrl: './board-manager.component.html',
-  styleUrls: ['./board-manager.component.css']
-})
-export class BoardManagerComponent implements OnInit {
-  test: Test;
-  tests: Array<Test>;
+  styleUrls: ['./board-manager.component.css'],
 
+})
+export class BoardManagerComponent implements OnInit{
+  //Переменные для Topic
   topic: Topic;
   isCreateTopicFailed = false;
   newTopic = true;
   topics: Array<Topic>;
+
+  //Переменные для Test
+  test: Test;
+  tests: Array<Test>;
 
 
   showModal = false;
@@ -30,9 +33,9 @@ export class BoardManagerComponent implements OnInit {
     private renderer2: Renderer2,
     private router: Router,
     private tokenStorage: TokenStorageService,
-    private managerService: ManagerService,
+    private testService: TestService,
     private topicService: TopicService) {
-    this.test = new Test()
+    this.test = new Test();
     this.topic = new Topic();
   }
 
@@ -46,9 +49,25 @@ export class BoardManagerComponent implements OnInit {
     }
 
     this.getTopics();
+    this.getTest();
   }
 
-  //Обработка топика
+  //Обработка вкладки Тематика тестирования
+  getNameTopic(id: String): String {
+    return this.topics.find(topic => topic.id === id).name;
+  }
+
+  openModalNewTopic() {
+    this.showModal = true;
+    this.newTopic = true;
+  }
+
+  openModalEditTopic(id: String) {
+    this.showModal = true;
+    this.newTopic = false;
+    this.topic = this.topics.find(topic => topic.id === id);
+  }
+
   getTopics() {
     this.topicService.getTopics().subscribe(
       data => {
@@ -62,17 +81,6 @@ export class BoardManagerComponent implements OnInit {
         }
       }
     )
-  }
-
-  openModalNewTopic() {
-    this.showModal = true;
-    this.newTopic = true;
-  }
-
-  openModalEditTopic(id: String) {
-    this.showModal = true;
-    this.newTopic = false;
-    this.topic = this.topics.find(topic => topic.id === id);
   }
 
   createTopic(): void {
@@ -136,27 +144,12 @@ export class BoardManagerComponent implements OnInit {
     );
   }
 
-  //Обработка теста
-  createTest(): void {
-    this.managerService.createTest(this.test).subscribe(
+  //Обработка вкладки Тест
+  getTest() {
+    //TODO как сделаю метод на основании конкретного автора, переключиться
+    this.testService.getTests().subscribe(
       data => {
-        if (data.statusCode == "200") {
-          this.managerService.getManagerTest().subscribe(
-            data => {
-              console.log(data);
-              console.log('==============');
-              this.tests = data;
-              console.log(this.tests);
-            },
-            error => {
-              if (error.statusText == "Unknown Error") {
-                this.errorMessage = "Server is not responding";
-              } else {
-                this.errorMessage = error.message;
-              }
-            }
-          )
-        }
+        this.tests = data;
       },
       error => {
         if (error.statusText == "Unknown Error") {
@@ -165,8 +158,11 @@ export class BoardManagerComponent implements OnInit {
           this.errorMessage = error.message;
         }
       }
-    );
+    )
+  }
 
+  redirectToCreateTest(): void {
+    this.router.navigate(["/test"])
   }
 
   //Обработка модальных окон
