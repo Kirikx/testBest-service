@@ -10,8 +10,8 @@ import ru.testbest.dto.BaseDTO;
 public class QuestionDto implements BaseDTO {
 
   private UUID id;
-  private String questionText;
+  private String question;
   private UUID topicId;
   private UUID questionTypeId;
-  private Set<AnswerDto> questionAnswers = new HashSet<>();
+  private Set<AnswerDto> answers = new HashSet<>();
 }

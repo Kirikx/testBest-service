@@ -1,15 +1,13 @@
 package ru.testbest.dto.test;
 
-import java.util.UUID;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import ru.testbest.dto.BaseDTO;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class AnswerFullDto implements BaseDTO {
+public class AnswerFullDto extends AnswerDto implements BaseDTO {
 
-  private UUID id;
-  private String answerText;
-  private UUID questionId;
   private Boolean isCorrect;
   private Boolean isDeleted;
 }

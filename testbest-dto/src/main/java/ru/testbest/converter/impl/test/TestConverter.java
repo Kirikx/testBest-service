@@ -7,7 +7,7 @@ import javax.annotation.PostConstruct;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.testbest.converter.AbstractMapper;
+import ru.testbest.converter.impl.AbstractMapper;
 import ru.testbest.dto.test.TestDto;
 import ru.testbest.persistence.dao.TopicDao;
 import ru.testbest.persistence.dao.UserDao;
@@ -70,5 +70,4 @@ public class TestConverter extends AbstractMapper<Test, TestDto> {
         destination.setTopic(topicDao.findById(source.getTopicId()).orElse(null))
     );
   }
-
 }

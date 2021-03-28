@@ -8,6 +8,6 @@ import ru.testbest.dto.BaseDTO;
 public class AnswerDto implements BaseDTO {
 
   private UUID id;
-  private String answerText;
+  private String answer;
   private UUID questionId;
 }

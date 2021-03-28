@@ -1,9 +1,10 @@
-package ru.testbest.converter;
+package ru.testbest.converter.impl;
 
 import java.util.Objects;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.testbest.converter.ConverterTest;
 import ru.testbest.dto.BaseDTO;
 import ru.testbest.persistence.BaseEntity;
 
