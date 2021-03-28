@@ -3,7 +3,7 @@
   <div class="align-center container">
     <div class="row justify-content-center">
       <div class="col-lg-5 mx-auto mbr-form" data-form-type="formoid">
-        <form *ngIf="!isLoggedIn" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate
+        <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate
               class="mbr-form form-with-styler" data-form-title="Form Name">
           <div class="dragArea row">
             <div class="col-12">
@@ -18,16 +18,16 @@
             </div>
 
             <div class="col-12 form-group" data-for="login">
-              <input id="login-form1-u" type="text" name="login" [(ngModel)]="form.username" required
+              <input id="login-form1-u" type="text" name="login" [(ngModel)]="auth.username" required
                      #username="ngModel"
                      placeholder="Логин" data-form-field="Login" class="form-control">
               <div class="alert-danger col-12" role="alert" *ngIf="username.errors && f.submitted">
-                <div *ngIf="password.errors.required">Поле обязательно для заполнения</div>
+                <div *ngIf="username.errors.required">Поле обязательно для заполнения</div>
               </div>
             </div>
 
             <div class="col-12 form-group" data-for="password">
-              <input id="password-form1-u" type="password" name="password" [(ngModel)]="form.password" required
+              <input id="password-form1-u" type="password" name="password" [(ngModel)]="auth.password" required
                      #password="ngModel"
                      placeholder="Пароль" data-form-field="Password" class="form-control">
               <div class="alert-danger col-12" role="alert" *ngIf="password.errors && f.submitted">

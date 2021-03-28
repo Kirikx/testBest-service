@@ -72,19 +72,28 @@
               <div class="container">
                 <div class="mbr-section-head">
                   <h4 class="mbr-section-subtitle mbr-fonts-style align-center mb-0 mt-2 display-5">
-                   Создание теста
+                    Создание теста
                   </h4>
                 </div>
                 <div class="row justify-content-center mt-4">
                   <div class="col-lg-8 mx-auto mbr-form" data-form-type="id">
-                    <form action="https://mobirise.eu/" method="POST" class="mbr-form form-with-styler" data-form-title="Form Name">
-                      <input type="hidden" name="id" data-form-field="id">
+                    <form name="form" (ngSubmit)="f.form.valid && createTest()" #f="ngForm" novalidate
+                          class="mbr-form form-with-styler" data-form-title="Form Name">
+                      <input type="hidden" name="id" data-form-field="id" [(ngModel)]="test.id" #id="ngModel">
                       <div class="dragArea row">
                         <div class="col-md col-sm-12 form-group" data-for="name">
-                          <input type="text" name="name" placeholder="Название теста" data-form-field="name" class="form-control" value="" id="name-form5-17">
+                          <input id="name-form5-17" type="text" name="nameTest" placeholder="Название теста"
+                                 [(ngModel)]="test.name" required #name="ngModel"
+                                 data-form-field="name" class="form-control">
                         </div>
+                        <div class="alert-danger col-12" role="alert" *ngIf="name.errors && f.submitted">
+                          <div *ngIf="name.errors.required">Поле обязательно для заполнения</div>
+                        </div>
+
                         <div class="col-12 form-group" data-for="textarea">
-                          <textarea name="description" placeholder="Описание" data-form-field="textarea" class="form-control" id="textarea-form5-17"></textarea>
+                          <textarea name="description" placeholder="Описание" data-form-field="textarea"
+                                    [(ngModel)]="test.description" #description="ngModel"
+                                    class="form-control" id="textarea-form5-17"></textarea>
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
                           <button type="submit" class="btn btn-success display-4">Создать тест</button>
@@ -95,6 +104,14 @@
                 </div>
               </div>
             </div>
+
+            <!--            <app-modal *ngIf="showModal" (close)="closeModal()">-->
+            <!--              <div>-->
+            <!--                <h3>First Modal</h3>-->
+            <!--              </div>-->
+            <!--            </app-modal>-->
+
+            <!--            <button (click)="openModal()">Open First Modal</button>-->
           </div>
           <div id="tab3" class="tab-pane" role="tabpanel">
             <div class="row">
@@ -110,8 +127,9 @@
                     </ul>
                   </li>
                 </ul>
+
                 <div class="col-lg-12 col-md-12 col-sm-12 align-right mbr-section-btn">
-                  <button class="btn btn-success display-4">Добавить</button>
+                  <button class="btn btn-success display-4" (click)="openModalNewTopic()">Добавить</button>
                 </div>
               </div>
             </div>
@@ -125,17 +143,71 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td>Тестове имя</td>
-                    <td>Тестовое описание</td>
+                  <tr *ngFor="let topic of topics" (click)="openModalEditTopic(topic.id)">
+                    <td>{{ topic.name }}</td>
+                    <td>{{ topic.description }}</td>
                   </tr>
                   </tbody>
                 </table>
               </div>
             </div>
+
+            <app-modal *ngIf="showModal" (close)="closeModal()">
+              <form name="formTopic" (ngSubmit)="fTopic.form.valid && createTopic()" #fTopic="ngForm" novalidate
+                    class="mbr-form form-with-styler" data-form-title="Form Topic">
+                <div class="mbr-section-head">
+                  <h4 *ngIf="newTopic" class="mbr-section-subtitle mbr-fonts-style align-center mb-0 mt-2 display-5">
+                    Добавление тематики
+                  </h4>
+                  <h4 *ngIf="!newTopic" class="mbr-section-subtitle mbr-fonts-style align-center mb-0 mt-2 display-5">
+                    Редактирование тематики
+                  </h4>
+                </div>
+
+                <div class="dragArea row">
+                  <div class="col-12 form-group" data-for="id">
+                    <input type="hidden" name="id" data-form-field="id" [(ngModel)]="topic.id" #id="ngModel">
+                  </div>
+                  <div class="col-12 form-group" data-for="name">
+                    <input id="name-form6-1" type="text" name="nameTopic" placeholder="Наименование тематики"
+                           [(ngModel)]="topic.name" required #name="ngModel"
+                           data-form-field="name" class="form-control">
+                    <div class="col-12 form-group alert-danger" role="alert" *ngIf="name.errors && fTopic.submitted">
+                      <div *ngIf="name.errors.required">Поле обязательно для заполнения</div>
+                    </div>
+                  </div>
+                  <div class="col-12 form-group" data-for="textarea">
+                          <textarea name="description" placeholder="Описание" data-form-field="textarea"
+                                    [(ngModel)]="topic.description" #description="ngModel"
+                                    class="form-control" id="textarea-form6-2"></textarea>
+                    <div class="col-12 form-group alert-danger" role="alert"
+                         *ngIf="fTopic.submitted && isCreateTopicFailed && newTopic">
+                      Ошибка при добавление тематики: {{ errorMessage }}
+                    </div>
+                    <div class="col-12 form-group alert-danger" role="alert"
+                         *ngIf="fTopic.submitted && isCreateTopicFailed && !newTopic">
+                      Ошибка при редактировании тематики: {{ errorMessage }}
+                    </div>
+                  </div>
+                  <div *ngIf="newTopic" class="col-12 mbr-section-btn">
+                    <button type="submit" class="btn btn-success display-4">Добавить</button>
+                  </div>
+                  <div *ngIf="!newTopic" class="col-12 mbr-section-btn">
+                    <table>
+                      <tr>
+                        <th scope="col"><button (click)="editTopic()" class="btn btn-success display-4">Редактировать</button></th>
+                        <th scope="col"><button (click)="deleteTopic()" class="btn btn-success display-4">Удалить</button></th>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </form>
+            </app-modal>
+
           </div>
         </div>
       </div>
     </div>
   </div>
+  <app-modal-outlet></app-modal-outlet>
 </section>
