@@ -12,35 +12,37 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RequestMapping("/api/topics")
 public class TopicRestController {
 
     private final TopicServiceImpl topicService;
 
-    @GetMapping("/topics")
+    @GetMapping("/")
     public List<TopicDto> getTopics(){
         log.info("Get all topics");
         return topicService.getTopics();
     }
 
-    @GetMapping("/topics/{id}")
+    @GetMapping("/{id}")
     public TopicDto getTopic(@PathVariable("id") String id){
         log.info("Get topic by id {}", id);
         return topicService.getTopicById(UUID.fromString(id));
     }
 
-    @PutMapping("/topics")
+    @PutMapping("/")
     public TopicDto editTopics(@RequestBody TopicDto topicDto){
         log.info("Edit topic {}", topicDto);
         return topicService.editTopic(topicDto);
     }
 
-    @DeleteMapping("/topics/{id}")
+    @DeleteMapping("/{id}")
     public void deleteTopics(@PathVariable("id") String id){
         log.info("Delete topic by id {}", id);
         topicService.deleteTopicById(UUID.fromString(id));
     }
 
-    @PostMapping("/topics/create")
+    @PostMapping("/create")
     public TopicDto createTopics(@RequestBody TopicDto topicDto){
         log.info("Create topic {}", topicDto);
         return topicService.createTopic(topicDto);

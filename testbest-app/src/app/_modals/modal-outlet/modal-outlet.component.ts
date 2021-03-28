@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-modal-outlet',
-  template: '<div class="modals-manager"></div>',
+  template: '<div class="modal-window"></div>',
 })
 export class ModalOutletComponent {
 }

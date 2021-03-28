@@ -4,6 +4,8 @@ import {TokenStorageService} from "../_services/token-storage.service";
 import {DOCUMENT} from "@angular/common";
 import {Test} from "../_models/test";
 import {ManagerService} from "../_services/manager.service";
+import {TopicService} from "../_services/topic.service";
+import {Topic} from "../_models/topic";
 
 @Component({
   selector: 'app-board-moderator',
@@ -12,18 +14,26 @@ import {ManagerService} from "../_services/manager.service";
 })
 export class BoardManagerComponent implements OnInit {
   test: Test;
-  showFirstModal = false;
-  showSecondModal = false;
-  errorMessage: string;
   tests: Array<Test>;
+
+  topic: Topic;
+  isCreateTopicFailed = false;
+  newTopic = true;
+  topics: Array<Topic>;
+
+
+  showModal = false;
+  errorMessage: string;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private renderer2: Renderer2,
     private router: Router,
     private tokenStorage: TokenStorageService,
-    private managerService: ManagerService) {
+    private managerService: ManagerService,
+    private topicService: TopicService) {
     this.test = new Test()
+    this.topic = new Topic();
   }
 
   ngOnInit(): void {
@@ -35,18 +45,98 @@ export class BoardManagerComponent implements OnInit {
       this.router.navigate(["/home"])
     }
 
-    //TODO Будут запросы на получение данных:
-    //      список тестов
-    // this.userService.getUserBoard().subscribe(
-    //   data => {
-    //     this.content = data;
-    //   },
-    //   err => {
-    //     this.content = JSON.parse(err.error).message;
-    //   }
-    // );
+    this.getTopics();
   }
 
+  //Обработка топика
+  getTopics() {
+    this.topicService.getTopics().subscribe(
+      data => {
+        this.topics = data;
+      },
+      error => {
+        if (error.statusText == "Unknown Error") {
+          this.errorMessage = "Server is not responding";
+        } else {
+          this.errorMessage = error.message;
+        }
+      }
+    )
+  }
+
+  openModalNewTopic() {
+    this.showModal = true;
+    this.newTopic = true;
+  }
+
+  openModalEditTopic(id: String) {
+    this.showModal = true;
+    this.newTopic = false;
+    this.topic = this.topics.find(topic => topic.id === id);
+  }
+
+  createTopic(): void {
+    this.topicService.createTopic(this.topic).subscribe(
+      data => {
+        if (data.id != null && data.id != '') {
+          this.isCreateTopicFailed = false;
+          this.closeModal();
+          this.getTopics();
+          this.topic = new Topic();
+        }
+      },
+      error => {
+        this.isCreateTopicFailed = true;
+        if (error.statusText == "Unknown Error") {
+          this.errorMessage = "Server is not responding";
+        } else {
+          this.errorMessage = error.message;
+        }
+      }
+    );
+  }
+
+  editTopic(): void {
+    this.topicService.editTopic(this.topic).subscribe(
+      data => {
+        if (data.id != null && data.id != '') {
+          this.isCreateTopicFailed = false;
+          this.closeModal();
+          this.getTopics();
+          this.topic = new Topic();
+        }
+      },
+      error => {
+        this.isCreateTopicFailed = true;
+        if (error.statusText == "Unknown Error") {
+          this.errorMessage = "Server is not responding";
+        } else {
+          this.errorMessage = error.message;
+        }
+      }
+    );
+  }
+
+  deleteTopic(): void {
+    this.topicService.deleteTopic(this.topic).subscribe(
+      data => {
+        this.isCreateTopicFailed = false;
+        this.closeModal();
+        this.getTopics();
+        this.topic = new Topic();
+      },
+      error => {
+        this.isCreateTopicFailed = true;
+        if (error.statusText == "Unknown Error") {
+          this.errorMessage = "Server is not responding";
+        } else {
+          this.errorMessage = error.message;
+        }
+      }
+    );
+  }
+
+  //Обработка теста
   createTest(): void {
     this.managerService.createTest(this.test).subscribe(
       data => {
@@ -55,7 +145,7 @@ export class BoardManagerComponent implements OnInit {
             data => {
               console.log(data);
               console.log('==============');
-              this.tests = data;;
+              this.tests = data;
               console.log(this.tests);
             },
             error => {
@@ -79,19 +169,12 @@ export class BoardManagerComponent implements OnInit {
 
   }
 
-  openFirstModal() {
-    this.showFirstModal = true;
+  //Обработка модальных окон
+  openModal() {
+    this.showModal = true;
   }
 
-  closeFirstModal() {
-    this.showFirstModal = false;
-  }
-
-  openSecondModal() {
-    this.showSecondModal = true;
-  }
-
-  closeSecondModal() {
-    this.showSecondModal = false;
+  closeModal() {
+    this.showModal = false;
   }
 }
