@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.testbest.converter.AbstractMapper;
 import ru.testbest.dto.test.TestDto;
@@ -18,6 +19,7 @@ public class TestConverter extends AbstractMapper<Test, TestDto> {
   private final TopicDao topicDao;
   private final UserDao userDao;
 
+  @Autowired
   public TestConverter(
       ModelMapper mapper,
       TopicDao topicDao,
