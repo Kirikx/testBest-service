@@ -11,8 +11,8 @@
 }
 
 .modal-overlay .my-modal {
-  min-width: 400px;
-  min-height: 500px;
+  min-width: auto;
+  min-height: auto;
   background-color: white;
   padding: 40px 20px;
   border-radius: 4px;

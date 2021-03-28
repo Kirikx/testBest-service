@@ -1,22 +1,5 @@
-<div class="modal-overlay" (click)="closeModal($event)" *portalTo="'.modals-manager'" #overlay>
+<div class="modal-overlay" (click)="closeModal($event)" *portalTo="'.modal-window'" #overlay>
   <div class="my-modal">
-    <form action="https://mobirise.eu/" method="POST" class="mbr-form form-with-styler"
-          data-form-title="Form Name">
-      <input type="hidden" name="id" data-form-field="id">
-      <div class="dragArea row">
-        <div class="col-md col-sm-12 form-group" data-for="name">
-          <input type="text" name="name" placeholder="Название теста" data-form-field="name"
-                 class="form-control" value="" id="name-form5-17">
-        </div>
-        <div class="col-12 form-group" data-for="textarea">
-                          <textarea name="description" placeholder="Описание" data-form-field="textarea"
-                                    class="form-control" id="textarea-form5-17"></textarea>
-        </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
-          <button type="submit" class="btn btn-success display-4">Создать тест</button>
-        </div>
-      </div>
-    </form>
-<!--    <ng-content></ng-content>-->
+    <ng-content></ng-content>
   </div>
 </div>

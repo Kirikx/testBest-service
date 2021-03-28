@@ -26,7 +26,7 @@
 
             <div class="col-md col-sm-12 form-group" data-for="name">
               <input id="name-form5-y" type="text" name="firstName"
-                     [(ngModel)]="form.firstName" required minlength="3" maxlength="20" #firstName="ngModel"
+                     [(ngModel)]="user.firstName" required minlength="3" maxlength="20" #firstName="ngModel"
                      placeholder="Фамилия" data-form-field="name" class="form-control">
               <div class="alert-danger" *ngIf="firstName.errors && f.submitted">
                 <div *ngIf="firstName.errors.required">Поле обязательно для заполнения</div>
@@ -41,7 +41,7 @@
 
             <div class="col-md col-sm-12 form-group" data-for="surname">
               <input id="surname-form5-y" type="text" name="lastName"
-                     [(ngModel)]="form.lastName" required minlength="3" maxlength="20" #lastName="ngModel"
+                     [(ngModel)]="user.lastName" required minlength="3" maxlength="20" #lastName="ngModel"
                      placeholder="Имя" data-form-field="name" class="form-control">
               <div class="alert-danger" *ngIf="lastName.errors && f.submitted">
                 <div *ngIf="lastName.errors.required">Поле обязательно для заполнения</div>
@@ -56,7 +56,7 @@
 
             <div class="col-sm-12 form-group" data-for="email">
               <input id="email-form5-y" type="email" class="form-control" name="email" placeholder="Email"
-                     [(ngModel)]="form.email" required email #email="ngModel"/>
+                     [(ngModel)]="user.email" required email #email="ngModel"/>
               <div class="alert-danger" *ngIf="email.errors && f.submitted">
                 <div *ngIf="email.errors.required">Поле обязательно для заполнения</div>
                 <div *ngIf="email.errors.email">Формат поля email нарушен</div>
@@ -65,7 +65,7 @@
 
             <div class="col-md col-sm-12 form-group" data-for="login">
               <input type="text" name="login" placeholder="Логин" data-form-field="username"
-                     class="form-control" value="" id="login-form5-y" [(ngModel)]="form.username"
+                     class="form-control" value="" id="login-form5-y" [(ngModel)]="user.username"
                      required minlength="3" maxlength="20" #username="ngModel">
               <div class="alert-danger" *ngIf="lastName.errors && f.submitted">
                 <div *ngIf="username.errors.required">Поле обязательно для заполнения</div>
@@ -81,7 +81,7 @@
             <div class="col-md col-sm-12 form-group" data-for="password">
               <input type="password" name="password" placeholder="Пароль" data-form-field="password"
                      class="form-control" value="" id="password-form5-y"
-                     [(ngModel)]="form.password" required minlength="6" #password="ngModel">
+                     [(ngModel)]="user.password" required minlength="6" #password="ngModel">
               <div class="alert-danger col-12" role="alert" *ngIf="password.errors && f.submitted">
                 <div *ngIf="password.errors.required">Поле обязательно для заполнения</div>
                 <div *ngIf="password.errors.minlength">Данное поле не может содержать меньше 6 символов</div>
@@ -90,7 +90,8 @@
 
             <div class="col-12 form-group" data-for="repeat">
               <input type="password" name="repeat"  placeholder="Повторите пароль" data-form-field="repeat"
-                     [(ngModel)]="form.repeat" #repeat="ngModel" pattern="{{password.value}}" required class="form-control" value="" id="url-form5-y">
+                     [(ngModel)]="user.repeatPassword" #repeat="ngModel" pattern="{{password.value}}" required
+                     class="form-control" value="" id="url-form5-y">
               <div class="alert-danger col-12" role="alert" *ngIf="repeat.errors && f.submitted">
                 <div *ngIf="repeat.errors.required">Поле обязательно для заполнения</div>
                 <div *ngIf="repeat.errors.pattern">Значение в поле не совпадает</div>

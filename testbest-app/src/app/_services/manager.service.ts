@@ -22,16 +22,6 @@ export class ManagerService {
   }
 
   getManagerTest(): Observable<any> {
-    return this.http.get(TEST_API, { responseType: 'text' });
+    return this.http.get(TEST_API, httpOptions);
   }
-
-
-  //
-  // getManagerBoard(): Observable<any> {
-  //   return this.http.get(API_URL + 'mod', { responseType: 'text' });
-  // }
-  //
-  // getAdminBoard(): Observable<any> {
-  //   return this.http.get(API_URL + 'admin', { responseType: 'text' });
-  // }
 }
