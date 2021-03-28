@@ -38,8 +38,8 @@ public class UserTest {
     private Short score;
 
     @Column(name = "passed",
-        columnDefinition = "TINYINT(1)")
-    private Boolean isPassed;
+        columnDefinition = "TINYINT")
+    private Boolean isPassed = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "test_id")

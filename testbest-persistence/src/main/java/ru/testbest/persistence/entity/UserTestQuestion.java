@@ -35,8 +35,8 @@ public class UserTestQuestion {
     private LocalDateTime answered;
 
     @Column(name = "correct",
-        columnDefinition = "TINYINT(1)")
-    private Boolean isCorrect;
+        columnDefinition = "TINYINT")
+    private Boolean isCorrect = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_test_id")

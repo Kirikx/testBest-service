@@ -32,8 +32,8 @@ public class Question {
     String question;
 
     @Column(name = "deleted",
-        columnDefinition = "TINYINT(1)")
-    Boolean isDeleted;
+        columnDefinition = "TINYINT")
+    Boolean isDeleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id")

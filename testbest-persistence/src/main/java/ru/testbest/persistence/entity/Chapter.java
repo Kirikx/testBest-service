@@ -35,7 +35,7 @@ public class Chapter {
 
     @Column(name = "deleted",
         columnDefinition = "TINYINT")
-    private Boolean isDeleted;
+    private Boolean isDeleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "test_id")

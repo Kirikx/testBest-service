@@ -35,14 +35,17 @@ public class Test {
     private String description;
 
     @Column
-    private LocalDateTime created;
+    private LocalDateTime created = LocalDateTime.now();
 
     @Column
     private Short duration;
 
+    @Column(name = "pass_score")
+    private Short passScore;
+
     @Column(name = "deleted",
-        columnDefinition = "TINYINT(1)")
-    private Boolean isDeleted;
+        columnDefinition = "TINYINT")
+    private Boolean isDeleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id")

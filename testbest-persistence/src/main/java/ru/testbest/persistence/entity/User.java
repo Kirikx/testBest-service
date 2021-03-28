@@ -41,8 +41,8 @@ public class User {
     private String email;
 
     @Column(name = "deleted",
-        columnDefinition = "TINYINT(1)")
-    private Boolean isDeleted;
+        columnDefinition = "TINYINT")
+    private Boolean isDeleted = false;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_role",

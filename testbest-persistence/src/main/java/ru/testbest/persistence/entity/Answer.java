@@ -28,11 +28,11 @@ public class Answer {
 
   @Column(name = "deleted",
       columnDefinition = "TINYINT")
-  private Boolean isDeleted;
+  private Boolean isDeleted = false;
 
   @Column(name = "correct",
       columnDefinition = "TINYINT")
-  private Boolean isCorrect;
+  private Boolean isCorrect = false;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "question_id")
