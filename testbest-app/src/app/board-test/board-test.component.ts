@@ -21,7 +21,8 @@ export class BoardTestComponent implements OnInit {
   formTestCreate = new FormGroup({
     topicId: new FormControl('', Validators.required),
     name: new FormControl('', Validators.required),
-    description: new FormControl()
+    description: new FormControl(),
+    duration: new FormControl('', [Validators.required, Validators.min(10), Validators.max(300)])
   });
 
   isCreateNewTest = false;
@@ -90,14 +91,18 @@ export class BoardTestComponent implements OnInit {
     this.test.name = event.target.value;
   }
 
+  changeDuration(event) {
+    this.test.duration = event.target.value;
+  }
+
   createTest(): void {
     if (!this.formTestCreate.valid) {
       this.isSubmitted = false;
     } else {
       this.testService.createTest(this.test).subscribe(
         data => {
-          this.isCreateNewTest = true;
           this.test = data;
+          this.router.navigate(["/test/"+ this.test.id])
         },
         error => {
           if (error.statusText == "Unknown Error") {
@@ -117,6 +122,13 @@ export class BoardTestComponent implements OnInit {
       this.testService.getTest(this.test).subscribe(
         data => {
           this.isCreateNewTest = true;
+          this.test = data;
+          this.formTestCreate.setValue({
+            topicId: this.test.topicId,
+            name: this.test.name,
+            description: this.test.description,
+            duration: this.test.duration
+          })
           this.test = data;
         },
         error => {

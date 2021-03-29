@@ -1,5 +1,5 @@
 <section class="tabs content18 cid-srn9kG2mng mbr-fullscreen" id="tabs1-14">
-  <script type="application/javascript" defer  src="./assets/mbr-tabs/mbr-tabs.js"></script>
+  <script type="application/javascript" defer src="./assets/mbr-tabs/mbr-tabs.js"></script>
   <div class="mbr-overlay" style="opacity: 0.6; background-color: rgb(255, 255, 255);"></div>
   <div class="container">
     <div class="row justify-content-center">
@@ -36,7 +36,7 @@
                       <li>Создать новый тест</li>
                       <li>Выбрать тест для редактирования</li>
                       <li>Удалить тест</li>
-<!--                      <li>Назначит тест на прохождение для конкретных людей</li>-->
+                      <!--                      <li>Назначит тест на прохождение для конкретных людей</li>-->
                     </ul>
                   </li>
                 </ul>
@@ -57,7 +57,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr *ngFor="let test of tests" ><!-- (click)="">-->
+                  <tr *ngFor="let test of tests" (click)="redirectToCreateTest(test.id)">
                     <td>{{ getNameTopic(test.topicId) }}</td>
                     <td>{{ test.name }}</td>
                     <td>{{ test.description }}</td>
@@ -149,8 +149,12 @@
                   <div *ngIf="!newTopic" class="col-12 mbr-section-btn">
                     <table>
                       <tr>
-                        <th scope="col"><button (click)="editTopic()" class="btn btn-success display-4">Редактировать</button></th>
-                        <th scope="col"><button (click)="deleteTopic()" class="btn btn-success display-4">Удалить</button></th>
+                        <th scope="col">
+                          <button (click)="editTopic()" class="btn btn-success display-4">Редактировать</button>
+                        </th>
+                        <th scope="col">
+                          <button (click)="deleteTopic()" class="btn btn-success display-4">Удалить</button>
+                        </th>
                       </tr>
                     </table>
                   </div>

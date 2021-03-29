@@ -13,7 +13,7 @@ import {Topic} from "../_models/topic";
   styleUrls: ['./board-manager.component.css'],
 
 })
-export class BoardManagerComponent implements OnInit{
+export class BoardManagerComponent implements OnInit {
   //Переменные для Topic
   topic: Topic;
   isCreateTopicFailed = false;
@@ -161,8 +161,8 @@ export class BoardManagerComponent implements OnInit{
     )
   }
 
-  redirectToCreateTest(): void {
-    this.router.navigate(["/test"])
+  redirectToCreateTest(id: string): void {
+    this.router.navigate(["/test/" + id])
   }
 
   //Обработка модальных окон
