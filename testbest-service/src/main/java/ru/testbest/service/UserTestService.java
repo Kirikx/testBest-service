@@ -15,7 +15,7 @@ public interface UserTestService {
 
   Optional<QuestionDto> startUserTest(UUID testId, UUID userId);
 
-  Optional<QuestionDto> createUserAnswer(UserTestQuestionDto userTestQuestionDto);
+  Optional<QuestionDto> createUserAnswer(UserTestQuestionDto userTestQuestionDto, UUID userId);
 
   UserTestDto finishUserTest(UUID userTestId);
 

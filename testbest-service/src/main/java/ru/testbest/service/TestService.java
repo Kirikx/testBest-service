@@ -2,8 +2,6 @@ package ru.testbest.service;
 
 import java.util.List;
 import java.util.UUID;
-import ru.testbest.dto.test.QuestionDto;
-import ru.testbest.dto.test.QuestionFullDto;
 import ru.testbest.dto.test.TestDto;
 
 public interface TestService {
@@ -14,7 +12,7 @@ public interface TestService {
 
   void deleteTestById(UUID uuid);
 
-  TestDto createTest(TestDto questionDto);
+  TestDto createTest(TestDto questionDto, UUID userId);
 
   TestDto editTest(TestDto questionDto);
 

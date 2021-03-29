@@ -112,7 +112,8 @@ public class UserTestServiceImpl implements UserTestService {
 
   @Override
   @Transactional
-  public Optional<QuestionDto> createUserAnswer(UserTestQuestionDto userTestQuestionDto) {
+  public Optional<QuestionDto> createUserAnswer(UserTestQuestionDto userTestQuestionDto,
+      UUID userId) {
     userTestQuestionDto.setAnswered(LocalDateTime.now());
     userTestQuestionDto.setIsCorrect(
         checkCorrectUserAnswer(userTestQuestionDto));
