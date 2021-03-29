@@ -28,6 +28,8 @@ hs_err_pid*
 # Project exclude paths
 testbest-app/target/
 testbest-app/node/
+testbest-front/node/
+testbest-front/node_modules/
 testbest-rest-api/target/
 testbest-service/target/
 testbest-dto/target/
