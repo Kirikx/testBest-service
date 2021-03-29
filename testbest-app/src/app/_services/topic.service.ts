@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import {Globals} from "../global";
+import {Global} from "../global";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Topic} from "../_models/topic";
 
-const TOPIC_API = Globals.PROD + '/api/topics/';
+const TOPIC_API = Global.PROD + '/api/topics/';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})

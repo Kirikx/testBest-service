@@ -11,7 +11,6 @@ import {Auth} from "../_models/auth";
 })
 export class LoginComponent implements OnInit {
   auth: Auth;
-  // roles: string[] = [];
   isLoginFailed = false;
   errorMessage = '';
 
@@ -23,10 +22,6 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // if (this.tokenStorage.getToken()) {
-    //   this.isLoggedIn = true;
-    //   this.roles = this.tokenStorage.getUser().roles;
-    // }
   }
 
   onSubmit(): void {
