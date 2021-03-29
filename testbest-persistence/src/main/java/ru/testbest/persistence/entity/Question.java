@@ -14,6 +14,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,9 +30,11 @@ public class Question {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
+    @NotNull
     @Column
     String question;
 
+    @NotNull
     @Column(name = "deleted",
         columnDefinition = "TINYINT")
     Boolean isDeleted = false;

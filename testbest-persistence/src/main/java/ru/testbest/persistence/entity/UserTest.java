@@ -14,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,15 +30,18 @@ public class UserTest {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
+    @NotNull
     @Column
     private LocalDateTime started;
 
+    @NotNull
     @Column
     private LocalDateTime finished;
 
     @Column
     private Short score;
 
+    @NotNull
     @Column(name = "passed",
         columnDefinition = "TINYINT")
     private Boolean isPassed = false;

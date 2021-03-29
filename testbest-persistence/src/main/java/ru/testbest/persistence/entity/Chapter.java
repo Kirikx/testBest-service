@@ -13,6 +13,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,12 +29,14 @@ public class Chapter {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
+    @NotNull
     @Column
     private String name;
 
     @Column
     private String description;
 
+    @NotNull
     @Column(name = "deleted",
         columnDefinition = "TINYINT")
     private Boolean isDeleted = false;

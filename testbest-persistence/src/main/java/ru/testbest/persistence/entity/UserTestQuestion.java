@@ -14,6 +14,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,6 +36,7 @@ public class UserTestQuestion {
     @Column
     private LocalDateTime answered;
 
+    @NotNull
     @Column(name = "correct",
         columnDefinition = "TINYINT")
     private Boolean isCorrect = false;
