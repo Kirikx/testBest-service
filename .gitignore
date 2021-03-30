@@ -27,13 +27,12 @@ hs_err_pid*
 /arhive/
 # Project exclude paths
 testbest-app/target/
+testbest-app/node/
 testbest-rest-api/target/
 testbest-service/target/
 testbest-dto/target/
 testbest-persistence/target/
 testbest-db/target/
-testbest-front/target/
-testbest-front/node/
 # IntellijIdea files
 *.iml
 .idea

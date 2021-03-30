@@ -13,8 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import ru.testbest.persistence.BaseEntity;
@@ -30,21 +30,29 @@ public class Test implements BaseEntity {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
+    @NotNull
     @Column
     private String name;
 
     @Column
     private String description;
 
-    @Column(updatable = false)
-    private LocalDateTime created;
+    @NotNull
+    @Column
+    private LocalDateTime created = LocalDateTime.now();
 
+    @NotNull
     @Column
     private Short duration;
 
+    @NotNull(message = "Field pass_score must not be null!")
+    @Column(name = "pass_score")
+    private Short passScore = 1;
+
+    @NotNull
     @Column(name = "deleted",
-        columnDefinition = "TINYINT(1)")
-    private Boolean isDeleted;
+        columnDefinition = "TINYINT")
+    private Boolean isDeleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id")
@@ -73,9 +81,18 @@ public class Test implements BaseEntity {
         chapter.setTest(null);
     }
 
-    @PrePersist
-    public void toCreate() {
-        setCreated(LocalDateTime.now());
-        setIsDeleted(false);
+    @Override
+    public String toString() {
+        return "Test{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", description='" + description + '\'' +
+            ", created=" + created +
+            ", duration=" + duration +
+            ", passScore=" + passScore +
+            ", isDeleted=" + isDeleted +
+            ", topic=" + topic +
+            ", author=" + author +
+            '}';
     }
 }

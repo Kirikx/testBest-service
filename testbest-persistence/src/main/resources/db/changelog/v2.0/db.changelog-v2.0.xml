@@ -5,43 +5,50 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="1" author="author">
+    <changeSet id="11" author="author">
         <sqlFile dbms="mysql"
                  encoding="utf8"
-                 path="01-create-schema-tables.sql"
+                 path="02-insert-manager.sql"
                  relativeToChangelogFile="true"
                  splitStatements="true"
                  stripComments="true"/>
         <sqlFile dbms="h2"
                  encoding="utf8"
-                 path="01-create-schema-tables-H2.sql"
+                 path="02-insert-manager-H2.sql"
                  relativeToChangelogFile="true"
                  splitStatements="true"
                  stripComments="true"/>
         <rollback>
             <sqlFile dbms="mysql, h2"
                      encoding="utf8"
-                     path="01-drop-schema-tables.sql"
+                     path="02-delete-manager.sql"
                      relativeToChangelogFile="true"
                      splitStatements="true"
                      stripComments="true"/>
         </rollback>
     </changeSet>
 
-    <changeSet id="2" author="author">
+    <changeSet id="12" author="author">
         <sqlFile dbms="mysql"
-          encoding="utf8"
-          path="01-insert-initial-data.sql"
-          relativeToChangelogFile="true"
-          splitStatements="true"
-          stripComments="true"/>
-        <sqlFile dbms="h2"
                  encoding="utf8"
-                 path="01-insert-initial-data-H2.sql"
+                 path="02-insert-test-example.sql"
                  relativeToChangelogFile="true"
                  splitStatements="true"
                  stripComments="true"/>
-        <rollback/>
+        <sqlFile dbms="h2"
+                 encoding="utf8"
+                 path="02-insert-test-example-H2.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="true"
+                 stripComments="true"/>
+        <rollback>
+            <sqlFile dbms="mysql, h2"
+                     encoding="utf8"
+                     path="02-delete-test-example.sql"
+                     relativeToChangelogFile="true"
+                     splitStatements="true"
+                     stripComments="true"/>
+        </rollback>
     </changeSet>
 
 </databaseChangeLog>

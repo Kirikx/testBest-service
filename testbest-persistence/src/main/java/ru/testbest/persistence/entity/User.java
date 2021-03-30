@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.Setter;
 import ru.testbest.persistence.BaseEntity;
@@ -26,24 +28,29 @@ public class User implements BaseEntity {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
+    @NotNull
     @Column(name = "first_name")
     private String firstName;
 
+    @NotNull
     @Column(name = "last_name")
     private String lastName;
 
+    @NotNull
     @Column
     private String username;
 
+    @NotNull
     @Column
     private String password;
 
     @Column
     private String email;
 
+    @NotNull
     @Column(name = "deleted",
-        columnDefinition = "TINYINT(1)")
-    private Boolean isDeleted;
+        columnDefinition = "TINYINT")
+    private Boolean isDeleted = false;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_role",
