@@ -15,7 +15,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
 import lombok.Getter;
 import lombok.Setter;
 import ru.testbest.persistence.BaseEntity;
@@ -80,5 +79,20 @@ public class Test implements BaseEntity {
     public void removeChapter(Chapter chapter) {
         chapters.remove(chapter);
         chapter.setTest(null);
+    }
+
+    @Override
+    public String toString() {
+        return "Test{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", description='" + description + '\'' +
+            ", created=" + created +
+            ", duration=" + duration +
+            ", passScore=" + passScore +
+            ", isDeleted=" + isDeleted +
+            ", topic=" + topic +
+            ", author=" + author +
+            '}';
     }
 }

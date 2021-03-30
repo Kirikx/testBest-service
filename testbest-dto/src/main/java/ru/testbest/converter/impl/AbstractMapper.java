@@ -1,6 +1,7 @@
 package ru.testbest.converter.impl;
 
 import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import ru.testbest.converter.ConverterTest;
 import ru.testbest.dto.BaseDTO;
 import ru.testbest.persistence.BaseEntity;
 
+@Slf4j
 public abstract class AbstractMapper<E extends BaseEntity, D extends BaseDTO> implements
     ConverterTest<E, D> {
 
@@ -24,6 +26,7 @@ public abstract class AbstractMapper<E extends BaseEntity, D extends BaseDTO> im
 
   @Override
   public E convertToEntity(D dto) {
+    log.info(String.valueOf(dto));
     return Objects.isNull(dto)
         ? null
         : mapper.map(dto, entityClass);
@@ -31,6 +34,7 @@ public abstract class AbstractMapper<E extends BaseEntity, D extends BaseDTO> im
 
   @Override
   public D convertToDto(E entity) {
+    log.info(String.valueOf(entity));
     return Objects.isNull(entity)
         ? null
         : mapper.map(entity, dtoClass);
