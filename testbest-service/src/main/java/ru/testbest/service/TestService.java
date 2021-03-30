@@ -16,4 +16,6 @@ public interface TestService {
 
   TestDto editTest(TestDto questionDto);
 
+  List<TestDto> getTestsByAuthorId(UUID authorId);
+
 }
