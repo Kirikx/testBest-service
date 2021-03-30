@@ -63,7 +63,9 @@ public class UserTestServiceImpl implements UserTestService {
   }
 
   private boolean isLegalTime(UserTest userTest) {
-    return userTest.getStarted()
+    LocalDateTime timeStart = Optional.ofNullable(userTest.getStarted())
+        .orElseThrow(RuntimeException::new);
+    return timeStart
         .plusSeconds(userTest.getTest().getDuration())
         .isBefore(LocalDateTime.now());
   }
@@ -96,23 +98,23 @@ public class UserTestServiceImpl implements UserTestService {
         .orElseThrow(
             () -> new RuntimeException(String.format("User test id %s not found", userTestId)));
 
-    if (!isLegalTime(userTest)) {
-      finishUserTest(userTestId);
-      return Optional.empty();
+    if (isLegalTime(userTest)) {
+
+      Set<Question> testQuestions = userTest.getTest().getChapters().stream()
+          .map(Chapter::getQuestions)
+          .flatMap(Collection::stream)
+          .collect(Collectors.toSet());
+
+      Set<UserTestQuestion> userTestQuestions = userTest.getUserTestQuestions();
+
+      return testQuestions.stream()
+          .filter(q -> userTestQuestions.stream()
+              .noneMatch(utq -> q.getId().equals(utq.getQuestion().getId())))
+          .map(questionConverter::convertToDto)
+          .findAny();
     }
 
-    Set<Question> testQuestions = userTest.getTest().getChapters().stream()
-        .map(Chapter::getQuestions)
-        .flatMap(Collection::stream)
-        .collect(Collectors.toSet());
-
-    Set<UserTestQuestion> userTestQuestions = userTest.getUserTestQuestions();
-
-    return testQuestions.stream()
-        .filter(q -> userTestQuestions.stream()
-            .noneMatch(utq -> q.getId().equals(utq.getQuestion().getId())))
-        .map(questionConverter::convertToDto)
-        .findAny();
+    return Optional.empty();
   }
 
   @Override
@@ -123,11 +125,14 @@ public class UserTestServiceImpl implements UserTestService {
     UserTest userTest = lastUserTestByUserId.orElse(null);
     if (lastUserTestByUserId.isPresent() && isLegalTime(userTest)) {
       userTest.setFinished(LocalDateTime.now());
-      userTest.setScore((short) (userTest.getScore() + 1));
 
       userTestQuestionDto.setAnswered(LocalDateTime.now());
       userTestQuestionDto.setIsCorrect(
-          checkCorrectUserAnswer(userTestQuestionDto));
+          checkCorrectSelectedAnswer(userTestQuestionDto));
+
+      userTest.setScore((short) (userTestQuestionDto.getIsCorrect() ?
+          userTest.getScore() + 1 : userTest.getScore()));
+      userTest.setIsPassed(userTest.getScore() >= userTest.getTest().getPassScore());
 
       UserTestQuestion userTestQuestion = userTestQuestionConverter
           .convertToEntity(userTestQuestionDto);
@@ -140,7 +145,7 @@ public class UserTestServiceImpl implements UserTestService {
     return Optional.empty();
   }
 
-  private Boolean checkCorrectUserAnswer(UserTestQuestionDto userTestQuestionDto) {
+  private Boolean checkCorrectSelectedAnswer(UserTestQuestionDto userTestQuestionDto) {
     Question question = questionDao.findById(userTestQuestionDto.getQuestionId())
         .orElseThrow(() -> new RuntimeException(
             String.format("Question id %s not found", userTestQuestionDto.getQuestionId())));
@@ -198,23 +203,6 @@ public class UserTestServiceImpl implements UserTestService {
     String correctAnswer = any.map(Answer::getAnswer)
         .orElseThrow(() -> new RuntimeException("Question answer no contain correct answer"));
     return correctAnswer.equalsIgnoreCase(freeAnswer);
-  }
-
-  @Override
-  @Transactional
-  public UserTestDto finishUserTest(UUID userTestId) {
-    UserTest userTest = userTestDao.findById(userTestId)
-        .orElseThrow(
-            () -> new RuntimeException(String.format("User test id %s not found", userTestId)));
-
-    UserTestDto userTestDto = userTestConverter.convertToDto(userTest);
-    userTestDto.setIsPassed(
-        userTestDto.getScore() >= userTest.getTest().getPassScore());
-    // Тест считается пройден если количество правильных ответов >= минимальному количеству
-
-    return userTestConverter.convertToDto(
-        userTestDao.save(
-            userTestConverter.convertToEntity(userTestDto)));
   }
 
   @Override
