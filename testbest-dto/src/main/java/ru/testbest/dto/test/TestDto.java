@@ -18,4 +18,5 @@ public class TestDto implements BaseDTO {
   private UUID topicId;
   private UUID authorId;
   private Set<ChapterDto> chapters;
+  private Short passScore;
 }
