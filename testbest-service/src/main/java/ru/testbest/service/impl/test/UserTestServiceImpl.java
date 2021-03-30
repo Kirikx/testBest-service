@@ -54,7 +54,7 @@ public class UserTestServiceImpl implements UserTestService {
   public UserTestDto getActiveUserTestByUserId(UUID userId) {
     Optional<UserTest> oActiveUserTest = userTestDao
         .findAllByUserIdAndFinishedIsNull(userId).stream()
-        .findFirst(); // TODO продумать механизм получения активного теста. Пока берем крайний
+        .findFirst();
 
     return oActiveUserTest
         .map(userTestConverter::convertToDto)
@@ -89,7 +89,7 @@ public class UserTestServiceImpl implements UserTestService {
 
     LocalDateTime started = userTest.getStarted();
     Short duration = userTest.getTest().getDuration();
-    LocalDateTime endTime = started.plusSeconds(duration);
+    LocalDateTime endTime = started.plusMinutes(duration);
 
     if (LocalDateTime.now().isBefore(endTime)) {
       finishUserTest(userTestId);
@@ -197,9 +197,9 @@ public class UserTestServiceImpl implements UserTestService {
     userTestDto.setScore((short) userTestDto.getUserTestQuestions().stream()
         .filter(UserTestQuestionDto::getIsCorrect)
         .count());
-    userTestDto.setIsPassed(userTest.getTest().getChapters().stream()
-        .mapToLong(ch -> ch.getQuestions().size())
-        .sum() <= userTestDto.getScore()); // TODO Тест пройден если все ответы правильные
+    userTestDto.setIsPassed(
+        userTestDto.getScore() >= userTest.getTest().getPassScore());
+    // Тест считается пройден если количество правильных ответов >= минимальному количеству
 
     return userTestConverter.convertToDto(
         userTestDao.save(
