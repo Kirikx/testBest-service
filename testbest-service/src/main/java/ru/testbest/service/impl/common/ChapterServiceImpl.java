@@ -37,23 +37,23 @@ public class ChapterServiceImpl implements ChapterService {
 
   @Override
   @Transactional
-  public ChapterDto createChapter(ChapterDto topicDto) {
-    if (topicDto.getId() != null) {
+  public ChapterDto createChapter(ChapterDto chapterDto) {
+    if (chapterDto.getId() != null) {
       throw new RuntimeException();
     }
     return chapterConverter.convertToDto(
         chapterDao.save(
-            chapterConverter.convertToEntity(topicDto)));
+            chapterConverter.convertToEntity(chapterDto)));
   }
 
   @Override
   @Transactional
-  public ChapterDto editChapter(ChapterDto topicDto) {
-    Optional.ofNullable(topicDto.getId())
+  public ChapterDto editChapter(ChapterDto chapterDto) {
+    Optional.ofNullable(chapterDto.getId())
         .orElseThrow(RuntimeException::new);
     return chapterConverter.convertToDto(
         chapterDao.save(
-            chapterConverter.convertToEntity(topicDto)));
+            chapterConverter.convertToEntity(chapterDto)));
   }
 
   @Override
