@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Global} from "../global";
-import {Auth} from "../_models/auth";
-import {User} from "../_models/user";
+import {Auth} from "../_models/users/Auth";
+import {User} from "../_models/users/User";
 
 const AUTH_API = Global.PROD + '/api/auth/';
 
