@@ -19,8 +19,6 @@ public interface UserTestService {
 
   Optional<QuestionDto> getNextQuestion(UUID userTestId);
 
-  UserTestDto finishUserTest(UUID userTestId);
-
   List<UserTestQuestionDto> getFailQuestionsByUserTestId(UUID userTestId);
 
 }
