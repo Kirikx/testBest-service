@@ -13,10 +13,9 @@
             </and>
             <and>
                 <dbms type="h2"/>
+                <runningAs username="sa"/>
             </and>
         </or>
-<!--        <dbms type="mssql"/>-->
-<!--        <runningAs username="root"/>-->
     </preConditions>
 
     <changeSet id="0" author="author">
@@ -24,8 +23,18 @@
     </changeSet>
 
     <include file="v1.0/db.changelog-v1.0.xml" relativeToChangelogFile="true"/>
-    <changeSet id="10" author="maksim.nikitin">
+    <changeSet id="10" author="author">
         <tagDatabase tag="v1.0"/>
+    </changeSet>
+
+    <include file="v2.0/db.changelog-v2.0.xml" relativeToChangelogFile="true"/>
+    <changeSet id="20" author="author">
+        <tagDatabase tag="v2.0"/>
+    </changeSet>
+
+    <include file="v3.0/db.changelog-v3.0.xml" relativeToChangelogFile="true"/>
+    <changeSet id="30" author="author">
+        <tagDatabase tag="v3.0"/>
     </changeSet>
 
 </databaseChangeLog>

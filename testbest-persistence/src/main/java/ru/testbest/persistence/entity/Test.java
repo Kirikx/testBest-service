@@ -13,8 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.Setter;
 import ru.testbest.persistence.BaseEntity;
@@ -30,21 +31,29 @@ public class Test implements BaseEntity {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
+    @NotNull
     @Column
     private String name;
 
     @Column
     private String description;
 
-    @Column(updatable = false)
-    private LocalDateTime created;
+    @NotNull
+    @Column
+    private LocalDateTime created = LocalDateTime.now();
 
+    @NotNull
     @Column
     private Short duration;
 
+    @NotNull
+    @Column(name = "pass_score")
+    private Short passScore;
+
+    @NotNull
     @Column(name = "deleted",
-        columnDefinition = "TINYINT(1)")
-    private Boolean isDeleted;
+        columnDefinition = "TINYINT")
+    private Boolean isDeleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id")
@@ -71,11 +80,5 @@ public class Test implements BaseEntity {
     public void removeChapter(Chapter chapter) {
         chapters.remove(chapter);
         chapter.setTest(null);
-    }
-
-    @PrePersist
-    public void toCreate() {
-        setCreated(LocalDateTime.now());
-        setIsDeleted(false);
     }
 }
