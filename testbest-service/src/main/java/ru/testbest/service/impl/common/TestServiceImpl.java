@@ -60,6 +60,14 @@ public class TestServiceImpl implements TestService {
 
   @Override
   @Transactional
+  public List<TestDto> getTestsByAuthorId(UUID authorId) {
+    return testDao.findAllByAuthorId(authorId).stream()
+        .map(testConverter::convertToDto)
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  @Transactional
   public void deleteTestById(UUID uuid) {
     Optional<Test> oTest = testDao.findByIdAndIsDeletedFalse(uuid);
     if (oTest.isPresent()) {

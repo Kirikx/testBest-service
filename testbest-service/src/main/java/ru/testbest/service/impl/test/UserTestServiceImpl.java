@@ -51,20 +51,27 @@ public class UserTestServiceImpl implements UserTestService {
 
   @Override
   @Transactional(readOnly = true)
-  public UserTestDto getActiveUserTestByUserId(UUID userId) {
-    Optional<UserTest> oActiveUserTest = userTestDao
-        .findAllByUserIdAndFinishedIsNull(userId).stream()
-        .findFirst();
-
-    return oActiveUserTest
+  public UserTestDto getActiveUserTest(UUID userId) {
+    return getLastUserTestByUserId(userId)
+        .filter(this::isLegalTime)
         .map(userTestConverter::convertToDto)
         .orElse(null);
+  }
+
+  private Optional<UserTest> getLastUserTestByUserId(UUID userId) {
+    return userTestDao.findLastByUserIdAndStarted(userId);
+  }
+
+  private boolean isLegalTime(UserTest userTest) {
+    return userTest.getStarted()
+        .plusSeconds(userTest.getTest().getDuration())
+        .isBefore(LocalDateTime.now());
   }
 
   @Override
   @Transactional
   public Optional<QuestionDto> startUserTest(UUID testId, UUID userId) {
-    UserTestDto findActiveUserTest = getActiveUserTestByUserId(userId);
+    UserTestDto findActiveUserTest = getActiveUserTest(userId);
     UserTestDto activeUserTest;
     if (findActiveUserTest != null) {
       activeUserTest = findActiveUserTest;
@@ -73,6 +80,7 @@ public class UserTestServiceImpl implements UserTestService {
       newUserTest.setUserId(userId);
       newUserTest.setTestId(testId);
       newUserTest.setStarted(LocalDateTime.now());
+      newUserTest.setFinished(LocalDateTime.now());
 
       activeUserTest = userTestConverter.convertToDto(
           userTestDao.save(
@@ -81,17 +89,14 @@ public class UserTestServiceImpl implements UserTestService {
     return getNextQuestion(activeUserTest.getId());
   }
 
-
-  private Optional<QuestionDto> getNextQuestion(UUID userTestId) {
+  @Override
+  @Transactional
+  public Optional<QuestionDto> getNextQuestion(UUID userTestId) {
     UserTest userTest = userTestDao.findById(userTestId)
         .orElseThrow(
             () -> new RuntimeException(String.format("User test id %s not found", userTestId)));
 
-    LocalDateTime started = userTest.getStarted();
-    Short duration = userTest.getTest().getDuration();
-    LocalDateTime endTime = started.plusMinutes(duration);
-
-    if (LocalDateTime.now().isBefore(endTime)) {
+    if (!isLegalTime(userTest)) {
       finishUserTest(userTestId);
       return Optional.empty();
     }
@@ -114,15 +119,25 @@ public class UserTestServiceImpl implements UserTestService {
   @Transactional
   public Optional<QuestionDto> createUserAnswer(UserTestQuestionDto userTestQuestionDto,
       UUID userId) {
-    userTestQuestionDto.setAnswered(LocalDateTime.now());
-    userTestQuestionDto.setIsCorrect(
-        checkCorrectUserAnswer(userTestQuestionDto));
+    Optional<UserTest> lastUserTestByUserId = getLastUserTestByUserId(userId);
+    UserTest userTest = lastUserTestByUserId.orElse(null);
+    if (lastUserTestByUserId.isPresent() && isLegalTime(userTest)) {
+      userTest.setFinished(LocalDateTime.now());
+      userTest.setScore((short) (userTest.getScore() + 1));
 
-    UserTestQuestion userTestQuestion = userTestQuestionConverter
-        .convertToEntity(userTestQuestionDto);
-    userTestQuestionDao.save(userTestQuestion);
+      userTestQuestionDto.setAnswered(LocalDateTime.now());
+      userTestQuestionDto.setIsCorrect(
+          checkCorrectUserAnswer(userTestQuestionDto));
 
-    return getNextQuestion(userTestQuestionDto.getUserTestId());
+      UserTestQuestion userTestQuestion = userTestQuestionConverter
+          .convertToEntity(userTestQuestionDto);
+
+      userTestDao.save(userTest);
+      userTestQuestionDao.save(userTestQuestion);
+
+      return getNextQuestion(userTestQuestionDto.getUserTestId());
+    }
+    return Optional.empty();
   }
 
   private Boolean checkCorrectUserAnswer(UserTestQuestionDto userTestQuestionDto) {
@@ -136,7 +151,7 @@ public class UserTestServiceImpl implements UserTestService {
             String
                 .format("Question type name %s not found", question.getQuestionType().getName())));
 
-    boolean correct = false;
+    boolean isCorrect = false;
 
     switch (questionType) {
       case SET:
@@ -149,7 +164,7 @@ public class UserTestServiceImpl implements UserTestService {
               .map(Answer::getId)
               .findFirst()
               .orElseThrow(() -> new RuntimeException("Question answer no contain correct answer"));
-          correct = oSelectedAnswerId.get().equals(correctAnswerId);
+          isCorrect = oSelectedAnswerId.get().equals(correctAnswerId);
         }
         break;
 
@@ -162,12 +177,12 @@ public class UserTestServiceImpl implements UserTestService {
               .filter(Answer::getIsCorrect)
               .map(Answer::getId)
               .collect(Collectors.toSet());
-          correct = selectedAnswerIds.containsAll(correctAnswerIds);
+          isCorrect = selectedAnswerIds.containsAll(correctAnswerIds);
         }
         break;
 
       case FREE:
-        correct = checkFreeTextAnswer(
+        isCorrect = checkCorrectFreeTextAnswer(
             question.getAnswers().stream().findFirst(), userTestQuestionDto.getFreeAnswer());
         break;
 
@@ -176,10 +191,10 @@ public class UserTestServiceImpl implements UserTestService {
 
     }
 
-    return correct;
+    return isCorrect;
   }
 
-  private boolean checkFreeTextAnswer(Optional<Answer> any, String freeAnswer) {
+  private boolean checkCorrectFreeTextAnswer(Optional<Answer> any, String freeAnswer) {
     String correctAnswer = any.map(Answer::getAnswer)
         .orElseThrow(() -> new RuntimeException("Question answer no contain correct answer"));
     return correctAnswer.equalsIgnoreCase(freeAnswer);
@@ -193,23 +208,30 @@ public class UserTestServiceImpl implements UserTestService {
             () -> new RuntimeException(String.format("User test id %s not found", userTestId)));
 
     UserTestDto userTestDto = userTestConverter.convertToDto(userTest);
-    userTestDto.setFinished(getMaxLocalDateTimeFromAnswers(userTestDto));
-    userTestDto.setScore((short) userTestDto.getUserTestQuestions().stream()
-        .filter(UserTestQuestionDto::getIsCorrect)
-        .count());
+    // TODO Тест пройден если все ответы правильные (исправить после добавления min_correct признака)
+    userTest.setIsPassed(getQuantityQuestions(userTest) <= userTestDto.getScore());
     userTestDto.setIsPassed(
         userTestDto.getScore() >= userTest.getTest().getPassScore());
     // Тест считается пройден если количество правильных ответов >= минимальному количеству
+
 
     return userTestConverter.convertToDto(
         userTestDao.save(
             userTestConverter.convertToEntity(userTestDto)));
   }
 
-  private LocalDateTime getMaxLocalDateTimeFromAnswers(UserTestDto userTestDto) {
-    return userTestDto.getUserTestQuestions().stream()
-        .map(UserTestQuestionDto::getAnswered)
-        .max(LocalDateTime::compareTo)
-        .orElse(LocalDateTime.now());
+  private int getQuantityQuestions(UserTest userTest) {
+    return userTest.getTest().getChapters().stream()
+        .mapToInt(ch -> ch.getQuestions().size())
+        .sum();
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<UserTestQuestionDto> getFailQuestionsByUserTestId(UUID userTestId) {
+    return userTestQuestionDao.findAllByUserTestId(userTestId).stream()
+        .filter(utq -> !utq.getIsCorrect())
+        .map(userTestQuestionConverter::convertToDto)
+        .collect(Collectors.toList());
   }
 }
