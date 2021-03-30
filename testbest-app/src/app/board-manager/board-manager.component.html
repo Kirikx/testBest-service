@@ -4,7 +4,7 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-12 col-md-11">
-        <h3 class="mbr-section-title mb-0 mbr-fonts-style display-2"><strong>Менеджер тестов</strong></h3>
+        <h3 class="mbr-section-title mb-0 mbr-fonts-style display-2"><strong>Редактор тестов</strong></h3>
       </div>
     </div>
     <div class="row justify-content-center mt-4">
@@ -54,14 +54,17 @@
                     <th scope="col">Наименование теста</th>
                     <th scope="col">Описание</th>
                     <th scope="col">Время прохождения</th>
+                    <th scope="col"></th>
                   </tr>
                   </thead>
                   <tbody>
-                  <tr *ngFor="let test of tests" (click)="redirectToCreateTest(test.id)">
-                    <td>{{ getNameTopic(test.topicId) }}</td>
-                    <td>{{ test.name }}</td>
-                    <td>{{ test.description }}</td>
-                    <td>{{ test.duration }}</td>
+                  <tr *ngFor="let test of tests">
+                    <td class="align-middle">{{ getNameTopic(test.topicId) }}</td>
+                    <td class="align-middle">{{ test.name }}</td>
+                    <td class="align-middle">{{ test.description }}</td>
+                    <td class="align-middle">{{ test.duration }}</td>
+                    <td class="align-right"><a class="btn btn-info-outline display-12"
+                                               (click)="redirectToCreateTest(test.id)">Редактировать</a></td>
                   </tr>
                   </tbody>
                 </table>
@@ -94,12 +97,15 @@
                   <tr>
                     <th scope="col">Наименование тематики</th>
                     <th scope="col">Описание</th>
+                    <th scope="col"></th>
                   </tr>
                   </thead>
                   <tbody>
-                  <tr *ngFor="let topic of topics" (click)="openModalEditTopic(topic.id)">
-                    <td>{{ topic.name }}</td>
-                    <td>{{ topic.description }}</td>
+                  <tr *ngFor="let topic of topics">
+                    <td class="align-middle">{{ topic.name }}</td>
+                    <td class="align-middle">{{ topic.description }}</td>
+                    <td class="align-right"><a class="btn btn-info-outline display-12"
+                                               (click)="openModalEditTopic(topic.id)">Редактировать</a></td>
                   </tr>
                   </tbody>
                 </table>
@@ -107,56 +113,98 @@
             </div>
 
             <app-modal *ngIf="showModal" (close)="closeModal()">
-              <form name="formTopic" (ngSubmit)="fTopic.form.valid && createTopic()" #fTopic="ngForm" novalidate
+              <form *ngIf="newTopic" name="formTopic" (ngSubmit)="fTopic.form.valid && createTopic()" #fTopic="ngForm"
+                    novalidate
                     class="mbr-form form-with-styler" data-form-title="Form Topic">
-                <div class="mbr-section-head">
-                  <h4 *ngIf="newTopic" class="mbr-section-subtitle mbr-fonts-style align-center mb-0 mt-2 display-5">
-                    Добавление тематики
-                  </h4>
-                  <h4 *ngIf="!newTopic" class="mbr-section-subtitle mbr-fonts-style align-center mb-0 mt-2 display-5">
-                    Редактирование тематики
-                  </h4>
-                </div>
-
-                <div class="dragArea row">
-                  <div class="col-12 form-group" data-for="id">
-                    <input type="hidden" name="id" data-form-field="id" [(ngModel)]="topic.id" #id="ngModel">
-                  </div>
-                  <div class="col-12 form-group" data-for="name">
-                    <input id="name-form6-1" type="text" name="nameTopic" placeholder="Наименование тематики"
-                           [(ngModel)]="topic.name" required #name="ngModel"
-                           data-form-field="name" class="form-control">
-                    <div class="col-12 form-group alert-danger" role="alert" *ngIf="name.errors && fTopic.submitted">
-                      <div *ngIf="name.errors.required">Поле обязательно для заполнения</div>
+                <div class="row">
+                  <div class="col-md-auto">
+                    <h4 class="align-center mb-0 mt-2 display-5">Добавление тематики</h4>
+                    <div class="col-12 form-group" data-for="id">
+                      <input type="hidden" name="id" data-form-field="id" [(ngModel)]="topic.id" #id="ngModel">
                     </div>
-                  </div>
-                  <div class="col-12 form-group" data-for="textarea">
+                    <div class="col-12 form-group" data-for="name">
+                      <input type="text" name="nameTopic" placeholder="Наименование тематики"
+                             [(ngModel)]="topic.name" required #name="ngModel"
+                             data-form-field="name" class="form-control">
+                      <div class="col-12 form-group alert-danger" role="alert" *ngIf="name.errors && fTopic.submitted">
+                        <div *ngIf="name.errors.required">Поле обязательно для заполнения</div>
+                      </div>
+                    </div>
+                    <div class="col-12 form-group" data-for="textarea">
                           <textarea name="description" placeholder="Описание" data-form-field="textarea"
                                     [(ngModel)]="topic.description" #description="ngModel"
-                                    class="form-control" id="textarea-form6-2"></textarea>
-                    <div class="col-12 form-group alert-danger" role="alert"
-                         *ngIf="fTopic.submitted && isCreateTopicFailed && newTopic">
-                      Ошибка при добавление тематики: {{ errorMessage }}
+                                    class="form-control"></textarea>
+                      <div class="col-12 form-group alert-danger" role="alert"
+                           *ngIf="fTopic.submitted && isCreateTopicFailed && newTopic">
+                        Ошибка при добавление тематики: <p>{{ errorMessage }}</p>
+                      </div>
+                      <div class="col-12 form-group alert-danger" role="alert"
+                           *ngIf="fTopic.submitted && isCreateTopicFailed && !newTopic">
+                        Ошибка при редактировании тематики: <p>{{ errorMessage }}</p>
+                      </div>
                     </div>
-                    <div class="col-12 form-group alert-danger" role="alert"
-                         *ngIf="fTopic.submitted && isCreateTopicFailed && !newTopic">
-                      Ошибка при редактировании тематики: {{ errorMessage }}
+                    <div class="col-12 mbr-section-btn">
+                      <table class="col-12 form-group align-center">
+                        <tr>
+                          <th scope="col" class="align-middle">
+                            <button type="submit" class="btn btn-success display-4 align-center">Добавить</button>
+                          </th>
+                          <th scope="col" class="align-middle">
+                            <button (click)="closeModal()" class="btn btn-info display-4 align-center">Закрыть</button>
+                          </th>
+                        </tr>
+                      </table>
                     </div>
                   </div>
-                  <div *ngIf="newTopic" class="col-12 mbr-section-btn">
-                    <button type="submit" class="btn btn-success display-4">Добавить</button>
-                  </div>
-                  <div *ngIf="!newTopic" class="col-12 mbr-section-btn">
-                    <table>
-                      <tr>
-                        <th scope="col">
-                          <button (click)="editTopic()" class="btn btn-success display-4">Редактировать</button>
-                        </th>
-                        <th scope="col">
-                          <button (click)="deleteTopic()" class="btn btn-success display-4">Удалить</button>
-                        </th>
-                      </tr>
-                    </table>
+                </div>
+              </form>
+
+              <form *ngIf="!newTopic" name="formTopic" (ngSubmit)="fTopic.form.valid && editTopic()" #fTopic="ngForm"
+                    novalidate
+                    class="mbr-form form-with-styler" data-form-title="Form Topic">
+                <div class="row">
+                  <div class="col-md-auto">
+                    <h4 class="align-center mb-0 mt-2 display-5">Редактирование тематики</h4>
+                    <div class="col-12 form-group" data-for="id">
+                      <input type="hidden" name="id" data-form-field="id" [(ngModel)]="topic.id" #id="ngModel">
+                    </div>
+                    <div class="col-12 form-group" data-for="name">
+                      <input id="name-form6-1" type="text" name="nameTopic" placeholder="Наименование тематики"
+                             [(ngModel)]="topic.name" required #name="ngModel"
+                             data-form-field="name" class="form-control">
+                      <div class="col-12 form-group alert-danger" role="alert" *ngIf="name.errors && fTopic.submitted">
+                        <div *ngIf="name.errors.required">Поле обязательно для заполнения</div>
+                      </div>
+                    </div>
+                    <div class="col-12 form-group" data-for="textarea">
+                          <textarea name="description" placeholder="Описание" data-form-field="textarea"
+                                    [(ngModel)]="topic.description" #description="ngModel"
+                                    class="form-control"></textarea>
+                      <div class="col-12 form-group alert-danger" role="alert"
+                           *ngIf="fTopic.submitted && isCreateTopicFailed && newTopic">
+                        Ошибка при добавление тематики: <p>{{ errorMessage }}</p>
+                      </div>
+                      <div class="col-12 form-group alert-danger" role="alert"
+                           *ngIf="fTopic.submitted && isCreateTopicFailed && !newTopic">
+                        Ошибка при редактировании тематики: <p>{{ errorMessage }}</p>
+                      </div>
+                    </div>
+                    <div class="col-12 mbr-section-btn">
+                      <table class="col-12 form-group align-center">
+                        <tr>
+                          <th scope="col" class="align-middle">
+                            <button type="submit" class="btn btn-success display-4">Сохранить</button>
+                          </th>
+                          <th scope="col" class="align-middle">
+                            <button type="submit" (click)="deleteTopic()" class="btn btn-danger display-4">Удалить
+                            </button>
+                          </th>
+                          <th scope="col" class="align-middle">
+                            <button (click)="closeModal()" class="btn btn-info display-4">Закрыть</button>
+                          </th>
+                        </tr>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </form>

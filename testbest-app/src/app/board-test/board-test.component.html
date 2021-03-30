@@ -6,43 +6,44 @@
 
         <div class="dragArea row">
           <div class="col-12">
-            <h2 *ngIf="!isCreateNewTest" class="mbr-section-title mb-4 display-2">
+            <h2 *ngIf="!isCreateTest" class="mbr-section-title mb-4 display-2">
               <strong>Создание теста</strong>
             </h2>
-            <h2 *ngIf="isCreateNewTest" class="mbr-section-title mb-4 display-2">
+            <h2 *ngIf="isCreateTest" class="mbr-section-title mb-4 display-2">
               <strong>Редактирование теста</strong>
             </h2>
           </div>
 
           <form [formGroup]="formTestCreate" (ngSubmit)="createTest()" class="mbr-form form-with-styler"
                 data-form-title="Form Name">
-            <div class="dragArea row">
+            <div class="row">
               <div>
                 <input type="hidden" data-form-field="id">
               </div>
 
               <div class="col-12 form-group" data-for="selectTopic">
-                <select class="form-control form-select" (change)="changeSelect($event)" formControlName="topicId"
+                <select class="form-control form-select" (change)="changeTestSelect($event)" formControlName="topicId"
                         aria-label="Default select example">
                   <option selected value="">Выберите тематику теста</option>
                   <option *ngFor="let topic of topics" [ngValue]="topic.id">{{topic.name}}</option>
                 </select>
-                <div *ngIf="validationForm.topicId.invalid && !isSubmitted" class="alert-danger col-12" role="alert">
-                  <div *ngIf="validationForm.topicId.errors.required">Поле обязательно для заполнения</div>
+                <div *ngIf="validationTestForm.topicId.invalid && !isSubmitted" class="alert-danger col-12"
+                     role="alert">
+                  <div *ngIf="validationTestForm.topicId.errors.required">Поле обязательно для заполнения</div>
                 </div>
               </div>
 
               <div class="col-12 form-group" data-for="name">
-                <input id="name-form5-17" formControlName="name" type="text" placeholder="Название теста"
-                       data-form-field="name" class="form-control" (change)="changeName($event)">
+                <input id="name-form5-17" formControlName="name" type="text" placeholder="Наименование теста"
+                       data-form-field="name" class="form-control" (change)="changeTestName($event)">
                 <div class="alert-danger col-12" role="alert"
-                     *ngIf="validationForm.name.invalid && !isSubmitted">
-                  <div *ngIf="validationForm.name.errors.required">Поле обязательно для заполнения</div>
+                     *ngIf="validationTestForm.name.invalid && !isSubmitted">
+                  <div *ngIf="validationTestForm.name.errors.required">Поле обязательно для заполнения</div>
                 </div>
               </div>
 
               <div class="col-12 form-group" data-for="textarea">
-                <textarea (change)="changeDescription($event)" formControlName="description" name="description"
+                <textarea (change)="changeTestDescription($event)" formControlName="description" name="description"
                           placeholder="Описание"
                           data-form-field="textarea" class="form-control" id="textarea-form5-17">
                 </textarea>
@@ -50,56 +51,103 @@
 
               <div class="col-12 form-group" data-for="duration">
                 <input id="name-form5-18" formControlName="duration" type="number" placeholder="Продолжительность (мин)"
-                       data-form-field="name" class="form-control" (change)="changeDuration($event)">
-                <div class="alert-danger col-12" role="alert" *ngIf="validationForm.duration.invalid && !isSubmitted">
-                  <div *ngIf="validationForm.duration.errors.required">Поле обязательно для заполнения</div>
-                  <div *ngIf="validationForm.duration.errors.min">Минимально доступное время 10 минут</div>
-                  <div *ngIf="validationForm.duration.errors.max">Максимально доступное время 300 минут</div>
+                       data-form-field="name" class="form-control" (change)="changeTestDuration($event)">
+                <div class="alert-danger col-12" role="alert"
+                     *ngIf="validationTestForm.duration.invalid && !isSubmitted">
+                  <div *ngIf="validationTestForm.duration.errors.required">Поле обязательно для заполнения</div>
+                  <div *ngIf="validationTestForm.duration.errors.min">Минимально доступное время 10 минут</div>
+                  <div *ngIf="validationTestForm.duration.errors.max">Максимально доступное время 300 минут</div>
                 </div>
               </div>
 
               <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
-                <button *ngIf="!isCreateNewTest" type="submit" class="btn btn-success display-4">Создать тест</button>
-                <button *ngIf="isCreateNewTest" type="submit" class="btn btn-success display-4">Редактировать тест
-                </button>
+                <button *ngIf="!isCreateTest" type="submit" class="btn btn-success display-4">Создать тест</button>
+                <button *ngIf="isCreateTest" type="submit" class="btn btn-success display-4">Сохранить тест</button>
               </div>
             </div>
           </form>
+          <div *ngIf="isCreateTest" class="col-12">
 
-          <div *ngIf="isCreateNewTest" class="dragArea row">
+            <div class="row">
+              <div class="col-md col-sm-12 form-group" data-for="name" style="padding-left: 0px;">
+                <button class="btn btn-success display-6" (click)="openModalNewChapter()">Добавить раздел</button>
+              </div>
+              <div class="col-md col-sm-12 form-group" data-for="surname">
+                <button class="btn btn-success display-6" [disabled]="true" (click)="openModalNewQuestion()">
+                  Добавить вопрос
+                </button>
+              </div>
+            </div>
+
             <div class="col-12">
               <div>
-<!--                <table class="table table-borderless table-hover">-->
-<!--                  <tbody>-->
-<!--                  &lt;!&ndash;                  <tr *ngFor="let test of tests">&lt;!&ndash; (click)="">&ndash;&gt;&ndash;&gt;-->
-<!--                  &lt;!&ndash;                    <td>{{ test.topicId }}</td>&ndash;&gt;-->
-<!--                  &lt;!&ndash;                    <td>{{ test.name }}</td>&ndash;&gt;-->
-<!--                  &lt;!&ndash;                    <td>{{ test.description }}</td>&ndash;&gt;-->
-<!--                  &lt;!&ndash;                  </tr>&ndash;&gt;-->
-
-<!--                  <tr>-->
-<!--                    <td>Создать раздел</td>-->
-<!--                    <td>Описание</td>-->
-<!--                  </tr>-->
-<!--                  <tr *ngFor="let chapter of test.chapters">-->
-<!--                    <td>{{ chapter.name }}</td>-->
-<!--                    <td>{{ chapter.description }}</td>-->
-<!--                  </tr>-->
-<!--                  </tbody>-->
-<!--                </table>-->
+                <table class="table table-borderless table-hover">
+                  <tbody>
+                  <tr>
+                    <td>Создать раздел</td>
+                    <td>Описание</td>
+                  </tr>
+                  <tr *ngFor="let chapter of test.chapters">
+                    <td>{{ chapter.name }}</td>
+                    <td>{{ chapter.description }}</td>
+                  </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
 
-          <!--            <app-modal *ngIf="showModal" (close)="closeModal()">-->
-          <!--              <div>-->
-          <!--                <h3>First Modal</h3>-->
-          <!--              </div>-->
-          <!--            </app-modal>-->
+          <app-modal *ngIf="showModal" (close)="closeModal()">
+            <form [formGroup]="formChapterCreate" (ngSubmit)="createChapter()" class="mbr-form form-with-styler">
+              <div class="row">
+                  <div class="col-12 form-group" data-for="name">
+                    <h4 *ngIf="!isCreateChapter" class="align-center">Создание раздела</h4>
+                    <h4 *ngIf="isCreateChapter" class="align-center">Редактирование раздела</h4>
+                  </div>
 
-          <!--            <button (click)="openModal()">Open First Modal</button>-->
+                  <div class="col-12 form-group" data-for="name">
+                    <input formControlName="name" type="text" placeholder="Наименование раздела"
+                           data-form-field="name" class="form-control" (change)="changeChapterName($event)">
+                    <div class="alert-danger col-12" role="alert"
+                         *ngIf="validationChapterForm.name.invalid && !isSubmitted">
+                      <div *ngIf="validationChapterForm.name.errors.required">Поле обязательно для заполнения</div>
+                    </div>
+                  </div>
+
+                  <div class="col-12 form-group" data-for="textarea">
+                    <textarea (change)="changeChapterDescription($event)" formControlName="description"
+                              name="description"
+                              placeholder="Описание" data-form-field="textarea" class="form-control">
+
+                    </textarea>
+                  </div>
+
+                  <div class="col-md col-sm-12 form-group" data-for="name">
+                    <button *ngIf="!isCreateChapter" type="submit" class="btn btn-success display-4">Создать раздел
+                    </button>
+                    <button *ngIf="isCreateChapter" type="submit" class="btn btn-success display-4">Сохранить раздел
+                    </button>
+                  </div>
+                  <div class="col-md col-sm-12 form-group" data-for="surname">
+                    <button (click)="closeModal()" class="btn btn-info display-4">Закрыть</button>
+                  </div>
+
+
+                <!--                <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">-->
+                <!--                  <button *ngIf="!isCreateChapter" type="submit" class="btn btn-success display-4">Создать раздел-->
+                <!--                  </button>-->
+                <!--                  <button *ngIf="isCreateChapter" type="submit" class="btn btn-success display-4">Сохранить раздел-->
+                <!--                  </button>-->
+                <!--                  <button (click)="closeModal()" class="btn btn-info display-4">Закрыть</button>-->
+                <!--                </div>-->
+              </div>
+            </form>
+          </app-modal>
+
+
         </div>
       </div>
     </div>
   </div>
+  <app-modal-outlet></app-modal-outlet>
 </section>

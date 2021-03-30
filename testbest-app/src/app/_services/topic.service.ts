@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {Global} from "../global";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Topic} from "../_models/topic";
+import {Topic} from "../_models/createTest/parameters/Topic";
 
 const TOPIC_API = Global.PROD + '/api/topics/';
 

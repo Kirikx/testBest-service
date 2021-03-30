@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../_services/auth.service';
 import {Router} from "@angular/router";
 import {TokenStorageService} from "../_services/token-storage.service";
-import {User} from "../_models/user";
+import {User} from "../_models/users/User";
 
 @Component({
   selector: 'app-register',

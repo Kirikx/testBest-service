@@ -1,4 +1,4 @@
-import {Chapter} from "./chapter";
+import {Chapter} from "./Chapter";
 
 export class Test {
   topicId: string = null;

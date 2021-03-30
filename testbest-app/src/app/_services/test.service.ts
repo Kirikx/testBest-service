@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Test} from "../_models/test";
+import {Test} from "../_models/createTest/Test";
 import {Global} from "../global";
 
 const TEST_API = Global.PROD + '/api/tests/';

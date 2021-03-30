@@ -1,11 +1,11 @@
-import {Component, Inject, OnChanges, OnInit, Renderer2, SimpleChanges} from '@angular/core';
+import {Component, Inject, OnInit, Renderer2} from '@angular/core';
 import {Router} from "@angular/router";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {DOCUMENT} from "@angular/common";
-import {Test} from "../_models/test";
+import {Test} from "../_models/createTest/Test";
 import {TestService} from "../_services/test.service";
 import {TopicService} from "../_services/topic.service";
-import {Topic} from "../_models/topic";
+import {Topic} from "../_models/createTest/parameters/Topic";
 
 @Component({
   selector: 'app-board-moderator',
@@ -16,6 +16,7 @@ import {Topic} from "../_models/topic";
 export class BoardManagerComponent implements OnInit {
   //Переменные для Topic
   topic: Topic;
+  buff: Topic;
   isCreateTopicFailed = false;
   newTopic = true;
   topics: Array<Topic>;
@@ -60,12 +61,28 @@ export class BoardManagerComponent implements OnInit {
   openModalNewTopic() {
     this.showModal = true;
     this.newTopic = true;
+    this.topic = new Topic();
   }
 
   openModalEditTopic(id: String) {
     this.showModal = true;
     this.newTopic = false;
-    this.topic = this.topics.find(topic => topic.id === id);
+    this.getTopic(this.topics.find(topic => topic.id === id));
+  }
+
+  getTopic(topic: Topic) {
+    this.topicService.getTopic(topic).subscribe(
+      data => {
+        this.topic = data;
+      },
+      error => {
+        if (error.statusText == "Unknown Error") {
+          this.errorMessage = "Server is not responding";
+        } else {
+          this.errorMessage = error.message;
+        }
+      }
+    )
   }
 
   getTopics() {

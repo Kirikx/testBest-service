@@ -2,11 +2,12 @@ import {Component, Inject, OnInit, Renderer2} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {DOCUMENT} from "@angular/common";
-import {Test} from "../_models/test";
+import {Test} from "../_models/createTest/Test";
 import {TestService} from "../_services/test.service";
 import {TopicService} from "../_services/topic.service";
-import {Topic} from "../_models/topic";
+import {Topic} from "../_models/createTest/parameters/Topic";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {Chapter} from "../_models/createTest/Chapter";
 
 @Component({
   selector: 'app-board-test',
@@ -15,7 +16,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 })
 export class BoardTestComponent implements OnInit {
   test: Test;
-  tests: Array<Test>;
+  chapter: Chapter;
   topics: Array<Topic>;
 
   formTestCreate = new FormGroup({
@@ -25,7 +26,22 @@ export class BoardTestComponent implements OnInit {
     duration: new FormControl('', [Validators.required, Validators.min(10), Validators.max(300)])
   });
 
-  isCreateNewTest = false;
+  formChapterCreate = new FormGroup({
+    name: new FormControl('', Validators.required),
+    description: new FormControl()
+  });
+
+  // formQuestionCreate = new FormGroup({
+  //   topicId: new FormControl('', Validators.required),
+  //   name: new FormControl('', Validators.required),
+  //   description: new FormControl(),
+  //   duration: new FormControl('', [Validators.required, Validators.min(10), Validators.max(300)])
+  // });
+
+  isCreateTest = false; //записан ли тест
+  isCreateChapter = false; //записан ли раздел
+  isCreateQuestion = false; //записан ли вопрос
+
   isSubmitted = true;
 
   showModal = false;
@@ -43,10 +59,6 @@ export class BoardTestComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const textScript = this.renderer2.createElement('script');
-    textScript.src = 'assets/mbr-tabs/mbr-tabs.js';
-    this.renderer2.appendChild(this.document.body, textScript);
-
     if (!this.tokenStorage.getToken()) {
       this.router.navigate(["/home"])
     }
@@ -72,26 +84,26 @@ export class BoardTestComponent implements OnInit {
   }
 
   //Обработка теста
-  get validationForm() {
+  get validationTestForm() {
     return this.formTestCreate.controls;
   }
 
-  changeSelect(event) {
+  changeTestSelect(event) {
     this.formTestCreate.get("topicId").setValue(event.target.value, {
       onlySelf: true
     })
     this.test.topicId = event.target.value.substring(3);
   }
 
-  changeDescription(event) {
+  changeTestDescription(event) {
     this.test.description = event.target.value;
   }
 
-  changeName(event) {
+  changeTestName(event) {
     this.test.name = event.target.value;
   }
 
-  changeDuration(event) {
+  changeTestDuration(event) {
     this.test.duration = event.target.value;
   }
 
@@ -121,7 +133,7 @@ export class BoardTestComponent implements OnInit {
       this.test.id = id;
       this.testService.getTest(this.test).subscribe(
         data => {
-          this.isCreateNewTest = true;
+          this.isCreateTest = true;
           this.test = data;
           this.formTestCreate.setValue({
             topicId: this.test.topicId,
@@ -142,11 +154,49 @@ export class BoardTestComponent implements OnInit {
     }
   }
 
-  //Обработка модальных окон
-  openModal() {
+  //Обработка разделов
+  openModalNewChapter() {
     this.showModal = true;
+    this.chapter = new Chapter();
   }
 
+  get validationChapterForm() {
+    return this.formChapterCreate.controls;
+  }
+
+  changeChapterDescription(event) {
+    this.chapter.description = event.target.value;
+  }
+
+  changeChapterName(event) {
+    this.chapter.name = event.target.value;
+  }
+
+  createChapter(): void {
+    if (!this.formChapterCreate.valid) {
+      this.isSubmitted = false;
+    } else {
+      // this.testService.createTest(this.test).subscribe(
+      //   data => {
+      //     this.test = data;
+      //     this.router.navigate(["/test/"+ this.test.id])
+      //   },
+      //   error => {
+      //     if (error.statusText == "Unknown Error") {
+      //       this.errorMessage = "Server is not responding";
+      //     } else {
+      //       this.errorMessage = error.message;
+      //     }
+      //   }
+      // );
+    }
+  }
+
+  //Обработка модальных окон
+  openModalNewQuestion() {
+    this.showModal = true;
+  }
+  //Обработка модальных окон
   closeModal() {
     this.showModal = false;
   }
