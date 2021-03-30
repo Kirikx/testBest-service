@@ -14,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.Setter;
 import ru.testbest.persistence.BaseEntity;
@@ -29,18 +31,21 @@ public class UserTest implements BaseEntity {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
+    @NotNull
     @Column
     private LocalDateTime started;
 
+    @NotNull
     @Column
     private LocalDateTime finished;
 
     @Column
     private Short score;
 
+    @NotNull
     @Column(name = "passed",
-        columnDefinition = "TINYINT(1)")
-    private Boolean isPassed;
+        columnDefinition = "TINYINT")
+    private Boolean isPassed = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "test_id")
