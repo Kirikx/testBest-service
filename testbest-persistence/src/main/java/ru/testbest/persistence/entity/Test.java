@@ -45,7 +45,7 @@ public class Test implements BaseEntity {
     @Column
     private Short duration;
 
-    @NotNull
+    @NotNull(message = "Field pass_score must not be null!")
     @Column(name = "pass_score")
     private Short passScore;
 
