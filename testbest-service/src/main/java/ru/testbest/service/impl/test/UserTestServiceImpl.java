@@ -208,22 +208,13 @@ public class UserTestServiceImpl implements UserTestService {
             () -> new RuntimeException(String.format("User test id %s not found", userTestId)));
 
     UserTestDto userTestDto = userTestConverter.convertToDto(userTest);
-    // TODO Тест пройден если все ответы правильные (исправить после добавления min_correct признака)
-    userTest.setIsPassed(getQuantityQuestions(userTest) <= userTestDto.getScore());
     userTestDto.setIsPassed(
         userTestDto.getScore() >= userTest.getTest().getPassScore());
     // Тест считается пройден если количество правильных ответов >= минимальному количеству
 
-
     return userTestConverter.convertToDto(
         userTestDao.save(
             userTestConverter.convertToEntity(userTestDto)));
-  }
-
-  private int getQuantityQuestions(UserTest userTest) {
-    return userTest.getTest().getChapters().stream()
-        .mapToInt(ch -> ch.getQuestions().size())
-        .sum();
   }
 
   @Override
