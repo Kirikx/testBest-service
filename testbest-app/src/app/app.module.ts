@@ -20,6 +20,7 @@ import {ModalComponent} from './_modals/modal/modal.component';
 import {CommonModule} from "@angular/common";
 import {PortalModule} from "./_modals/portal/portal.module";
 import {BoardTestComponent} from './board-test/board-test.component';
+import {TreeviewModule} from "ngx-treeview";
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import {BoardTestComponent} from './board-test/board-test.component';
     HttpClientModule,
     CommonModule,
     PortalModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TreeviewModule.forRoot()
   ],
   exports: [
     ModalOutletComponent,
