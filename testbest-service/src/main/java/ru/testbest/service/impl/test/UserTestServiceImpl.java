@@ -59,7 +59,8 @@ public class UserTestServiceImpl implements UserTestService {
   }
 
   private Optional<UserTest> getLastUserTestByUserId(UUID userId) {
-    return userTestDao.findLastByUserIdAndStarted(userId);
+//    return userTestDao.findLastByUserIdAndStarted(userId);
+    return Optional.empty();
   }
 
   private boolean isLegalTime(UserTest userTest) {
