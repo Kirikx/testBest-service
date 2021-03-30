@@ -7,6 +7,7 @@ export class Test {
   name: string = null;
   description: string = null;
   duration:	number = null;
+  passScore: number = null;
 
   chapters: Array<Chapter> = null;
 

@@ -5,12 +5,6 @@ import {Global} from "../global";
 import {Auth} from "../_models/users/Auth";
 import {User} from "../_models/users/User";
 
-const AUTH_API = Global.PROD + '/api/auth/';
-
-const httpOptions = {
-  headers: new HttpHeaders({'Content-Type': 'application/json'})
-};
-
 @Injectable({
   providedIn: 'root'
 })
@@ -19,10 +13,10 @@ export class AuthService {
   }
 
   login(auth: Auth): Observable<any> {
-    return this.http.post(AUTH_API + 'signin', auth, httpOptions);
+    return this.http.post(Global.AUTH_API + 'signin', auth, Global.httpOptions);
   }
 
   register(user: User): Observable<any> {
-    return this.http.post(AUTH_API + 'signup', user, httpOptions);
+    return this.http.post(Global.AUTH_API + 'signup', user, Global.httpOptions);
   }
 }
