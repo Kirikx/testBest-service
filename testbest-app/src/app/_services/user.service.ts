@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {Globals} from "../global";
+import {Global} from "../global";
 
-const API_URL = Globals.PROD + '/api/test/';
+const API_URL = Global.PROD + '/api/test/';
 
 @Injectable({
   providedIn: 'root'

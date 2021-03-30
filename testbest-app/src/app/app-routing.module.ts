@@ -8,6 +8,7 @@ import {ProfileComponent} from './profile/profile.component';
 import {BoardUserComponent} from './board-user/board-user.component';
 import {BoardManagerComponent} from './board-manager/board-manager.component';
 import {BoardAdminComponent} from './board-admin/board-admin.component';
+import {BoardTestComponent} from "./board-test/board-test.component";
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -15,14 +16,16 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: 'profile', component: ProfileComponent},
   {path: 'tests', component: BoardUserComponent},
+  {path: 'test', component: BoardTestComponent},
+  {path: 'test/:id', component: BoardTestComponent},
   {path: 'manager', component: BoardManagerComponent},
   {path: 'admin', component: BoardAdminComponent},
-  {path: '', redirectTo: 'home', pathMatch: 'full'}
+  {path: '', redirectTo: 'home', pathMatch: 'full'},
+  {path: '**', redirectTo: 'home', pathMatch: 'full'}
 ];
 
 @NgModule({
-  //imports: [RouterModule.forRoot(routes)],
-  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule {
