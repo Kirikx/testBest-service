@@ -14,7 +14,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "./target/front/",
-            "baseHref": "./",
+            "baseHref" : "./",
             "deployUrl": "./",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -28,7 +28,10 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "lodash"
+            ]
           },
           "configurations": {
             "production": {

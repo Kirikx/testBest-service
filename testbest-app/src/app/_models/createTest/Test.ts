@@ -1,4 +1,4 @@
-import {Chapter} from "./chapter";
+import {Chapter} from "./Chapter";
 
 export class Test {
   topicId: string = null;
@@ -7,6 +7,7 @@ export class Test {
   name: string = null;
   description: string = null;
   duration:	number = null;
+  passScore: number = null;
 
   chapters: Array<Chapter> = null;
 

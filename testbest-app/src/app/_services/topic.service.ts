@@ -1,14 +1,8 @@
 import { Injectable } from '@angular/core';
 import {Global} from "../global";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Topic} from "../_models/topic";
-
-const TOPIC_API = Global.PROD + '/api/topics/';
-
-const httpOptions = {
-  headers: new HttpHeaders({'Content-Type': 'application/json'})
-};
+import {Topic} from "../_models/createTest/parameters/Topic";
 
 @Injectable({
   providedIn: 'root'
@@ -19,22 +13,22 @@ export class TopicService {
   }
 
   getTopics(): Observable<any> {
-    return this.http.get(TOPIC_API, httpOptions);
+    return this.http.get(Global.TOPIC_API, Global.httpOptions);
   }
 
   getTopic(topic:Topic): Observable<any> {
-    return this.http.get(TOPIC_API + topic.id, httpOptions);
+    return this.http.get(Global.TOPIC_API + topic.id, Global.httpOptions);
   }
 
   deleteTopic(topic:Topic): Observable<any> {
-    return this.http.delete(TOPIC_API + topic.id, httpOptions);
+    return this.http.delete(Global.TOPIC_API + topic.id, Global.httpOptions);
   }
 
   editTopic(topic:Topic): Observable<any> {
-    return this.http.put(TOPIC_API, topic, httpOptions);
+    return this.http.put(Global.TOPIC_API, topic, Global.httpOptions);
   }
 
   createTopic(topic: Topic): Observable<any> {
-    return this.http.post(TOPIC_API + 'create', topic, httpOptions);
+    return this.http.post(Global.TOPIC_API + 'create', topic, Global.httpOptions);
   }
 }
