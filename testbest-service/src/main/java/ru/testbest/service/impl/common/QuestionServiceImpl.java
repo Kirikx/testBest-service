@@ -1,7 +1,9 @@
 package ru.testbest.service.impl.common;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -9,8 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.testbest.converter.impl.manage.QuestionFullConverter;
 import ru.testbest.converter.impl.test.QuestionConverter;
+import ru.testbest.dto.test.ChapterWrapDto;
 import ru.testbest.dto.test.QuestionDto;
 import ru.testbest.dto.test.QuestionFullDto;
+import ru.testbest.persistence.dao.ChapterDao;
 import ru.testbest.persistence.dao.QuestionDao;
 import ru.testbest.persistence.entity.Question;
 import ru.testbest.service.QuestionService;
@@ -20,6 +24,7 @@ import ru.testbest.service.QuestionService;
 public class QuestionServiceImpl implements QuestionService {
 
   private final QuestionDao questionDao;
+  private final ChapterDao chapterDao;
   private final QuestionConverter questionConverter;
   private final QuestionFullConverter questionFullConverter;
 
@@ -61,9 +66,23 @@ public class QuestionServiceImpl implements QuestionService {
     if (questionDto.getId() != null) {
       throw new RuntimeException();
     }
-    return questionFullConverter.convertToDto(
-        questionDao.save(
-            questionFullConverter.convertToEntity(questionDto)));
+    Question question = questionDao.save(
+        questionFullConverter.convertToEntity(questionDto));
+
+    Set<ChapterWrapDto> questionChapters = Optional
+        .ofNullable(questionDto.getChapters())
+        .orElseThrow(() -> new RuntimeException("Question chapter is not null"));
+
+    questionChapters.stream()
+        .map(ChapterWrapDto::getId)
+        .filter(Objects::nonNull)
+        .map(chapterDao::findByIdAndIsDeletedFalse)
+        .map(oChapter -> oChapter.orElse(null))
+        .filter(Objects::nonNull)
+        .peek(chapter -> chapter.addQuestion(question))
+        .forEach(chapterDao::save);
+
+    return getQuestionFullById(question.getId());
   }
 
   @Override
