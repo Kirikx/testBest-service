@@ -9,7 +9,7 @@ import {Topic} from "../_models/createTest/parameters/Topic";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Chapter} from "../_models/createTest/Chapter";
 import {ChapterService} from "../_services/chapter.service";
-import {TreeviewConfig, TreeviewItem} from "ngx-treeview";
+import {TreeItem, TreeviewConfig, TreeviewItem} from "ngx-treeview";
 
 @Component({
   selector: 'app-board-test',
@@ -41,16 +41,17 @@ export class BoardTestComponent implements OnInit {
   //   duration: new FormControl('', [Validators.required, Validators.min(10), Validators.max(300)])
   // });
 
-  isCreateTest = false; //записан ли тест
-  isCreateChapter = false; //записан ли раздел
-  isCreateQuestion = false; //записан ли вопрос
+  isCreateTest = false; //записан ли тест?
+  isCreateChapter = false; //записан ли раздел?
+  isCreateQuestion = false; //записан ли вопрос?
 
-  isSubmitted = true; //нужна валидация форм
+  isSubmitted = true; //нужна валидация форм?
 
   showModalChapter = false;
   showModalQuestion = false;
   errorMessage: string;
 
+  item: TreeItem;
   items: TreeviewItem[];
   config = TreeviewConfig.create({
     hasFilter: true,
@@ -76,62 +77,54 @@ export class BoardTestComponent implements OnInit {
     if (!this.tokenStorage.getToken()) {
       this.router.navigate(["/home"])
     }
-
     this.getTest();
     this.getTopics();
-
-    this.items = [new TreeviewItem({
-      text: "Bolikov",
-      value: 1,
-      checked: false,
-      children: [
-        {
-          text: "Programming",
-          value: 91,
-          checked: false,
-          children: [
-            {
-              text: "Frontend",
-              value: 911,
-              checked: false,
-              children: [
-                {text: "Боликов", value: 9111, checked: false},
-                {text: "Angular 2", value: 9112, checked: false},
-                {text: "ReactJS", value: 9113, checked: false},
-              ],
-            },
-            {
-              text: "Backend",
-              value: 912,
-              checked: false,
-              children: [
-                {text: "C#", value: 9121, checked: false},
-                {text: "Java", value: 9122, checked: false},
-                {text: "Python", value: 9123, checked: false},
-              ],
-            },
-          ],
-        },
-        {
-          text: "Networking",
-          value: 92,
-          checked: false,
-          children: [
-            {text: "Internet", value: 921, checked: false},
-            {text: "Security", value: 922, checked: false},
-          ],
-        },
-      ],
-    })];
-
   }
 
+  //Обработка дерева теста
   onSelectedChangeTest(event) {
   }
 
   onFilterChangeTest(event) {
 
   }
+
+  getTreeData(): TreeviewItem[] {
+    let chapters: TreeviewItem;
+    let questions: TreeviewItem;
+    let answers: TreeviewItem;
+
+    const root = new TreeviewItem({
+      text: this.test.name, value: 1, checked: false, children: [
+        {text: 'Разделы', value: 2, checked: false, disabled: true}
+      ]
+    });
+
+    this.test.chapters.forEach(chapter => {
+      chapters = new TreeviewItem({
+        text: chapter.name, value: chapter.id, checked: false, children: [
+          {text: 'Вопросы', value: 3, checked: false, disabled: true}
+        ]
+      });
+      chapter.questions.forEach(question => {
+        questions = new TreeviewItem({
+          text: question.question, value: question.id, checked: false, children: [
+            {text: 'Ответы', value: 4, checked: false, disabled: true}
+          ]
+        });
+        chapters.children.push(questions);
+
+        question.answers.forEach(answer => {
+          answers = new TreeviewItem({text: answer.answer, value: answer.id, checked: false});
+          questions.children.push(answers);
+        });
+
+      });
+      root.children.push(chapters);
+    });
+    return [root];
+  }
+
 
   //Обработка топика
   getTopics() {
@@ -231,6 +224,8 @@ export class BoardTestComponent implements OnInit {
             duration: this.test.duration,
             passScore: this.test.passScore
           })
+          console.log(this.test);
+          this.items = this.getTreeData();
         },
         error => {
           if (error.statusText == "Unknown Error") {
