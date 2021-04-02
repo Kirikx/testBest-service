@@ -1,4 +1,4 @@
-package exception;
+package ru.testbest.exception;
 
 public enum ErrorType {
 

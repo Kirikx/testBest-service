@@ -1,13 +1,13 @@
-package exception.controller;
+package ru.testbest.exception.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import exception.ErrorType;
-import exception.ResponseMessage;
-import exception.custom.CustomBadRequest;
-import exception.custom.CustomNotFoundException;
-import exception.custom.GlobalException;
+import ru.testbest.exception.ErrorType;
+import ru.testbest.exception.ResponseMessage;
+import ru.testbest.exception.custom.CustomBadRequest;
+import ru.testbest.exception.custom.CustomNotFoundException;
+import ru.testbest.exception.custom.GlobalException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
