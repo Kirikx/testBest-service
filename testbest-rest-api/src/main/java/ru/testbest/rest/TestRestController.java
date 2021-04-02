@@ -4,13 +4,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.testbest.dto.test.TestDto;
 import ru.testbest.dto.test.UserTestDto;
 import ru.testbest.service.UserTestService;
@@ -18,44 +12,45 @@ import ru.testbest.service.impl.common.TestServiceImpl;
 
 @Slf4j
 @RequiredArgsConstructor
+@RequestMapping("/api/tests")
 @RestController
 public class TestRestController {
 
     private final TestServiceImpl testService;
     private final UserTestService userTestService;
 
-    @GetMapping("/tests")
+    @GetMapping()
     public List<TestDto> getQuestions(){
         log.info("Get all tests");
         return testService.getTests();
     }
 
-    @GetMapping("/tests/{id}")
-    public TestDto getQuestion(@PathVariable("id") String id){
+    @GetMapping()
+    public TestDto getQuestion(@RequestParam String id){
         log.info("Get test by id {}", id);
         return testService.getTestById(UUID.fromString(id));
     }
 
-    @PutMapping("/tests")
+    @PutMapping()
     public TestDto editQuestion(@RequestBody TestDto testDto){
         log.info("Edit test {}", testDto);
         return testService.editTest(testDto);
     }
 
-    @DeleteMapping("/tests/{id}")
-    public void deleteQuestion(@PathVariable("id") String id){
+    @DeleteMapping()
+    public void deleteQuestion(@RequestParam String id){
         log.info("Delete test by id {}", id);
         testService.deleteTestById(UUID.fromString(id));
     }
 
-    @PostMapping("/tests/create")
+    @PostMapping("/create")
     public TestDto createQuestion(@RequestBody TestDto testDto){
         log.info("Create test {}", testDto);
         return testService.createTest(testDto);
     }
 
-    @GetMapping("/tests/user/{id}")
-    public List<UserTestDto> getAllTestOfUser(@PathVariable("id") UUID id){
+    @GetMapping("/user")
+    public List<UserTestDto> getAllTestOfUser(@RequestParam UUID id){
         log.info("Get all test for user {}", id);
         return userTestService.getUserTests(id);
     }

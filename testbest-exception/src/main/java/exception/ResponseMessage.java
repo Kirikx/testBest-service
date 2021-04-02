@@ -1,4 +1,4 @@
-package ru.testbest.exception;
+package exception;
 
 import lombok.Getter;
 import lombok.Setter;

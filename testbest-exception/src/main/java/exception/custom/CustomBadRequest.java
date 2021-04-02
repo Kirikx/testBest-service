@@ -1,8 +1,8 @@
-package ru.testbest.exception.custom;
+package exception.custom;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.testbest.exception.ErrorType;
+import exception.ErrorType;
 
 @Getter
 @Setter
