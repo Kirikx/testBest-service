@@ -16,7 +16,7 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: 'profile', component: ProfileComponent},
   {path: 'tests', component: BoardUserComponent},
-  {path: 'test', component: BoardTestComponent},
+  {path: 'test/new', component: BoardTestComponent},
   {path: 'test/:id', component: BoardTestComponent},
   {path: 'manager', component: BoardManagerComponent},
   {path: 'admin', component: BoardAdminComponent},
@@ -25,7 +25,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
   exports: [RouterModule]
 })
 export class AppRoutingModule {

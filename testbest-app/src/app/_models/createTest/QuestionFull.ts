@@ -7,8 +7,8 @@ export class QuestionFull {
   questionTypeId: string = null;
   topicId: string = null;
   isDeleted: boolean = false;
-  answers: Array<AnswerFull> = null;
-  chapter: Array<ChapterWrap> = null;
+  answers = new Array<AnswerFull>();
+  chapters = new Array<ChapterWrap>();
 }
 
 
