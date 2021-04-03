@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import ru.testbest.dto.manage.QuestionFullDto;
 import ru.testbest.dto.test.QuestionDto;
-import ru.testbest.dto.test.QuestionFullDto;
 import ru.testbest.service.impl.common.QuestionServiceImpl;
 
 @Slf4j

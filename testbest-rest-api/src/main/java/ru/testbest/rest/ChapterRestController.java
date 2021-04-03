@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.testbest.dto.manage.ChapterFullDto;
 import ru.testbest.dto.test.ChapterDto;
 import ru.testbest.service.impl.common.ChapterServiceImpl;
 
@@ -38,7 +39,7 @@ public class ChapterRestController {
     }
 
     @PutMapping
-    public ChapterDto editChapter(@RequestBody ChapterDto chapterDto) {
+    public ChapterFullDto editChapter(@RequestBody ChapterFullDto chapterDto) {
         log.info("Edit chapter {}", chapterDto);
         return chapterService.editChapter(chapterDto);
     }
@@ -50,7 +51,7 @@ public class ChapterRestController {
     }
 
     @PostMapping("/create")
-    public ChapterDto createChapter(@RequestBody ChapterDto chapterDto) {
+    public ChapterFullDto createChapter(@RequestBody ChapterFullDto chapterDto) {
         log.info("Create chapter {}", chapterDto);
         return chapterService.createChapter(chapterDto);
     }

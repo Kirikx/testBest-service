@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import ru.testbest.dto.manage.AnswerFullDto;
 import ru.testbest.dto.test.AnswerDto;
-import ru.testbest.dto.test.AnswerFullDto;
 import ru.testbest.service.impl.common.AnswerServiceImpl;
 
 
