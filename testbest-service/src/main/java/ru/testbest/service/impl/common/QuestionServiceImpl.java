@@ -99,7 +99,7 @@ public class QuestionServiceImpl implements QuestionService {
         questionFullConverter.convertToEntity(questionDto));
 
     Set<Chapter> activeChapters = question.getChapters();
-    log.debug("activeChapters = " + activeChapters);
+    log.info("activeChapters = " + activeChapters);
 
     final Set<UUID> currentChaptersIds;
     if (Objects.isNull(questionDto.getChapters())) {
@@ -114,7 +114,7 @@ public class QuestionServiceImpl implements QuestionService {
       if (!activeChapters.isEmpty()) {
         activeChapters.stream()
             .filter(ch -> !currentChaptersIds.contains(ch.getId()))
-            .peek(ch -> log.debug("remove chapter = " + ch))
+            .peek(ch -> log.info("remove chapter = " + ch))
             .peek(ch -> ch.removeQuestion(question))
             .forEach(chapterDao::save);
       }
@@ -125,7 +125,7 @@ public class QuestionServiceImpl implements QuestionService {
             .filter(currentChaptersIds::contains)
             .collect(Collectors.toSet());
 
-        log.debug("skipChapters = " + skipChapters);
+        log.info("skipChapters = " + skipChapters);
 
         currentChaptersIds.stream()
             .filter(skipChapters::contains)
