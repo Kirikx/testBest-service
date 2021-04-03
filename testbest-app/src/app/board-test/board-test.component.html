@@ -1,0 +1,203 @@
+<section class="form1 cid-srmGhZz8Eh mbr-fullscreen mbr-parallax-background">
+  <div class="mbr-overlay" style="opacity: 1; background-color: rgb(255, 255, 255);"></div>
+  <div class="align-center container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 mx-auto mbr-form" data-form-type="formoid">
+
+        <div class="dragArea row">
+
+          <div class="col-sm-3 form-group" data-for="surname">
+            <a class="btn btn-info display-8" routerLink="/manager">Назад</a>
+          </div>
+
+          <form [formGroup]="formTestCreate" (ngSubmit)="createTest()" class="mbr-form form-with-styler">
+            <div class="col-12">
+              <h2 *ngIf="!isCreateTest" class="mbr-section-title mb-4 display-2">
+                <strong>Создание теста</strong>
+              </h2>
+              <h2 *ngIf="isCreateTest" class="mbr-section-title mb-4 display-2">
+                <strong>Редактирование теста</strong>
+              </h2>
+            </div>
+            <div class="row">
+              <div class="col-12 form-group" data-for="selectTopic">
+                <select class="form-control form-select" (change)="changeTestSelect($event)" formControlName="topicId"
+                        aria-label="Default select example">
+                  <option selected value="">Выберите тематику теста</option>
+                  <option *ngFor="let topic of topics" [ngValue]="topic.id">{{topic.name}}</option>
+                </select>
+                <div *ngIf="validationTestForm.topicId.invalid && !isSubmitted" class="alert-danger col-12"
+                     role="alert">
+                  <div *ngIf="validationTestForm.topicId.errors.required">Поле обязательно для заполнения</div>
+                </div>
+              </div>
+
+              <div class="col-12 form-group" data-for="name">
+                <input formControlName="name" type="text" placeholder="Наименование теста"
+                       data-form-field="name" class="form-control" (change)="changeTestName($event)">
+                <div class="alert-danger col-12" role="alert"
+                     *ngIf="validationTestForm.name.invalid && !isSubmitted">
+                  <div *ngIf="validationTestForm.name.errors.required">Поле обязательно для заполнения</div>
+                </div>
+              </div>
+
+              <div class="col-12 form-group" data-for="textarea">
+                <textarea (change)="changeTestDescription($event)" formControlName="description" name="description"
+                          placeholder="Описание"
+                          data-form-field="textarea" class="form-control">
+                </textarea>
+              </div>
+
+              <div class="col-12 form-group" data-for="duration">
+                <input formControlName="duration" type="number" placeholder="Продолжительность (мин)"
+                       data-form-field="name" class="form-control" (change)="changeTestDuration($event)">
+                <div class="alert-danger col-12" role="alert"
+                     *ngIf="validationTestForm.duration.invalid && !isSubmitted">
+                  <div *ngIf="validationTestForm.duration.errors.required">Поле обязательно для заполнения</div>
+                  <div *ngIf="validationTestForm.duration.errors.min">Минимально доступное время: 10 минут</div>
+                  <div *ngIf="validationTestForm.duration.errors.max">Максимально доступное время: 300 минут</div>
+                </div>
+              </div>
+
+              <div class="col-12 form-group" data-for="duration">
+                <input formControlName="passScore" type="number" placeholder="Минимальное количество правильных ответов"
+                       data-form-field="name" class="form-control" (change)="changeTestPassScore($event)">
+                <div class="alert-danger col-12" role="alert"
+                     *ngIf="validationTestForm.passScore.invalid && !isSubmitted">
+                  <div *ngIf="validationTestForm.passScore.errors.required">Поле обязательно для заполнения</div>
+                  <div *ngIf="validationTestForm.passScore.errors.min">Минимально доступное значение: 1</div>
+                  <!--                  <div *ngIf="validationTestForm.passScore.errors.max">Максимально доступное время 300 минут</div>-->
+                </div>
+              </div>
+
+              <div *ngIf="!isCreateTest" class="col-md col-sm-12 form-group" data-for="name">
+                <button type="submit" class="btn btn-success display-4">Создать тест</button>
+              </div>
+              <div *ngIf="isCreateTest" class="col-md col-sm-12 form-group" data-for="surname">
+                <button type="submit" class="btn btn-success display-4">Сохранить тест</button>
+              </div>
+              <div *ngIf="isCreateTest" class="col-md col-sm-12 form-group" data-for="surname">
+                <a (click)="deleteTest()" class="btn btn-danger display-4">Удалить</a>
+              </div>
+            </div>
+          </form>
+
+          <div *ngIf="isCreateTest" class="col-12">
+
+            <ngx-treeview [items]="items" [config]="config"
+                          (selectedChange)="onSelectedChangeTest($event)"
+                          (filterChange)="onFilterChangeTest($event)">
+            </ngx-treeview>
+
+            <div class="row">
+              <div class="col-md col-sm-12 form-group" data-for="name" style="padding-left: 0px;">
+                <button class="btn btn-success display-6" (click)="openModalChapter()">{{getNameCreateButton()}}
+                  раздел
+                </button>
+              </div>
+              <div class="col-md col-sm-12 form-group" data-for="surname">
+                <button class="btn btn-success display-6" (click)="openModalQuestion()">{{getNameCreateButton()}}
+                  вопрос
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <app-modal *ngIf="showModalChapter" (close)="closeModalCreateChapter()">
+          <form [formGroup]="formChapterCreate" (ngSubmit)="createChapter()" class="mbr-form form-with-styler">
+            <div class="row">
+              <div class="col-12 form-group" data-for="name">
+                <h4 class="align-center">{{getNameCreateButton()}} раздела</h4>
+              </div>
+
+              <div class="col-12 form-group" data-for="name">
+                <input formControlName="name" type="text" placeholder="Наименование раздела"
+                       data-form-field="name" class="form-control" (change)="changeChapterName($event)">
+                <div class="alert-danger col-12" role="alert"
+                     *ngIf="validationChapterForm.name.invalid && !isSubmitted">
+                  <div *ngIf="validationChapterForm.name.errors.required">Поле обязательно для заполнения</div>
+                </div>
+              </div>
+
+              <div class="col-12 form-group" data-for="textarea">
+                    <textarea (change)="changeChapterDescription($event)" formControlName="description"
+                              name="description"
+                              placeholder="Описание" data-form-field="textarea" class="form-control">
+                    </textarea>
+              </div>
+
+              <div class="col-md col-sm-12 form-group" data-for="name">
+                <button type="submit" class="btn btn-success display-4">{{getNameUpdateButton()}} раздел</button>
+              </div>
+              <div class="col-md col-sm-12 form-group" data-for="surname" *ngIf="selectIsChapter">
+                <a (click)="deleteChapter()" class="btn btn-danger display-4">Удалить</a>
+              </div>
+              <div class="col-md col-sm-12 form-group" data-for="surname">
+                <a (click)="closeModalCreateChapter()" class="btn btn-info display-4">Закрыть</a>
+              </div>
+            </div>
+          </form>
+        </app-modal>
+
+        <app-modal *ngIf="showModalQuestion" (close)="closeModalCreateChapter()">
+          <form [formGroup]="formQuestionCreate" (ngSubmit)="createQuestion()" class="mbr-form form-with-styler">
+            <div class="row">
+              <div class="col-12 form-group" data-for="name">
+                <h4 class="align-center">{{getNameCreateButton()}} вопрос</h4>
+              </div>
+
+              <div class="col-12 form-group" data-for="selectTopic1">
+                <ngx-dropdown-treeview [config]="select" [items]="selectData"
+                                       (selectedChange)="onSelectedChangeQuestion($event)" formControlName="chaptersSelect">
+                </ngx-dropdown-treeview>
+                <div *ngIf="validationQuestionForm.chaptersSelect.invalid && !isSubmitted" class="alert-danger col-12"
+                     role="alert">
+                  <div *ngIf="validationQuestionForm.chaptersSelect.errors.required">Поле обязательно для заполнения</div>
+                </div>
+              </div>
+
+              <div class="col-12 form-group" data-for="textarea">
+                    <textarea (change)="changeQuestion($event)" formControlName="question"
+                              name="question" placeholder="Вопрос" class="form-control" [value]="question.question">
+                    </textarea>
+                <div *ngIf="validationQuestionForm.question.invalid && !isSubmitted" class="alert-danger col-12"
+                     role="alert">
+                  <div *ngIf="validationQuestionForm.question.errors.required">Поле обязательно для заполнения</div>
+                </div>
+              </div>
+
+              <div class="col-12 form-group" data-for="selectTopic">
+                <select class="form-control form-select" (change)="changeQuestionTypeSelect($event)"
+                        formControlName="questionTypeId" aria-label="Default select example">
+                  <option selected value="1">Выберите тип ответа</option>
+                  <option *ngFor="let type of questionTypes" [ngValue]="type.id">{{type.name}}</option>
+                </select>
+                <div *ngIf="validationQuestionForm.questionTypeId.invalid && !isSubmitted" class="alert-danger col-12"
+                     role="alert">
+                  <div *ngIf="validationQuestionForm.questionTypeId.errors.required">Поле обязательно для заполнения
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md col-sm-12 form-group" data-for="name">
+                <button type="submit"
+                        class="btn btn-success display-4">{{getNameUpdateButton()}} вопрос
+                </button>
+              </div>
+              <div class="col-md col-sm-12 form-group" data-for="surname" *ngIf="selectIsChapter">
+                <a (click)="deleteQuestion()" class="btn btn-danger display-4">Удалить</a>
+              </div>
+              <div class="col-md col-sm-12 form-group" data-for="surname">
+                <a (click)="closeModalCreateQuestion()" class="btn btn-info display-4">Закрыть</a>
+              </div>
+            </div>
+          </form>
+        </app-modal>
+
+
+      </div>
+    </div>
+  </div>
+  <app-modal-outlet></app-modal-outlet>
+</section>

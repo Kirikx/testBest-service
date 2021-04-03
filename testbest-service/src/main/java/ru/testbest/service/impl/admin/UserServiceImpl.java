@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.testbest.converter.impl.admin.UserConverter;
 import ru.testbest.dto.admin.UserDto;
+import ru.testbest.dto.admin.security.UserDetailsImpl;
 import ru.testbest.persistence.dao.UserDao;
 import ru.testbest.persistence.entity.User;
 import ru.testbest.service.UserService;
-import ru.testbest.dto.admin.security.UserDetailsImpl;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +43,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   @Override
   @Transactional
   public UserDto createUser(UserDto userDto) {
+    if (userDto.getId() != null) {
+      throw new RuntimeException();
+    }
     return userConverter.convertToDto(
         userDao.save(
             userConverter.convertToEntity(userDto)));

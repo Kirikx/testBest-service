@@ -6,25 +6,26 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.testbest.dto.test.QuestionDto;
-import ru.testbest.dto.test.QuestionFullDto;
 import ru.testbest.service.impl.common.QuestionServiceImpl;
+import ru.testbest.dto.manage.QuestionFullDto;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/questions")
 @RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RequestMapping("/api/questions")
 public class QuestionRestController {
 
     private final QuestionServiceImpl questionService;
 
-    @GetMapping()
+    @GetMapping("/")
     public List<QuestionDto> getQuestions(){
         log.info("Get all question");
         return questionService.getQuestions();
     }
 
-    @GetMapping()
-    public QuestionDto getQuestion(@RequestParam String id){
+    @GetMapping("/{id}")
+    public QuestionDto getQuestion(@PathVariable("id") String id){
         log.info("Get question by id {}", id);
         return questionService.getQuestionById(UUID.fromString(id));
     }
@@ -35,20 +36,20 @@ public class QuestionRestController {
         return questionService.getFullQuestions();
     }
 
-    @GetMapping("/full")
-    public QuestionFullDto getFullQuestion(@RequestParam String id) {
+    @GetMapping("/full/{id}")
+    public QuestionFullDto getFullQuestion(@PathVariable("id") String id) {
         log.info("Get full question by id {}", id);
         return questionService.getQuestionFullById(UUID.fromString(id));
     }
 
-    @PutMapping()
+    @PutMapping("/")
     public QuestionFullDto editQuestion(@RequestBody QuestionFullDto questionDto){
         log.info("Edit question {}", questionDto);
         return questionService.editQuestion(questionDto);
     }
 
-    @DeleteMapping()
-    public void deleteQuestion(@RequestParam String id){
+    @DeleteMapping("/{id}")
+    public void deleteQuestion(@PathVariable("id") String id){
         log.info("Delete question by id {}", id);
         questionService.deleteQuestionById(UUID.fromString(id));
     }

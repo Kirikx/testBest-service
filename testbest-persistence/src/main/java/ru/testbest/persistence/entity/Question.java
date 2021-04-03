@@ -14,26 +14,31 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.Setter;
+import ru.testbest.persistence.BaseEntity;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "question")
-public class Question {
+public class Question implements BaseEntity {
 
     @Id
     @GeneratedValue
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
+    @NotNull
     @Column
     String question;
 
+    @NotNull
     @Column(name = "deleted",
-        columnDefinition = "TINYINT(1)")
-    Boolean isDeleted;
+        columnDefinition = "TINYINT")
+    Boolean isDeleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id")

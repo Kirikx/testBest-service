@@ -18,18 +18,17 @@ export class BoardAdminComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     if (!this.tokenStorage.getToken()) {
       this.router.navigate(["/home"])
     }
 
-    this.userService.getAdminBoard().subscribe(
-      data => {
-        this.content = data;
-      },
-      err => {
-        this.content = JSON.parse(err.error).message;
-      }
-    );
+    // this.userService.getAdminBoard().subscribe(
+    //   data => {
+    //     this.content = data;
+    //   },
+    //   err => {
+    //     this.content = JSON.parse(err.error).message;
+    //   }
+    // );
   }
 }

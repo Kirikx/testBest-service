@@ -14,14 +14,17 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.Setter;
+import ru.testbest.persistence.BaseEntity;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "user_test_question")
-public class UserTestQuestion {
+public class UserTestQuestion implements BaseEntity {
 
     @Id
     @GeneratedValue
@@ -34,9 +37,10 @@ public class UserTestQuestion {
     @Column
     private LocalDateTime answered;
 
+    @NotNull
     @Column(name = "correct",
-        columnDefinition = "TINYINT(1)")
-    private Boolean isCorrect;
+        columnDefinition = "TINYINT")
+    private Boolean isCorrect = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_test_id")

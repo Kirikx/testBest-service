@@ -1,0 +1,5 @@
+<div class="modal-overlay" (click)="closeModal($event)" *portalTo="'.modal-window'" #overlay>
+  <div class="my-modal">
+    <ng-content></ng-content>
+  </div>
+</div>

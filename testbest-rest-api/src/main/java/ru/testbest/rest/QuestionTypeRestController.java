@@ -10,20 +10,21 @@ import ru.testbest.service.QuestionTypeService;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/type_questions")
 @RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RequestMapping("/api/type_questions")
 public class QuestionTypeRestController {
 
     private final QuestionTypeService questionTypeDto;
 
-    @GetMapping()
+    @GetMapping("/")
     public List<QuestionTypeDto> getTypeQuestions(){
         log.info("Get all type question");
         return questionTypeDto.getQuestionTypes();
     }
 
-    @GetMapping()
-    public QuestionTypeDto getTypeQuestion(@RequestParam String id){
+    @GetMapping("/{id}")
+    public QuestionTypeDto getTypeQuestion(@PathVariable("id") String id){
         log.info("Get question type by id {} ", id);
         return questionTypeDto.getQuestionTypeById(UUID.fromString(id));
     }

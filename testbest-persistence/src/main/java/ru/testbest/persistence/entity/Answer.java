@@ -9,30 +9,36 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.Setter;
+import ru.testbest.persistence.BaseEntity;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "answer")
-public class Answer {
+public class Answer implements BaseEntity {
 
   @Id
   @GeneratedValue
   @Column(columnDefinition = "BINARY(16)")
   private UUID id;
 
+  @NotNull
   @Column
   private String answer;
 
+  @NotNull
   @Column(name = "deleted",
       columnDefinition = "TINYINT")
-  private Boolean isDeleted;
+  private Boolean isDeleted = false;
 
+  @NotNull
   @Column(name = "correct",
       columnDefinition = "TINYINT")
-  private Boolean isCorrect;
+  private Boolean isCorrect = false;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "question_id")

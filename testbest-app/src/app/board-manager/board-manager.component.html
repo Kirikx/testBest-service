@@ -1,29 +1,24 @@
 <section class="tabs content18 cid-srn9kG2mng mbr-fullscreen" id="tabs1-14">
-  <div class="mbr-overlay" style="opacity: 0.6; background-color: rgb(255, 255, 255);"></div>
+  <script type="application/javascript" defer src="./assets/mbr-tabs/mbr-tabs.js"></script>
+  <div class="mbr-overlay" style="opacity: 1; background-color: rgb(255, 255, 255);"></div>
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-12 col-md-11">
-        <h3 class="mbr-section-title mb-0 mbr-fonts-style display-2"><strong>Менеджер тестов</strong></h3>
+        <h3 class="mbr-section-title mb-0 mbr-fonts-style display-2"><strong>Редактор тестов</strong></h3>
       </div>
     </div>
     <div class="row justify-content-center mt-4">
-      <div class="col-12 col-md-11">
+      <div class="col-12">
         <ul class="nav nav-tabs mb-4" role="tablist">
           <li class="nav-item first mbr-fonts-style">
             <a class="nav-link mbr-fonts-style show active display-7"
                role="tab" data-toggle="tab" href="#tabs1-14_tab0" aria-selected="true">
-              <strong>Созданные тесты</strong>
+              <strong>Тесты</strong>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link mbr-fonts-style active display-7"
                role="tab" data-toggle="tab" href="#tabs1-14_tab1" aria-selected="true">
-              <strong>Создать новый тест</strong>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link mbr-fonts-style active display-7"
-               role="tab" data-toggle="tab" href="#tabs1-14_tab2" aria-selected="true">
               <strong>Тематика тестирования</strong>
             </a>
           </li>
@@ -38,65 +33,47 @@
                 <ul class="list-unstyled">
                   <li>Здесь вы можете:
                     <ul>
+                      <li>Создать новый тест</li>
                       <li>Выбрать тест для редактирования</li>
-                      <li>Удалить данный тест</li>
-                      <li>Назначит тест на прохождение для конкретных людей</li>
+                      <li>Удалить тест</li>
+                      <!--                      <li>Назначит тест на прохождение для конкретных людей</li>-->
                     </ul>
                   </li>
                 </ul>
+                <div class="col-lg-12 col-md-12 col-sm-12 align-right ">
+                  <a class="btn btn-success display-4" routerLink="/test/new">Добавить</a>
+                </div>
               </div>
             </div>
-            <div class="col-md-12">
+            <div>
               <div>
-                <table class="table table-striped table-striped table-hover ">
+                <table class="table table-striped table-striped table-hover">
                   <thead class="colorTableHeader">
                   <tr>
-                    <th scope="col">Test name</th>
-                    <th scope="col">Topic</th>
-                    <th scope="col">Time</th>
+                    <th scope="col" class="align-middle">Тематика</th>
+                    <th scope="col" class="align-middle">Наименование теста</th>
+                    <th scope="col" class="align-middle">Описание</th>
+                    <th scope="col" class="align-middle">Время прохождения</th>
+                    <th scope="col" class="align-middle">Тест считается пройде</th>
+                    <th scope="col"></th>
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td>test name</td>
-                    <td>test topic</td>
-                    <td>20:00</td>
+                  <tr *ngFor="let test of tests">
+                    <td class="align-middle">{{ getNameTopic(test.topicId) }}</td>
+                    <td class="align-middle">{{ test.name }}</td>
+                    <td class="align-middle">{{ test.description }}</td>
+                    <td class="align-middle">{{ test.duration }}</td>
+                    <td class="align-middle">{{ test.passScore }}</td>
+                    <td class="align-right"><a class="btn btn-info-outline display-4"
+                                               (click)="redirectToCreateTest(test.id)">Редактировать</a></td>
                   </tr>
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
-          <div id="tab2" class="tab-pane in active" role="tabpanel">
-            <div class="row">
-              <div class="container">
-                <div class="mbr-section-head">
-                  <h4 class="mbr-section-subtitle mbr-fonts-style align-center mb-0 mt-2 display-5">
-                   Создание теста
-                  </h4>
-                </div>
-                <div class="row justify-content-center mt-4">
-                  <div class="col-lg-8 mx-auto mbr-form" data-form-type="id">
-                    <form action="https://mobirise.eu/" method="POST" class="mbr-form form-with-styler" data-form-title="Form Name">
-                      <input type="hidden" name="id" data-form-field="id">
-                      <div class="dragArea row">
-                        <div class="col-md col-sm-12 form-group" data-for="name">
-                          <input type="text" name="name" placeholder="Название теста" data-form-field="name" class="form-control" value="" id="name-form5-17">
-                        </div>
-                        <div class="col-12 form-group" data-for="textarea">
-                          <textarea name="description" placeholder="Описание" data-form-field="textarea" class="form-control" id="textarea-form5-17"></textarea>
-                        </div>
-                        <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
-                          <button type="submit" class="btn btn-success display-4">Создать тест</button>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div id="tab3" class="tab-pane" role="tabpanel">
+          <div id="tab2" class="tab-pane" role="tabpanel">
             <div class="row">
               <div class="col-md-12">
                 <p class="mbr-text mbr-fonts-style display-7">
@@ -111,7 +88,7 @@
                   </li>
                 </ul>
                 <div class="col-lg-12 col-md-12 col-sm-12 align-right mbr-section-btn">
-                  <button class="btn btn-success display-4">Добавить</button>
+                  <button class="btn btn-success display-4" (click)="openModalNewTopic()">Добавить</button>
                 </div>
               </div>
             </div>
@@ -122,20 +99,115 @@
                   <tr>
                     <th scope="col">Наименование тематики</th>
                     <th scope="col">Описание</th>
+                    <th scope="col"></th>
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td>Тестове имя</td>
-                    <td>Тестовое описание</td>
+                  <tr *ngFor="let topic of topics">
+                    <td class="align-middle">{{ topic.name }}</td>
+                    <td class="align-middle">{{ topic.description }}</td>
+                    <td class="align-right"><a class="btn btn-info-outline display-12"
+                                               (click)="openModalEditTopic(topic.id)">Редактировать</a></td>
                   </tr>
                   </tbody>
                 </table>
               </div>
             </div>
+
+            <app-modal *ngIf="showModal" (close)="closeModal()">
+              <form *ngIf="newTopic" name="formTopic" (ngSubmit)="fTopic.form.valid && createTopic()" #fTopic="ngForm"
+                    novalidate class="mbr-form form-with-styler">
+                <div class="row">
+                  <div class="col-12 form-group" data-for="name">
+                    <h4 class="align-center">Добавление тематики</h4>
+                  </div>
+
+                  <div class="col-12 form-group" data-for="name">
+                    <input type="text" name="nameTopic" placeholder="Наименование тематики"
+                           [(ngModel)]="topic.name" required #name="ngModel"
+                           data-form-field="name" class="form-control">
+                    <div class="col-12 form-group alert-danger" role="alert" *ngIf="name.errors && fTopic.submitted">
+                      <div *ngIf="name.errors.required">Поле обязательно для заполнения</div>
+                    </div>
+                  </div>
+
+                  <div class="col-12 form-group" data-for="textarea">
+                    <textarea name="description" placeholder="Описание" data-form-field="textarea"
+                            [(ngModel)]="topic.description" class="form-control">
+                    </textarea>
+                    <div class="col-12 form-group alert-danger" role="alert"
+                         *ngIf="fTopic.submitted && isCreateTopicFailed && newTopic">
+                      Ошибка при добавление тематики: <p>{{ errorMessage }}</p>
+                    </div>
+                    <div class="col-12 form-group alert-danger" role="alert"
+                         *ngIf="fTopic.submitted && isCreateTopicFailed && !newTopic">
+                      Ошибка при редактировании тематики: <p>{{ errorMessage }}</p>
+                    </div>
+                  </div>
+                  <div class="col-md col-sm-12 form-group" data-for="name">
+                    <button type="submit" class="btn btn-success display-4">Добавить</button>
+                  </div>
+                  <div class="col-md col-sm-12 form-group" data-for="surname">
+                    <a (click)="closeModal()" class="btn btn-info display-4">Закрыть</a>
+                  </div>
+                </div>
+              </form>
+
+              <form *ngIf="!newTopic" name="formTopic" (ngSubmit)="fTopic.form.valid && editTopic()" #fTopic="ngForm"
+                    novalidate
+                    class="mbr-form form-with-styler" data-form-title="Form Topic">
+                <div class="row">
+                  <div class="col-md-auto">
+                    <h4 class="align-center mb-0 mt-2 display-5">Редактирование тематики</h4>
+                    <div class="col-12 form-group" data-for="id">
+                      <input type="hidden" name="id" data-form-field="id" [(ngModel)]="topic.id" #id="ngModel">
+                    </div>
+                    <div class="col-12 form-group" data-for="name">
+                      <input id="name-form6-1" type="text" name="nameTopic" placeholder="Наименование тематики"
+                             [(ngModel)]="topic.name" required #name="ngModel"
+                             data-form-field="name" class="form-control">
+                      <div class="col-12 form-group alert-danger" role="alert" *ngIf="name.errors && fTopic.submitted">
+                        <div *ngIf="name.errors.required">Поле обязательно для заполнения</div>
+                      </div>
+                    </div>
+                    <div class="col-12 form-group" data-for="textarea">
+                          <textarea name="description" placeholder="Описание" data-form-field="textarea"
+                                    [(ngModel)]="topic.description" #description="ngModel"
+                                    class="form-control"></textarea>
+                      <div class="col-12 form-group alert-danger" role="alert"
+                           *ngIf="fTopic.submitted && isCreateTopicFailed && newTopic">
+                        Ошибка при добавление тематики: <p>{{ errorMessage }}</p>
+                      </div>
+                      <div class="col-12 form-group alert-danger" role="alert"
+                           *ngIf="fTopic.submitted && isCreateTopicFailed && !newTopic">
+                        Ошибка при редактировании тематики: <p>{{ errorMessage }}</p>
+                      </div>
+                    </div>
+                    <div class="col-12 mbr-section-btn">
+                      <table class="col-12 form-group align-center">
+                        <tr>
+                          <th scope="col" class="align-middle">
+                            <button type="submit" class="btn btn-success display-4">Сохранить</button>
+                          </th>
+                          <th scope="col" class="align-middle">
+                            <button type="submit" (click)="deleteTopic()" class="btn btn-danger display-4">Удалить
+                            </button>
+                          </th>
+                          <th scope="col" class="align-middle">
+                            <button (click)="closeModal()" class="btn btn-info display-4">Закрыть</button>
+                          </th>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </app-modal>
+
           </div>
         </div>
       </div>
     </div>
   </div>
+  <app-modal-outlet></app-modal-outlet>
 </section>

@@ -1,55 +1,72 @@
 package ru.testbest.converter.impl.manage;
 
-import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+import javax.annotation.PostConstruct;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.testbest.converter.ConverterTest;
-import ru.testbest.converter.impl.test.ChapterConverter;
-import ru.testbest.dto.test.QuestionFullDto;
+import ru.testbest.converter.impl.AbstractMapper;
+import ru.testbest.dto.manage.QuestionFullDto;
 import ru.testbest.persistence.dao.QuestionTypeDao;
 import ru.testbest.persistence.dao.TopicDao;
 import ru.testbest.persistence.entity.Question;
 
 @Component
-@RequiredArgsConstructor
-public class QuestionFullConverter implements ConverterTest<Question, QuestionFullDto> {
+public class QuestionFullConverter extends AbstractMapper<Question, QuestionFullDto> {
 
+  private final ModelMapper mapper;
   private final TopicDao topicDao;
   private final QuestionTypeDao questionTypeDao;
-  private final AnswerFullConverter answerFullConverter;
-  private final ChapterConverter chapterConverter;
 
-  @Override
-  public QuestionFullDto convertToDto(Question entity) {
-    QuestionFullDto questionFullDto = new QuestionFullDto();
-    questionFullDto.setId(entity.getId());
-    questionFullDto.setQuestionText(entity.getQuestion());
-    questionFullDto.setTopicId(entity.getTopic().getId());
-    questionFullDto.setQuestionTypeId(entity.getQuestionType().getId());
-    questionFullDto.setQuestionAnswers(entity.getAnswers().stream()
-        .map(answerFullConverter::convertToDto)
-        .collect(Collectors.toSet()));
-    questionFullDto.setIsDeleted(entity.getIsDeleted());
-    questionFullDto.setChapters(entity.getChapters().stream()
-        .map(chapterConverter::wrapDto)
-        .collect(Collectors.toSet()));
-    return questionFullDto;
+  @Autowired
+  public QuestionFullConverter(
+      ModelMapper mapper,
+      TopicDao topicDao,
+      QuestionTypeDao questionTypeDao
+  ) {
+    super(Question.class, QuestionFullDto.class);
+    this.mapper = mapper;
+    this.topicDao = topicDao;
+    this.questionTypeDao = questionTypeDao;
+  }
+
+  @PostConstruct
+  public void setupMapper() {
+    mapper.createTypeMap(Question.class, QuestionFullDto.class)
+        .addMappings(m -> m.skip(QuestionFullDto::setTopicId))
+        .addMappings(m -> m.skip(QuestionFullDto::setQuestionTypeId))
+        .setPostConverter(toDtoConverter());
+    mapper.createTypeMap(QuestionFullDto.class, Question.class)
+        .addMappings(m -> m.skip(Question::setTopic))
+        .addMappings(m -> m.skip(Question::setQuestionType))
+        .setPostConverter(toEntityConverter());
   }
 
   @Override
-  public Question convertToEntity(QuestionFullDto dto) {
-    Question question = new Question();
-    question.setId(dto.getId());
-    question.setQuestion(dto.getQuestionText());
-    question.setIsDeleted(dto.getIsDeleted());
-    question.setTopic(topicDao.findById(dto.getTopicId()).orElse(null));
-    question.setQuestionType(questionTypeDao.findById(dto.getQuestionTypeId()).orElse(null));
-    question.setAnswers(dto.getQuestionAnswers().stream()
-        .map(answerFullConverter::convertToEntity)
-        .collect(Collectors.toSet()));
-    question.setChapters(dto.getChapters().stream()
-        .map(chapterConverter::unwrapDto)
-        .collect(Collectors.toSet()));
-    return question;
+  public void mapSpecificFields(Question source, QuestionFullDto destination) {
+    destination.setTopicId(getTopicId(source));
+    destination.setQuestionTypeId(getQuestionTypeId(source));
+  }
+
+  private UUID getTopicId(Question source) {
+    return Objects.isNull(source) || Objects.isNull(source.getTopic()) ? null
+        : source.getTopic().getId();
+  }
+
+  private UUID getQuestionTypeId(Question source) {
+    return Objects.isNull(source) || Objects.isNull(source.getQuestionType()) ? null
+        : source.getQuestionType().getId();
+  }
+
+  @Override
+  public void mapSpecificFields(QuestionFullDto source, Question destination) {
+    Optional.ofNullable(source.getTopicId()).ifPresent(id ->
+        destination.setTopic(topicDao.findById(id).orElse(null))
+    );
+    Optional.ofNullable(source.getQuestionTypeId()).ifPresent(id ->
+        destination.setQuestionType(questionTypeDao.findById(id).orElse(null))
+    );
   }
 }

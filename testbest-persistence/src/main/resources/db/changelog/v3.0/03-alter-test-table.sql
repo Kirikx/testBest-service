@@ -1,0 +1,1 @@
+ALTER TABLE `test` ADD COLUMN `pass_score` smallint NOT NULL DEFAULT 0;
