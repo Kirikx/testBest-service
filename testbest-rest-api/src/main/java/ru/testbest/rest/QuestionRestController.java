@@ -6,8 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.testbest.dto.test.QuestionDto;
-import ru.testbest.dto.test.QuestionFullDto;
 import ru.testbest.service.impl.common.QuestionServiceImpl;
+import ru.testbest.dto.manage.QuestionFullDto;
+
 
 @Slf4j
 @RequiredArgsConstructor

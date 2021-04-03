@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.testbest.dto.admin.security.UserDetailsImpl;
+import ru.testbest.dto.manage.TestFullDto;
 import ru.testbest.dto.test.TestDto;
 import ru.testbest.dto.test.UserTestDto;
 import ru.testbest.service.UserTestService;
@@ -43,7 +44,7 @@ public class TestRestController {
     }
 
     @PutMapping
-    public TestDto editTest(@RequestBody TestDto testDto){
+    public TestFullDto editTest(@RequestBody TestFullDto testDto) {
         log.info("Edit test {}", testDto);
         return testService.editTest(testDto);
     }
@@ -55,7 +56,7 @@ public class TestRestController {
     }
 
     @PostMapping("/create")
-    public TestDto createTest(@RequestBody TestDto testDto, Authentication authentication) {
+    public TestFullDto createTest(@RequestBody TestFullDto testDto, Authentication authentication) {
         log.info("Create test {}", testDto);
         UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
         return testService.createTest(testDto, currentUser.getId());

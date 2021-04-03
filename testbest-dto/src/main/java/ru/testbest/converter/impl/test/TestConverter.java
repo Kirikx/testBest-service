@@ -1,54 +1,48 @@
 package ru.testbest.converter.impl.test;
 
 import java.util.Objects;
-import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.testbest.converter.impl.AbstractMapper;
+import ru.testbest.dto.test.ChapterDto;
 import ru.testbest.dto.test.TestDto;
-import ru.testbest.persistence.dao.TopicDao;
-import ru.testbest.persistence.dao.UserDao;
 import ru.testbest.persistence.entity.Test;
 
 @Component
 public class TestConverter extends AbstractMapper<Test, TestDto> {
 
   private final ModelMapper mapper;
-  private final TopicDao topicDao;
-  private final UserDao userDao;
+  private final ChapterConverter chapterConverter;
 
   @Autowired
   public TestConverter(
       ModelMapper mapper,
-      TopicDao topicDao,
-      UserDao userDao
+      ChapterConverter chapterConverter
   ) {
     super(Test.class, TestDto.class);
     this.mapper = mapper;
-    this.topicDao = topicDao;
-    this.userDao = userDao;
+    this.chapterConverter = chapterConverter;
   }
 
   @PostConstruct
   public void setupMapper() {
     mapper.createTypeMap(Test.class, TestDto.class)
         .addMappings(m -> m.skip(TestDto::setAuthorId))
-        .addMappings(m -> m.skip(TestDto::setAuthorId))
+        .addMappings(m -> m.skip(TestDto::setTopicId))
+        .addMappings(m -> m.skip(TestDto::setChapters))
         .setPostConverter(toDtoConverter());
-    mapper.createTypeMap(TestDto.class, Test.class)
-        .addMappings(m -> m.skip(Test::setAuthor))
-        .addMappings(m -> m.skip(Test::setTopic))
-        .addMappings(m -> m.skip(Test::setCreated))
-        .setPostConverter(toEntityConverter());
   }
 
   @Override
   public void mapSpecificFields(Test source, TestDto destination) {
     destination.setAuthorId(getAuthorId(source));
     destination.setTopicId(getTopicId(source));
+    destination.setChapters(getChaptersIsNotDelete(source));
   }
 
   private UUID getAuthorId(Test source) {
@@ -61,13 +55,16 @@ public class TestConverter extends AbstractMapper<Test, TestDto> {
         : source.getTopic().getId();
   }
 
+  private Set<ChapterDto> getChaptersIsNotDelete(Test source) {
+    return Objects.isNull(source) || Objects.isNull(source.getChapters()) ? null
+        : source.getChapters().stream()
+            .filter(ch -> !ch.getIsDeleted())
+            .map(chapterConverter::convertToDto)
+            .collect(Collectors.toSet());
+  }
+
   @Override
-  public void mapSpecificFields(TestDto source, Test destination) {
-    Optional.ofNullable(source.getAuthorId()).ifPresent(id ->
-        destination.setAuthor(userDao.findById(id).orElse(null))
-    );
-    Optional.ofNullable(source.getTopicId()).ifPresent(id ->
-        destination.setTopic(topicDao.findById(source.getTopicId()).orElse(null))
-    );
+  public Test convertToEntity(TestDto dto) {
+    throw new UnsupportedOperationException("This converter not supported convertToEntity");
   }
 }

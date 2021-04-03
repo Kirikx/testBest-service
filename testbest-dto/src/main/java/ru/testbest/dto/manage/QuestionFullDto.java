@@ -1,4 +1,4 @@
-package ru.testbest.dto.test;
+package ru.testbest.dto.manage;
 
 import java.util.HashSet;
 import java.util.Set;

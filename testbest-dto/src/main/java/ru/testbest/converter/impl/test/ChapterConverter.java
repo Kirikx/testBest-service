@@ -1,46 +1,45 @@
 package ru.testbest.converter.impl.test;
 
 import java.util.Objects;
-import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.testbest.converter.impl.AbstractMapper;
 import ru.testbest.dto.test.ChapterDto;
-import ru.testbest.persistence.dao.TestDao;
+import ru.testbest.dto.test.QuestionDto;
 import ru.testbest.persistence.entity.Chapter;
 
 @Component
 public class ChapterConverter extends AbstractMapper<Chapter, ChapterDto> {
 
   private final ModelMapper mapper;
-  private final TestDao testDao;
+  private final QuestionConverter questionConverter;
 
   @Autowired
   public ChapterConverter(
       ModelMapper mapper,
-      TestDao testDao
-  ) {
+      QuestionConverter questionConverter) {
     super(Chapter.class, ChapterDto.class);
     this.mapper = mapper;
-    this.testDao = testDao;
+    this.questionConverter = questionConverter;
   }
 
   @PostConstruct
   public void setupMapper() {
     mapper.createTypeMap(Chapter.class, ChapterDto.class)
         .addMappings(m -> m.skip(ChapterDto::setTestId))
+        .addMappings(m -> m.skip(ChapterDto::setQuestions))
         .setPostConverter(toDtoConverter());
-    mapper.createTypeMap(ChapterDto.class, Chapter.class)
-        .addMappings(m -> m.skip(Chapter::setTest))
-        .setPostConverter(toEntityConverter());
   }
 
   @Override
   public void mapSpecificFields(Chapter source, ChapterDto destination) {
     destination.setTestId(getTestId(source));
+    destination.setQuestions(getQuestionsIsNotDelete(source));
   }
 
   private UUID getTestId(Chapter source) {
@@ -48,10 +47,16 @@ public class ChapterConverter extends AbstractMapper<Chapter, ChapterDto> {
         : source.getTest().getId();
   }
 
+  private Set<QuestionDto> getQuestionsIsNotDelete(Chapter source) {
+    return Objects.isNull(source) || Objects.isNull(source.getQuestions()) ? null
+        : source.getQuestions().stream()
+            .filter(q -> !q.getIsDeleted())
+            .map(questionConverter::convertToDto)
+            .collect(Collectors.toSet());
+  }
+
   @Override
-  public void mapSpecificFields(ChapterDto source, Chapter destination) {
-    Optional.ofNullable(source.getTestId()).ifPresent(id ->
-        destination.setTest(testDao.findById(id).orElse(null))
-    );
+  public Chapter convertToEntity(ChapterDto dto) {
+    throw new UnsupportedOperationException("This converter not supported convertToEntity");
   }
 }
