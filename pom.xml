@@ -37,6 +37,7 @@
     <module>testbest-persistence</module>
     <module>testbest-app</module>
     <module>testbest-service</module>
+    <module>testbest-exception</module>
   </modules>
 
   <dependencies>

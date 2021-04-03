@@ -1,4 +1,4 @@
-package ru.testbest.service;
+package ru.testbest.service.impl.test;
 
 public enum QuestionTypeEnum {
   FREE("Вопрос со свободным ответом"),
