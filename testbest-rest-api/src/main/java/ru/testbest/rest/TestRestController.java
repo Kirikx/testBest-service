@@ -63,9 +63,16 @@ public class TestRestController {
     }
 
     @GetMapping("/user/{id}")
-    public List<UserTestDto> getAllTestOfUser(@PathVariable("id") UUID id){
+    public List<UserTestDto> getAllTestOfUser(@PathVariable("id") UUID id) {
         log.info("Get all test for user {}", id);
         return userTestService.getUserTests(id);
+    }
+
+    @GetMapping("/user")
+    public List<UserTestDto> getAllTestCurrentUser(Authentication authentication) {
+        UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+        log.info("Get all test for user {}", currentUser.getId());
+        return userTestService.getUserTests(currentUser.getId());
     }
 
 }

@@ -4,7 +4,11 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.testbest.dto.common.QuestionTypeDto;
 import ru.testbest.service.QuestionTypeService;
 
@@ -17,7 +21,7 @@ public class QuestionTypeRestController {
 
     private final QuestionTypeService questionTypeDto;
 
-    @GetMapping("/")
+    @GetMapping
     public List<QuestionTypeDto> getTypeQuestions(){
         log.info("Get all type question");
         return questionTypeDto.getQuestionTypes();
