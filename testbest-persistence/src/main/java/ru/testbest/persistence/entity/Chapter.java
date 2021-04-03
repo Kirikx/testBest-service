@@ -73,4 +73,15 @@ public class Chapter implements BaseEntity {
     boolean hasQuestion(Question question) {
         return questions.contains(question);
     }
+
+    @Override
+    public String toString() {
+        return "Chapter{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", description='" + description + '\'' +
+            ", isDeleted=" + isDeleted +
+            ", test=" + test +
+            '}';
+    }
 }

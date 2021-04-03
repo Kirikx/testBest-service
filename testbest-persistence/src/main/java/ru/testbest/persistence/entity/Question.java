@@ -86,4 +86,17 @@ public class Question implements BaseEntity {
         answers.remove(answer);
         answer.setQuestion(null);
     }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+            "id=" + id +
+            ", question='" + question + '\'' +
+            ", isDeleted=" + isDeleted +
+            ", topic=" + topic +
+            ", questionType=" + questionType +
+            ", answers=" + answers +
+            ", chapters=" + chapters +
+            '}';
+    }
 }
