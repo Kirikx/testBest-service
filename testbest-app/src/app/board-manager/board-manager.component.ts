@@ -1,17 +1,17 @@
 import {Component, Inject, OnInit, Renderer2} from '@angular/core';
-import {Router} from "@angular/router";
+import {NavigationEnd, Router, RouterEvent} from "@angular/router";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {DOCUMENT} from "@angular/common";
 import {Test} from "../_models/createTest/Test";
 import {TestService} from "../_services/test.service";
 import {TopicService} from "../_services/topic.service";
 import {Topic} from "../_models/createTest/parameters/Topic";
+import {filter} from "rxjs/operators";
 
 @Component({
   selector: 'app-board-moderator',
   templateUrl: './board-manager.component.html',
   styleUrls: ['./board-manager.component.css'],
-
 })
 export class BoardManagerComponent implements OnInit {
   //Переменные для Topic
@@ -51,6 +51,14 @@ export class BoardManagerComponent implements OnInit {
 
     this.getTopics();
     this.getTest();
+
+    this.router.events.pipe(
+      filter((event: RouterEvent) => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      if (window.location.href.toString().includes("/manager")) {
+        window.location.reload();
+      }
+    });
   }
 
   //Обработка вкладки Тематика тестирования

@@ -16,4 +16,6 @@ export class Global {
   static TOPIC_API = Global.PROD + '/api/topics/';
   static TEST_API = Global.PROD + '/api/tests/';
   static CHAPTER_API = Global.PROD + '/api/chapters/';
+  static QUESTION_TYPE_API = Global.PROD + '/api/type_questions/';
+  static QUESTION_API = Global.PROD + '/api/questions/';
 }
