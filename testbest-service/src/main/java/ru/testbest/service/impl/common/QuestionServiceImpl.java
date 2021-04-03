@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.testbest.converter.impl.manage.QuestionFullConverter;
@@ -21,6 +22,7 @@ import ru.testbest.persistence.entity.Chapter;
 import ru.testbest.persistence.entity.Question;
 import ru.testbest.service.QuestionService;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class QuestionServiceImpl implements QuestionService {
@@ -97,6 +99,7 @@ public class QuestionServiceImpl implements QuestionService {
         questionFullConverter.convertToEntity(questionDto));
 
     Set<Chapter> activeChapters = question.getChapters();
+    log.debug("activeChapters = " + activeChapters);
 
     final Set<UUID> currentChaptersIds;
     if (Objects.isNull(questionDto.getChapters())) {
@@ -111,6 +114,7 @@ public class QuestionServiceImpl implements QuestionService {
       if (!activeChapters.isEmpty()) {
         activeChapters.stream()
             .filter(ch -> !currentChaptersIds.contains(ch.getId()))
+            .peek(ch -> log.debug("remove chapter = " + ch))
             .peek(ch -> ch.removeQuestion(question))
             .forEach(chapterDao::save);
       }
@@ -120,6 +124,8 @@ public class QuestionServiceImpl implements QuestionService {
             .map(Chapter::getId)
             .filter(currentChaptersIds::contains)
             .collect(Collectors.toSet());
+
+        log.debug("skipChapters = " + skipChapters);
 
         currentChaptersIds.stream()
             .filter(skipChapters::contains)
