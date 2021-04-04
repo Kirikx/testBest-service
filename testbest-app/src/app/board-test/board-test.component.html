@@ -102,6 +102,7 @@
               </div>
             </div>
           </div>
+
         </div>
 
         <app-modal *ngIf="showModalChapter" (close)="closeModalCreateChapter()">
@@ -122,8 +123,7 @@
 
               <div class="col-12 form-group" data-for="textarea">
                     <textarea (change)="changeChapterDescription($event)" formControlName="description"
-                              name="description"
-                              placeholder="Описание" data-form-field="textarea" class="form-control">
+                              name="description" placeholder="Описание" class="form-control">
                     </textarea>
               </div>
 
@@ -147,7 +147,7 @@
                 <h4 class="align-center">{{getNameCreateButton()}} вопрос</h4>
               </div>
 
-              <div class="col-12 form-group" data-for="selectTopic1">
+              <div class="col-12 form-group">
                 <ngx-dropdown-treeview formControlName="chaptersSelect" [config]="select" [items]="selectData"
                                        (selectedChange)="onSelectedChangeQuestion($event)">
                 </ngx-dropdown-treeview>
@@ -158,7 +158,7 @@
                 </div>
               </div>
 
-              <div class="col-12 form-group" data-for="textarea">
+              <div class="col-12 form-group">
                     <textarea (change)="changeQuestion($event)" formControlName="question"
                               name="question" placeholder="Вопрос" class="form-control" [value]="question.question">
                     </textarea>
@@ -168,7 +168,7 @@
                 </div>
               </div>
 
-              <div class="col-12 form-group" data-for="selectTopic">
+              <div class="col-12 form-group">
                 <select class="form-control form-select" (change)="changeQuestionTypeSelect($event)"
                         formControlName="questionTypeId" aria-label="Default select example">
                   <option [value]="null" ngValue="null" hidden>Выберите тип ответа</option>
@@ -182,49 +182,79 @@
               </div>
 
               <div class="col col-sm-12 form-group"
-                   *ngIf="checkTypeQuestion()!= null && checkTypeQuestion().name == 'Вопрос со свободным ответом'">
+                   *ngIf="typeQ != null && typeQ.name == 'Вопрос со свободным ответом'">
                 <div class="col-12 form-group">
-                  <h7 class="align-center">Варианты ответов</h7>
+                  <h7 class="align-center">Ответ</h7>
                 </div>
 
                 <div class="col-12 form-group">
-                    <textarea (change)="changeFreeAnswer($event)" formControlName="freeAnswer"
-                              name="freeAnswer" placeholder="Ответ в свободной форме" class="form-control">
+                    <textarea (change)="changeFreeAnswer($event)" formControlName="answerTest"
+                              name="answer" placeholder="Ответ в свободной форме" class="form-control">
                     </textarea>
-                  <div *ngIf="validationQuestionForm.freeAnswer.invalid && !isSubmitted" class="alert-danger col-12"
+                  <div *ngIf="validationQuestionForm.answerTest.invalid && !isSubmitted" class="alert-danger col-12"
                        role="alert">
-                    <div *ngIf="validationQuestionForm.freeAnswer.errors.required">Поле обязательно для заполнения</div>
+                    <div *ngIf="validationQuestionForm.answerTest.errors.required">Поле обязательно для заполнения</div>
                   </div>
                 </div>
               </div>
 
-
-              <!--              <div class="col col-sm-12 form-group">-->
-              <!--                <div class="col-12 form-group" data-for="name">-->
-              <!--                  <h7 class="align-center">Варианты ответов</h7>-->
-              <!--                </div>-->
-
-              <!--                <div class="col-12 form-group" data-for="name">-->
-              <!--                  <input formControlName="name" type="text" placeholder="Наименование раздела"-->
-              <!--                         data-form-field="name" class="form-control" (change)="changeChapterName($event)">-->
-              <!--                  &lt;!&ndash;                  <div class="alert-danger col-12" role="alert"&ndash;&gt;-->
-              <!--                  &lt;!&ndash;                       *ngIf="validationChapterForm.name.invalid && !isSubmitted">&ndash;&gt;-->
-              <!--                  &lt;!&ndash;                    <div *ngIf="validationChapterForm.name.errors.required">Поле обязательно для заполнения</div>&ndash;&gt;-->
-              <!--                  &lt;!&ndash;                  </div>&ndash;&gt;-->
-              <!--                </div>-->
-
-              <!--                <div class="col-12 form-group" data-for="textarea">-->
-              <!--                    <textarea (change)="changeChapterDescription($event)" formControlName="description"-->
-              <!--                              name="description"-->
-              <!--                              placeholder="Описание" data-form-field="textarea" class="form-control">-->
-              <!--                    </textarea>-->
-              <!--                </div>-->
-              <!--              </div>-->
+              <div class="col col-sm-12 form-group"
+                   *ngIf="typeQ != null && typeQ.name == 'Одиночный'">
+                <div class="row">
+                  <div class="col-md col-sm-12 form-group">
+                    <h7 class="align-center">Варианты ответов</h7>
+                  </div>
+                  <div class="col-md col-sm-12 form-group">
+                    <a (click)="addAnswer()" class="btn btn-success display-4">Добавить вариант ответа</a>
+                  </div>
+                  <table class="table table-sm">
+                    <tbody>
+                    <tr *ngFor="let answer of question.answers">
+                      <td class="align-middle">
+                        <input class="custom-radio" type="radio" id="{{answer.id}}" name="answer"
+                               value="{{answer.answer}}" formControlName="answer" content="{{answer.answer}}"
+                               (change)="changeRadioButtonAnswer($event)">
+                      </td>
+                      <td class="align-middle">
+                        <input content="{{answer.id}}" type="text"
+                               placeholder="Вариант ответа" class="form-control"
+                               (change)="changeInputAnswer($event)" [value]="answer.answer">
+                      </td>
+                      <td class="align-middle">
+                        <button (click)="deleteAnswer(answer.id)" class="btn btn-danger display-7"
+                                [disabled]="question.answers.length < 3">Х
+                        </button>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <div class="alert-danger col-12" role="alert"
+                       *ngIf="validationQuestionForm.answer.invalid && !isSubmitted">
+                    <div *ngIf="validationQuestionForm.answer.errors.required">Варианты ответа обязательны для
+                      заполнения
+                    </div>
+                  </div>
+                  <!--                  <div class="col" *ngFor="let answer of question.answers">-->
+                  <!--                    <div class="col-md col-sm-12 form-group">-->
+                  <!--                      <input id="{{answer.id}}" type="radio" class="custom-radio" value="{{answer.answer}}"-->
+                  <!--                             formControlName="answer" (select)="changeRadioButtonAnswer($event)">-->
+                  <!--                      <input content="{{answer.id}}" type="text" placeholder="Вариант ответа" class="form-control"-->
+                  <!--                             (change)="changeInputAnswer($event)">-->
+                  <!--                      <a (click)="deleteQuestion()" class="btn btn-danger display-4">-</a>-->
+                  <!--                    </div>-->
+                  <!--                    <div class="col-md col-sm-12 form-group">-->
+                  <!--                      <input content="{{answer.id}}" type="text" placeholder="Вариант ответа" class="form-control"-->
+                  <!--                             (change)="changeInputAnswer($event)">-->
+                  <!--                    </div>-->
+                  <!--                    <div class="col-md col-sm-12 form-group">-->
+                  <!--                      <a (click)="deleteQuestion()" class="btn btn-danger display-4">-</a>-->
+                  <!--                    </div>-->
+                  <!--                  </div>-->
+                </div>
+              </div>
 
               <div class="col-md col-sm-12 form-group" data-for="name">
-                <button type="submit"
-                        class="btn btn-success display-4">{{getNameUpdateButton()}} вопрос
-                </button>
+                <button type="submit" class="btn btn-success display-4">{{getNameUpdateButton()}} вопрос</button>
               </div>
               <div class="col-md col-sm-12 form-group" data-for="surname" *ngIf="selectIsChapter">
                 <a (click)="deleteQuestion()" class="btn btn-danger display-4">Удалить</a>
