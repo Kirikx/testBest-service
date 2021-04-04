@@ -148,12 +148,13 @@
               </div>
 
               <div class="col-12 form-group" data-for="selectTopic1">
-                <ngx-dropdown-treeview [config]="select" [items]="selectData"
-                                       (selectedChange)="onSelectedChangeQuestion($event)" formControlName="chaptersSelect">
+                <ngx-dropdown-treeview formControlName="chaptersSelect" [config]="select" [items]="selectData"
+                                       (selectedChange)="onSelectedChangeQuestion($event)">
                 </ngx-dropdown-treeview>
                 <div *ngIf="validationQuestionForm.chaptersSelect.invalid && !isSubmitted" class="alert-danger col-12"
                      role="alert">
-                  <div *ngIf="validationQuestionForm.chaptersSelect.errors.required">Поле обязательно для заполнения</div>
+                  <div *ngIf="validationQuestionForm.chaptersSelect.errors.required">Поле обязательно для заполнения
+                  </div>
                 </div>
               </div>
 
@@ -170,7 +171,7 @@
               <div class="col-12 form-group" data-for="selectTopic">
                 <select class="form-control form-select" (change)="changeQuestionTypeSelect($event)"
                         formControlName="questionTypeId" aria-label="Default select example">
-                  <option selected value="1">Выберите тип ответа</option>
+                  <option [value]="null" ngValue="null" hidden>Выберите тип ответа</option>
                   <option *ngFor="let type of questionTypes" [ngValue]="type.id">{{type.name}}</option>
                 </select>
                 <div *ngIf="validationQuestionForm.questionTypeId.invalid && !isSubmitted" class="alert-danger col-12"
@@ -179,6 +180,46 @@
                   </div>
                 </div>
               </div>
+
+              <div class="col col-sm-12 form-group"
+                   *ngIf="checkTypeQuestion()!= null && checkTypeQuestion().name == 'Вопрос со свободным ответом'">
+                <div class="col-12 form-group">
+                  <h7 class="align-center">Варианты ответов</h7>
+                </div>
+
+                <div class="col-12 form-group">
+                    <textarea (change)="changeFreeAnswer($event)" formControlName="freeAnswer"
+                              name="freeAnswer" placeholder="Ответ в свободной форме" class="form-control">
+                    </textarea>
+                  <div *ngIf="validationQuestionForm.freeAnswer.invalid && !isSubmitted" class="alert-danger col-12"
+                       role="alert">
+                    <div *ngIf="validationQuestionForm.freeAnswer.errors.required">Поле обязательно для заполнения</div>
+                  </div>
+                </div>
+              </div>
+
+
+              <!--              <div class="col col-sm-12 form-group">-->
+              <!--                <div class="col-12 form-group" data-for="name">-->
+              <!--                  <h7 class="align-center">Варианты ответов</h7>-->
+              <!--                </div>-->
+
+              <!--                <div class="col-12 form-group" data-for="name">-->
+              <!--                  <input formControlName="name" type="text" placeholder="Наименование раздела"-->
+              <!--                         data-form-field="name" class="form-control" (change)="changeChapterName($event)">-->
+              <!--                  &lt;!&ndash;                  <div class="alert-danger col-12" role="alert"&ndash;&gt;-->
+              <!--                  &lt;!&ndash;                       *ngIf="validationChapterForm.name.invalid && !isSubmitted">&ndash;&gt;-->
+              <!--                  &lt;!&ndash;                    <div *ngIf="validationChapterForm.name.errors.required">Поле обязательно для заполнения</div>&ndash;&gt;-->
+              <!--                  &lt;!&ndash;                  </div>&ndash;&gt;-->
+              <!--                </div>-->
+
+              <!--                <div class="col-12 form-group" data-for="textarea">-->
+              <!--                    <textarea (change)="changeChapterDescription($event)" formControlName="description"-->
+              <!--                              name="description"-->
+              <!--                              placeholder="Описание" data-form-field="textarea" class="form-control">-->
+              <!--                    </textarea>-->
+              <!--                </div>-->
+              <!--              </div>-->
 
               <div class="col-md col-sm-12 form-group" data-for="name">
                 <button type="submit"

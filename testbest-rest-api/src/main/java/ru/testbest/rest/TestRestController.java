@@ -2,6 +2,7 @@ package ru.testbest.rest;
 
 import java.util.List;
 import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -32,13 +33,13 @@ public class TestRestController {
     private final UserTestService userTestService;
 
     @GetMapping
-    public List<TestDto> getTests(){
+    public List<TestDto> getTests() {
         log.info("Get all tests");
         return testService.getTests();
     }
 
     @GetMapping("/{id}")
-    public TestDto getTest(@PathVariable("id") String id){
+    public TestDto getTest(@PathVariable("id") String id) {
         log.info("Get test by id {}", id);
         return testService.getTestById(UUID.fromString(id));
     }
@@ -50,7 +51,7 @@ public class TestRestController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTest(@PathVariable("id") String id){
+    public void deleteTest(@PathVariable("id") String id) {
         log.info("Delete test by id {}", id);
         testService.deleteTestById(UUID.fromString(id));
     }
