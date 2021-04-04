@@ -19,31 +19,31 @@ public class TopicRestController {
     private final TopicServiceImpl topicService;
 
     @GetMapping("/")
-    public List<TopicDto> getTopics(){
+    public List<TopicDto> getTopics() {
         log.info("Get all topics");
         return topicService.getTopics();
     }
 
     @GetMapping("/{id}")
-    public TopicDto getTopic(@PathVariable("id") String id){
+    public TopicDto getTopic(@PathVariable("id") String id) {
         log.info("Get topic by id {}", id);
         return topicService.getTopicById(UUID.fromString(id));
     }
 
     @PutMapping("/")
-    public TopicDto editTopics(@RequestBody TopicDto topicDto){
+    public TopicDto editTopics(@RequestBody TopicDto topicDto) {
         log.info("Edit topic {}", topicDto);
         return topicService.editTopic(topicDto);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTopics(@PathVariable("id") String id){
+    public void deleteTopics(@PathVariable("id") String id) {
         log.info("Delete topic by id {}", id);
         topicService.deleteTopicById(UUID.fromString(id));
     }
 
     @PostMapping("/create")
-    public TopicDto createTopics(@RequestBody TopicDto topicDto){
+    public TopicDto createTopics(@RequestBody TopicDto topicDto) {
         log.info("Create topic {}", topicDto);
         return topicService.createTopic(topicDto);
     }

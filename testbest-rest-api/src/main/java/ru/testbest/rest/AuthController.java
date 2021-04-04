@@ -34,81 +34,81 @@ import ru.testbest.service.impl.admin.jwt.JwtUtils;
 @RequiredArgsConstructor
 public class AuthController {
 
-  private final AuthenticationManager authenticationManager;
-  private final UserServiceImpl userService;
-  private final RoleServiceImpl roleService;
-  private final PasswordEncoder encoder;
-  private final JwtUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
+    private final UserServiceImpl userService;
+    private final RoleServiceImpl roleService;
+    private final PasswordEncoder encoder;
+    private final JwtUtils jwtUtils;
 
-  @PostMapping("/signin")
-  public ResponseEntity<?> authenticateUser(@Valid @RequestBody Auth auth) {
+    @PostMapping("/signin")
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody Auth auth) {
 
-    Authentication authentication = authenticationManager.authenticate(
-      new UsernamePasswordAuthenticationToken(auth.getUsername(), auth.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(auth.getUsername(), auth.getPassword()));
 
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-    String jwt = jwtUtils.generateJwtToken(authentication);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
 
-    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-    List<String> roles = userDetails.getAuthorities().stream()
-      .map(GrantedAuthority::getAuthority)
-      .collect(Collectors.toList());
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
 
-    return ResponseEntity.ok(new Jwt(jwt,
-            userDetails.getId(),
-            userDetails.getUsername(),
-            userDetails.getEmail(),
-            roles));
-  }
-
-  @PostMapping("/signup")
-  public ResponseEntity<?> registerUser(@Valid @RequestBody UserDto userDto) {
-    if (userService.existNameUser(userDto.getUsername())) {
-      return ResponseEntity
-        .badRequest()
-        .body(new MessageResponse("Error: Username is already taken!"));
+        return ResponseEntity.ok(new Jwt(jwt,
+                userDetails.getId(),
+                userDetails.getUsername(),
+                userDetails.getEmail(),
+                roles));
     }
 
-    if (userService.existEmailUser(userDto.getEmail())) {
-      return ResponseEntity
-        .badRequest()
-        .body(new MessageResponse("Error: Email is already in use!"));
-    }
-
-    Set<RoleDto> strRoles = userDto.getRoles();
-    Set<RoleDto> roles = new HashSet<>();
-
-    if (strRoles == null) {
-      RoleDto userRole = roleService.getRoleByName("ROLE_USER")
-        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-      roles.add(userRole);
-    } else {
-      strRoles.forEach(role -> {
-        switch (role.getName()) {
-          case "admin":
-            RoleDto adminRole = roleService.getRoleByName("ROLE_ADMIN")
-              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(adminRole);
-
-            break;
-          case "manager":
-            RoleDto modRole = roleService.getRoleByName("ROLE_MANAGER")
-              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(modRole);
-            break;
-          default:
-            RoleDto userRole = roleService.getRoleByName("ROLE_USER")
-              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
+    @PostMapping("/signup")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserDto userDto) {
+        if (userService.existNameUser(userDto.getUsername())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Username is already taken!"));
         }
-      });
+
+        if (userService.existEmailUser(userDto.getEmail())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Email is already in use!"));
+        }
+
+        Set<RoleDto> strRoles = userDto.getRoles();
+        Set<RoleDto> roles = new HashSet<>();
+
+        if (strRoles == null) {
+            RoleDto userRole = roleService.getRoleByName("ROLE_USER")
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(userRole);
+        } else {
+            strRoles.forEach(role -> {
+                switch (role.getName()) {
+                    case "admin":
+                        RoleDto adminRole = roleService.getRoleByName("ROLE_ADMIN")
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(adminRole);
+
+                        break;
+                    case "manager":
+                        RoleDto modRole = roleService.getRoleByName("ROLE_MANAGER")
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(modRole);
+                        break;
+                    default:
+                        RoleDto userRole = roleService.getRoleByName("ROLE_USER")
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(userRole);
+                }
+            });
+        }
+
+        userDto.setPassword(encoder.encode(userDto.getPassword()));
+        userDto.setIsDeleted(false);
+        userDto.setRoles(roles);
+        userService.createUser(userDto);
+
+        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
-
-    userDto.setPassword(encoder.encode(userDto.getPassword()));
-    userDto.setIsDeleted(false);
-    userDto.setRoles(roles);
-    userService.createUser(userDto);
-
-    return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
-  }
 }
