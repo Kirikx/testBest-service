@@ -2,6 +2,7 @@ package ru.testbest.rest;
 
 import java.util.List;
 import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +19,13 @@ public class QuestionTypeRestController {
     private final QuestionTypeService questionTypeDto;
 
     @GetMapping("/")
-    public List<QuestionTypeDto> getTypeQuestions(){
+    public List<QuestionTypeDto> getTypeQuestions() {
         log.info("Get all type question");
         return questionTypeDto.getQuestionTypes();
     }
 
     @GetMapping("/{id}")
-    public QuestionTypeDto getTypeQuestion(@PathVariable("id") String id){
+    public QuestionTypeDto getTypeQuestion(@PathVariable("id") String id) {
         log.info("Get question type by id {} ", id);
         return questionTypeDto.getQuestionTypeById(UUID.fromString(id));
     }

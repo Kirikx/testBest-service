@@ -15,7 +15,8 @@ import {QuestionType} from "../_models/createTest/parameters/QuestionType";
 import {QuestionService} from "../_services/question.service";
 import {QuestionTypeService} from "../_services/question-type.service";
 import {ChapterWrap} from "../_models/ChapterWrap";
-import {isLineBreak} from "codelyzer/angular/sourceMappingVisitor";
+import {AnswerService} from "../_services/answer.service";
+import {AnswerFull} from "../_models/createTest/AnswerFull";
 
 @Component({
   selector: 'app-board-test',
@@ -29,6 +30,8 @@ export class BoardTestComponent implements OnInit {
   topics: Array<Topic>;
   question: QuestionFull;
   questionTypes: Array<QuestionType>;
+  answer: AnswerFull
+  answers: Array<AnswerFull>;
 
   isCreateTest = false; //записан ли тест?
   isSubmitted = true; //нужна валидация форм?
@@ -47,8 +50,10 @@ export class BoardTestComponent implements OnInit {
     private chapterService: ChapterService,
     private questionService: QuestionService,
     private questionTypeService: QuestionTypeService,
+    private answerService: AnswerService,
     private route: ActivatedRoute) {
     this.test = new Test();
+    this.answer = new AnswerFull();
   }
 
   ngOnInit(): void {
@@ -336,10 +341,7 @@ export class BoardTestComponent implements OnInit {
     this.chapter.name = event.target.value;
   }
 
-  getChapter(chapter
-               :
-               Chapter
-  ) {
+  getChapter(chapter: Chapter) {
     this.chapterService.getChapter(chapter).subscribe(
       data => {
         this.chapter = data;
@@ -365,12 +367,8 @@ export class BoardTestComponent implements OnInit {
     })
   }
 
-  createChapter()
-    :
-    void {
-    if (!
-      this.formChapterCreate.valid
-    ) {
+  createChapter(): void {
+    if (!this.formChapterCreate.valid) {
       this.isSubmitted = false;
     } else {
       if (this.chapter.id == null) {
@@ -407,12 +405,8 @@ export class BoardTestComponent implements OnInit {
     }
   }
 
-  deleteChapter()
-    :
-    void {
-    if (!
-      this.formChapterCreate.valid
-    ) {
+  deleteChapter(): void {
+    if (!this.formChapterCreate.valid) {
       this.isSubmitted = false;
     } else {
       this.chapterService.deleteChapter(this.chapter).subscribe(
@@ -436,13 +430,36 @@ export class BoardTestComponent implements OnInit {
   formQuestionCreate = new FormGroup({
     chaptersSelect: new FormControl([''], Validators.required),
     questionTypeId: new FormControl('', Validators.required),
-    question: new FormControl('', Validators.required)
+    question: new FormControl('', Validators.required),
+    freeAnswer: new FormControl('', Validators.required)
   });
 
+  setForValidation() {
+    if (this.question.questionTypeId != null) {
+      this.questionTypes.forEach(value => {
+        if (this.question.id != null) {
+          if (value.id == this.question.questionTypeId && value.name == 'Вопрос со свободным ответом') {
+            this.formQuestionCreate.setValue({
+              chaptersSelect: this.question.chapters,
+              questionTypeId: this.question.questionTypeId,
+              question: this.question.question,
+              freeAnswer: this.question.answers[0].answer
+            })
+          }
+        }
+      });
+    } else {
+      this.formQuestionCreate.setValue({
+        chaptersSelect: this.question.chapters,
+        questionTypeId: this.question.questionTypeId,
+        question: this.question.question,
+        freeAnswer: this.question.answers
+      });
+    }
+  }
+
   @ViewChild(TreeviewComponent, {static: false})
-  treeViewComponentSelected
-    :
-    TreeviewComponent;
+  treeViewComponentSelected: TreeviewComponent;
   selectData: TreeviewItem[];
   select = TreeviewConfig.create({
     hasAllCheckBox: false,
@@ -452,9 +469,7 @@ export class BoardTestComponent implements OnInit {
   });
   countSelect: number;
 
-  getSelectData()
-    :
-    void {
+  getSelectData(): void {
     let count = 0;
     let item;
     let check = false;
@@ -487,11 +502,7 @@ export class BoardTestComponent implements OnInit {
   clearFormCreateQuestion() {
     this.question = new QuestionFull();
     this.question.topicId = this.test.topicId;
-    this.formQuestionCreate.setValue({
-      chaptersSelect: this.question.chapters,
-      questionTypeId: this.question.questionTypeId,
-      question: this.question.question
-    })
+    this.setForValidation();
   }
 
   getQuestionTypes() {
@@ -514,11 +525,7 @@ export class BoardTestComponent implements OnInit {
       data => {
         this.question = data;
         this.getSelectData();
-        this.formQuestionCreate.setValue({
-          chaptersSelect: this.question.chapters,
-          questionTypeId: this.question.questionTypeId,
-          question: this.question.question
-        })
+        this.setForValidation();
       },
       error => {
         if (error.statusText == "Unknown Error") {
@@ -552,11 +559,7 @@ export class BoardTestComponent implements OnInit {
         if (chapter.id == ev) {
           if (!this.question.chapters.find(check => check.id == chapter.id)) {
             this.question.chapters.push(new ChapterWrap(chapter));
-            this.formQuestionCreate.setValue({
-              chaptersSelect: this.question.chapters,
-              questionTypeId: this.question.questionTypeId,
-              question: this.question.question
-            })
+            this.setForValidation();
           }
         }
       })
@@ -574,13 +577,6 @@ export class BoardTestComponent implements OnInit {
     return this.formQuestionCreate.controls;
   }
 
-// changeQuestionSelectChapter(event) {
-//   this.formQuestionCreate.get("chapters").setValue(event.target.value, {
-//     onlySelf: true
-//   })
-//   this.question.chapters.push(this.test.chapters.find(ch => ch.id === event.target.value.substring(3)));
-// }
-
   changeQuestion(event) {
     this.question.question = event.target.value;
   }
@@ -590,19 +586,23 @@ export class BoardTestComponent implements OnInit {
       onlySelf: true
     })
     this.question.questionTypeId = event.target.value.substring(3);
+    this.isSubmitted = true;
+    this.checkTypeQuestion();
   }
 
-  createQuestion()
-    :
-    void {
-    if (!
-      this.formQuestionCreate.valid
-    ) {
+  createQuestion(): void {
+    if (!this.formQuestionCreate.valid) {
       this.isSubmitted = false;
     } else {
       if (this.question.id == null) {
         this.questionService.createQuestion(this.question).subscribe(
           data => {
+            this.question = data;
+            this.answer.questionId = this.question.id;
+            this.answers = new Array<AnswerFull>();
+            this.answers.push(this.answer);
+            this.question.answers = this.answers;
+            this.editQuestion();
             this.closeModal();
             this.getTest();
             this.clearFormCreateQuestion();
@@ -616,30 +616,30 @@ export class BoardTestComponent implements OnInit {
           }
         );
       } else {
-        this.questionService.editQuestion(this.question).subscribe(
-          data => {
-            this.closeModal();
-            this.getTest();
-            this.clearFormCreateQuestion();
-          },
-          error => {
-            if (error.statusText == "Unknown Error") {
-              this.errorMessage = "Server is not responding";
-            } else {
-              this.errorMessage = error.message;
-            }
-          }
-        );
+        this.editQuestion();
       }
     }
   }
 
-  deleteQuestion()
-    :
-    void {
-    if (!
-      this.formQuestionCreate.valid
-    ) {
+  editQuestion(): void {
+    this.questionService.editQuestion(this.question).subscribe(
+      data => {
+        this.closeModal();
+        this.getTest();
+        this.clearFormCreateQuestion();
+      },
+      error => {
+        if (error.statusText == "Unknown Error") {
+          this.errorMessage = "Server is not responding";
+        } else {
+          this.errorMessage = error.message;
+        }
+      }
+    );
+  }
+
+  deleteQuestion(): void {
+    if (!this.formQuestionCreate.valid) {
       this.isSubmitted = false;
     } else {
       this.questionService.deleteQuestion(this.question).subscribe(
@@ -657,6 +657,42 @@ export class BoardTestComponent implements OnInit {
         }
       );
     }
+  }
+
+  checkTypeQuestion(): QuestionType {
+    let typeQ:QuestionType = null;
+    if (this.question.questionTypeId != null) {
+      this.questionTypes.forEach(value => {
+        if (value.id == this.question.questionTypeId) {
+          typeQ = value;
+        }
+      });
+      if (typeQ != null) return typeQ;
+    } else {
+      return typeQ;
+    }
+  }
+
+//Обработка ответов
+  changeFreeAnswer(event) {
+    this.answer.answer = event.target.value;
+    this.answer.isCorrect = true;
+  }
+
+  getAnswer() {
+    this.answerService.getFullAnswer(this.answer).subscribe(
+      data => {
+        // this.question = data;
+        // this.setForValidation();
+      },
+      error => {
+        if (error.statusText == "Unknown Error") {
+          this.errorMessage = "Server is not responding";
+        } else {
+          this.errorMessage = error.message;
+        }
+      }
+    );
   }
 
 //Общее закрытие модальных окон
