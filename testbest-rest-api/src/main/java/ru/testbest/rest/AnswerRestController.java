@@ -6,8 +6,8 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.testbest.dto.manage.AnswerFullDto;
 import ru.testbest.dto.test.AnswerDto;
-import ru.testbest.dto.test.AnswerFullDto;
 import ru.testbest.service.impl.common.AnswerServiceImpl;
 
 @Slf4j

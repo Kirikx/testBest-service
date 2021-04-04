@@ -1,8 +1,9 @@
-package ru.testbest.dto.test;
+package ru.testbest.dto.manage;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import ru.testbest.dto.BaseDTO;
+import ru.testbest.dto.test.AnswerDto;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

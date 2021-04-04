@@ -1,5 +1,10 @@
 package ru.testbest.rest;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,22 +13,20 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import ru.testbest.dto.MessageResponse;
 import ru.testbest.dto.admin.RoleDto;
 import ru.testbest.dto.admin.UserDto;
+import ru.testbest.dto.admin.security.UserDetailsImpl;
 import ru.testbest.dto.admin.security.request.Auth;
 import ru.testbest.dto.admin.security.response.Jwt;
-import ru.testbest.dto.MessageResponse;
-import ru.testbest.dto.admin.security.UserDetailsImpl;
 import ru.testbest.service.impl.admin.RoleServiceImpl;
 import ru.testbest.service.impl.admin.UserServiceImpl;
-import ru.testbest.service.impl.security.jwt.JwtUtils;
-
-import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import ru.testbest.service.impl.admin.jwt.JwtUtils;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)

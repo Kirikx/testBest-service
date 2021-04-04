@@ -2,18 +2,22 @@ package ru.testbest.service;
 
 import java.util.List;
 import java.util.UUID;
-import ru.testbest.dto.common.TopicDto;
+import ru.testbest.dto.manage.ChapterFullDto;
 import ru.testbest.dto.test.ChapterDto;
 
 public interface ChapterService {
 
   List<ChapterDto> getChapters();
 
+  List<ChapterFullDto> getFullChapters();
+
   ChapterDto getChapterById(UUID uuid);
 
-  ChapterDto createChapter(ChapterDto topicDto);
+  ChapterFullDto getChapterFullById(UUID uuid);
 
-  ChapterDto editChapter(ChapterDto topicDto);
+  ChapterFullDto createChapter(ChapterFullDto topicDto);
+
+  ChapterFullDto editChapter(ChapterFullDto topicDto);
 
   void deleteChapterById(UUID uuid);
 }
