@@ -15,17 +15,17 @@ import ru.testbest.service.impl.admin.UserServiceImpl;
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 @RestController
-public class AdminRestController {
+public class UserRestController {
 
-    private final UserServiceImpl userService;
+  private final UserServiceImpl userService;
 
-    @GetMapping
-    public List<UserDto> getUsers() {
-        log.info("Get all users");
-        return userService.getUsers();
-    }
+  @GetMapping
+  public List<UserDto> getUsers() {
+    log.info("Get all users");
+    return userService.getUsers();
+  }
 
-    @GetMapping("/{id}")
+  @GetMapping("/{id}")
     public UserDto getUser(@PathVariable("id") String id) {
         log.info("Get user by id {}", id);
         return userService.getUserById(UUID.fromString(id));
