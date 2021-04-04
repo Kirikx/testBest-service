@@ -11,6 +11,7 @@ import ru.testbest.converter.impl.manage.AnswerFullConverter;
 import ru.testbest.converter.impl.test.AnswerConverter;
 import ru.testbest.dto.manage.AnswerFullDto;
 import ru.testbest.dto.test.AnswerDto;
+import ru.testbest.exception.custom.CustomNotFoundException;
 import ru.testbest.persistence.dao.AnswerDao;
 import ru.testbest.persistence.entity.Answer;
 import ru.testbest.service.AnswerService;
@@ -36,7 +37,7 @@ public class AnswerServiceImpl implements AnswerService {
   public AnswerDto getAnswerById(UUID uuid) {
     return answerDao.findByIdAndIsDeletedFalse(uuid)
         .map(answerConverter::convertToDto)
-        .orElse(null);
+        .orElseThrow(CustomNotFoundException::new);
   }
 
   @Override
