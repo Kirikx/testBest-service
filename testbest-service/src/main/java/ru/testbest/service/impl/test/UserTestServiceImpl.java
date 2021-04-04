@@ -25,7 +25,6 @@ import ru.testbest.persistence.entity.Chapter;
 import ru.testbest.persistence.entity.Question;
 import ru.testbest.persistence.entity.UserTest;
 import ru.testbest.persistence.entity.UserTestQuestion;
-import ru.testbest.service.QuestionTypeEnum;
 import ru.testbest.service.UserTestService;
 
 @Service

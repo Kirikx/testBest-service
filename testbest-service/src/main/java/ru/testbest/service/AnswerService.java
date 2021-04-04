@@ -2,8 +2,8 @@ package ru.testbest.service;
 
 import java.util.List;
 import java.util.UUID;
+import ru.testbest.dto.manage.AnswerFullDto;
 import ru.testbest.dto.test.AnswerDto;
-import ru.testbest.dto.test.AnswerFullDto;
 
 public interface AnswerService {
 

@@ -8,7 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.testbest.converter.impl.AbstractMapper;
-import ru.testbest.dto.test.AnswerFullDto;
+import ru.testbest.dto.manage.AnswerFullDto;
 import ru.testbest.persistence.dao.QuestionDao;
 import ru.testbest.persistence.entity.Answer;
 

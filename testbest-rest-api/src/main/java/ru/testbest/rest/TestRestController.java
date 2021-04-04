@@ -2,6 +2,7 @@ package ru.testbest.rest;
 
 import java.util.List;
 import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.testbest.dto.admin.security.UserDetailsImpl;
+import ru.testbest.dto.manage.TestFullDto;
 import ru.testbest.dto.test.TestDto;
 import ru.testbest.dto.test.UserTestDto;
 import ru.testbest.service.UserTestService;
@@ -31,40 +33,47 @@ public class TestRestController {
     private final UserTestService userTestService;
 
     @GetMapping
-    public List<TestDto> getTests(){
+    public List<TestDto> getTests() {
         log.info("Get all tests");
         return testService.getTests();
     }
 
     @GetMapping("/{id}")
-    public TestDto getTest(@PathVariable("id") String id){
+    public TestDto getTest(@PathVariable("id") String id) {
         log.info("Get test by id {}", id);
         return testService.getTestById(UUID.fromString(id));
     }
 
     @PutMapping
-    public TestDto editTest(@RequestBody TestDto testDto){
+    public TestFullDto editTest(@RequestBody TestFullDto testDto) {
         log.info("Edit test {}", testDto);
         return testService.editTest(testDto);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTest(@PathVariable("id") String id){
+    public void deleteTest(@PathVariable("id") String id) {
         log.info("Delete test by id {}", id);
         testService.deleteTestById(UUID.fromString(id));
     }
 
     @PostMapping("/create")
-    public TestDto createTest(@RequestBody TestDto testDto, Authentication authentication) {
+    public TestFullDto createTest(@RequestBody TestFullDto testDto, Authentication authentication) {
         log.info("Create test {}", testDto);
         UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
         return testService.createTest(testDto, currentUser.getId());
     }
 
     @GetMapping("/user/{id}")
-    public List<UserTestDto> getAllTestOfUser(@PathVariable("id") UUID id){
+    public List<UserTestDto> getAllTestOfUser(@PathVariable("id") UUID id) {
         log.info("Get all test for user {}", id);
         return userTestService.getUserTests(id);
+    }
+
+    @GetMapping("/user")
+    public List<UserTestDto> getAllTestCurrentUser(Authentication authentication) {
+        UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+        log.info("Get all test for user {}", currentUser.getId());
+        return userTestService.getUserTests(currentUser.getId());
     }
 
 }

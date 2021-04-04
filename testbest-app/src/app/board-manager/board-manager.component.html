@@ -41,7 +41,7 @@
                   </li>
                 </ul>
                 <div class="col-lg-12 col-md-12 col-sm-12 align-right ">
-                  <a class="btn btn-success display-4" routerLink="/test">Добавить</a>
+                  <a class="btn btn-success display-4" routerLink="/test/new">Добавить</a>
                 </div>
               </div>
             </div>
@@ -66,7 +66,8 @@
                     <td class="align-middle">{{ test.duration }}</td>
                     <td class="align-middle">{{ test.passScore }}</td>
                     <td class="align-right"><a class="btn btn-info-outline display-4"
-                                               (click)="redirectToCreateTest(test.id)">Редактировать</a></td>
+                                               (click)="redirectToCreateTest(test.id)">Редактировать</a>
+                    </td>
                   </tr>
                   </tbody>
                 </table>
@@ -116,47 +117,39 @@
 
             <app-modal *ngIf="showModal" (close)="closeModal()">
               <form *ngIf="newTopic" name="formTopic" (ngSubmit)="fTopic.form.valid && createTopic()" #fTopic="ngForm"
-                    novalidate
-                    class="mbr-form form-with-styler" data-form-title="Form Topic">
+                    novalidate class="mbr-form form-with-styler">
                 <div class="row">
-                  <div class="col-md-auto">
-                    <h4 class="align-center mb-0 mt-2 display-5">Добавление тематики</h4>
-                    <div class="col-12 form-group" data-for="id">
-                      <input type="hidden" name="id" data-form-field="id" [(ngModel)]="topic.id" #id="ngModel">
+                  <div class="col-12 form-group" data-for="name">
+                    <h4 class="align-center">Добавление тематики</h4>
+                  </div>
+
+                  <div class="col-12 form-group" data-for="name">
+                    <input type="text" name="nameTopic" placeholder="Наименование тематики"
+                           [(ngModel)]="topic.name" required #name="ngModel"
+                           data-form-field="name" class="form-control">
+                    <div class="col-12 form-group alert-danger" role="alert" *ngIf="name.errors && fTopic.submitted">
+                      <div *ngIf="name.errors.required">Поле обязательно для заполнения</div>
                     </div>
-                    <div class="col-12 form-group" data-for="name">
-                      <input type="text" name="nameTopic" placeholder="Наименование тематики"
-                             [(ngModel)]="topic.name" required #name="ngModel"
-                             data-form-field="name" class="form-control">
-                      <div class="col-12 form-group alert-danger" role="alert" *ngIf="name.errors && fTopic.submitted">
-                        <div *ngIf="name.errors.required">Поле обязательно для заполнения</div>
-                      </div>
+                  </div>
+
+                  <div class="col-12 form-group" data-for="textarea">
+                    <textarea name="description" placeholder="Описание" data-form-field="textarea"
+                            [(ngModel)]="topic.description" class="form-control">
+                    </textarea>
+                    <div class="col-12 form-group alert-danger" role="alert"
+                         *ngIf="fTopic.submitted && isCreateTopicFailed && newTopic">
+                      Ошибка при добавление тематики: <p>{{ errorMessage }}</p>
                     </div>
-                    <div class="col-12 form-group" data-for="textarea">
-                          <textarea name="description" placeholder="Описание" data-form-field="textarea"
-                                    [(ngModel)]="topic.description" #description="ngModel"
-                                    class="form-control"></textarea>
-                      <div class="col-12 form-group alert-danger" role="alert"
-                           *ngIf="fTopic.submitted && isCreateTopicFailed && newTopic">
-                        Ошибка при добавление тематики: <p>{{ errorMessage }}</p>
-                      </div>
-                      <div class="col-12 form-group alert-danger" role="alert"
-                           *ngIf="fTopic.submitted && isCreateTopicFailed && !newTopic">
-                        Ошибка при редактировании тематики: <p>{{ errorMessage }}</p>
-                      </div>
+                    <div class="col-12 form-group alert-danger" role="alert"
+                         *ngIf="fTopic.submitted && isCreateTopicFailed && !newTopic">
+                      Ошибка при редактировании тематики: <p>{{ errorMessage }}</p>
                     </div>
-                    <div class="col-12 mbr-section-btn">
-                      <table class="col-12 form-group align-center">
-                        <tr>
-                          <th scope="col" class="align-middle">
-                            <button type="submit" class="btn btn-success display-4 align-center">Добавить</button>
-                          </th>
-                          <th scope="col" class="align-middle">
-                            <button (click)="closeModal()" class="btn btn-info display-4 align-center">Закрыть</button>
-                          </th>
-                        </tr>
-                      </table>
-                    </div>
+                  </div>
+                  <div class="col-md col-sm-12 form-group" data-for="name">
+                    <button type="submit" class="btn btn-success display-4">Добавить</button>
+                  </div>
+                  <div class="col-md col-sm-12 form-group" data-for="surname">
+                    <a (click)="closeModal()" class="btn btn-info display-4">Закрыть</a>
                   </div>
                 </div>
               </form>
