@@ -64,7 +64,7 @@ public class Chapter implements BaseEntity {
     }
 
     public void removeQuestion(Question question) {
-        System.out.println(questions.remove(question));
+        questions.remove(question);
         if (question.hasChapters(this)) {
             question.removeChapter(this);
         }

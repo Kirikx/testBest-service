@@ -26,7 +26,6 @@ public abstract class AbstractMapper<E extends BaseEntity, D extends BaseDTO> im
 
   @Override
   public E convertToEntity(D dto) {
-    log.info(String.valueOf(dto));
     return Objects.isNull(dto)
         ? null
         : mapper.map(dto, entityClass);
@@ -34,7 +33,6 @@ public abstract class AbstractMapper<E extends BaseEntity, D extends BaseDTO> im
 
   @Override
   public D convertToDto(E entity) {
-    log.info(String.valueOf(entity));
     return Objects.isNull(entity)
         ? null
         : mapper.map(entity, dtoClass);
