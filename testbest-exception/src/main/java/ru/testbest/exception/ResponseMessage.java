@@ -1,9 +1,8 @@
 package ru.testbest.exception;
 
+import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Date;
 
 @Getter
 @Setter
@@ -14,5 +13,6 @@ public class ResponseMessage {
     String path;
     String method;
     Date time;
+    String info;
 
 }

@@ -11,6 +11,7 @@ import ru.testbest.converter.impl.manage.AnswerFullConverter;
 import ru.testbest.converter.impl.test.AnswerConverter;
 import ru.testbest.dto.manage.AnswerFullDto;
 import ru.testbest.dto.test.AnswerDto;
+import ru.testbest.exception.custom.CustomBadRequest;
 import ru.testbest.exception.custom.CustomNotFoundException;
 import ru.testbest.persistence.dao.AnswerDao;
 import ru.testbest.persistence.entity.Answer;
@@ -53,14 +54,14 @@ public class AnswerServiceImpl implements AnswerService {
   public AnswerFullDto getAnswerFullById(UUID uuid) {
     return answerDao.findByIdAndIsDeletedFalse(uuid)
         .map(answerFullConverter::convertToDto)
-        .orElse(null);
+        .orElseThrow(CustomNotFoundException::new);
   }
 
   @Override
   @Transactional
   public AnswerFullDto createAnswer(AnswerFullDto answerDto) {
     if (answerDto.getId() != null) {
-      throw new RuntimeException();
+      throw new CustomBadRequest();
     }
     return answerFullConverter.convertToDto(
         answerDao.save(
@@ -71,7 +72,7 @@ public class AnswerServiceImpl implements AnswerService {
   @Transactional
   public AnswerFullDto editAnswer(AnswerFullDto answerDto) {
     Optional.ofNullable(answerDto.getId())
-        .orElseThrow(RuntimeException::new);
+        .orElseThrow(CustomBadRequest::new);
     return answerFullConverter.convertToDto(
         answerDao.save(
             answerFullConverter.convertToEntity(answerDto)));
@@ -80,11 +81,10 @@ public class AnswerServiceImpl implements AnswerService {
   @Override
   @Transactional
   public void deleteAnswerById(UUID uuid) {
-    Optional<Answer> oAnswer = answerDao.findByIdAndIsDeletedFalse(uuid);
-    if (oAnswer.isPresent()) {
-      Answer answer = oAnswer.get();
-      answer.setIsDeleted(true);
-      answerDao.save(answer);
-    }
+    Answer answer = answerDao.findByIdAndIsDeletedFalse(uuid)
+        .orElseThrow(CustomNotFoundException::new);
+
+    answer.setIsDeleted(true);
+    answerDao.save(answer);
   }
 }

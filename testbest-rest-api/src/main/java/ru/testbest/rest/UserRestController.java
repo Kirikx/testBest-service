@@ -25,10 +25,16 @@ public class UserRestController {
     return userService.getUsers();
   }
 
+  @GetMapping("/role/{id}")
+  public List<UserDto> getUsersByRoleId(@PathVariable String id) {
+    log.info("Get all users by roleId {}", id);
+    return userService.getUsersByRoleId(UUID.fromString(id));
+  }
+
   @GetMapping("/{id}")
-    public UserDto getUser(@PathVariable("id") String id) {
-        log.info("Get user by id {}", id);
-        return userService.getUserById(UUID.fromString(id));
-    }
+  public UserDto getUser(@PathVariable("id") String id) {
+    log.info("Get user by id {}", id);
+    return userService.getUserById(UUID.fromString(id));
+  }
 
 }
