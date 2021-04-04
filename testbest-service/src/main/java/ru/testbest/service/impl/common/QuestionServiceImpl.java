@@ -95,11 +95,10 @@ public class QuestionServiceImpl implements QuestionService {
     Optional.ofNullable(questionDto.getId())
         .orElseThrow(RuntimeException::new);
 
-    Question question = questionDao.save(
-        questionFullConverter.convertToEntity(questionDto));
-
-    Set<Chapter> activeChapters = question.getChapters();
-    log.info("activeChapters = " + activeChapters);
+    final Set<UUID> activeChaptersIds = questionDao.findByIdAndIsDeletedFalse(questionDto.getId())
+        .orElseThrow(RuntimeException::new).getChapters().stream()
+        .map(Chapter::getId)
+        .collect(Collectors.toSet());
 
     final Set<UUID> currentChaptersIds;
     if (Objects.isNull(questionDto.getChapters())) {
@@ -110,25 +109,28 @@ public class QuestionServiceImpl implements QuestionService {
           .collect(Collectors.toSet());
     }
 
-    if (!activeChapters.isEmpty() || !currentChaptersIds.isEmpty()) {
-      if (!activeChapters.isEmpty()) {
-        activeChapters.stream()
-            .filter(ch -> !currentChaptersIds.contains(ch.getId()))
-            .peek(ch -> log.info("remove chapter = " + ch))
+    Question question = questionDao.save(
+        questionFullConverter.convertToEntity(questionDto));
+
+    if (!activeChaptersIds.isEmpty() || !currentChaptersIds.isEmpty()) {
+
+      if (!activeChaptersIds.isEmpty()) {
+        activeChaptersIds.stream()
+            .filter(chId -> !currentChaptersIds.contains(chId))
+            .map(chapterDao::findByIdAndIsDeletedFalse)
+            .map(oChapter -> oChapter.orElse(null))
+            .filter(Objects::nonNull)
             .peek(ch -> ch.removeQuestion(question))
             .forEach(chapterDao::save);
       }
 
       if (!currentChaptersIds.isEmpty()) {
-        Set<UUID> skipChapters = activeChapters.stream()
-            .map(Chapter::getId)
+        Set<UUID> skipChapters = activeChaptersIds.stream()
             .filter(currentChaptersIds::contains)
             .collect(Collectors.toSet());
 
-        log.info("skipChapters = " + skipChapters);
-
         currentChaptersIds.stream()
-            .filter(skipChapters::contains)
+            .filter(currCh -> !skipChapters.contains(currCh))
             .map(chapterDao::findByIdAndIsDeletedFalse)
             .map(oChapter -> oChapter.orElse(null))
             .filter(Objects::nonNull)
@@ -136,6 +138,7 @@ public class QuestionServiceImpl implements QuestionService {
             .forEach(chapterDao::save);
       }
     }
+
     return getQuestionFullById(question.getId());
   }
 
