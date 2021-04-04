@@ -17,6 +17,7 @@ import {QuestionTypeService} from "../_services/question-type.service";
 import {ChapterWrap} from "../_models/ChapterWrap";
 import {AnswerService} from "../_services/answer.service";
 import {AnswerFull} from "../_models/createTest/AnswerFull";
+import {isWebpackFiveOrHigher} from "@angular-devkit/build-angular/src/utils/webpack-version";
 
 @Component({
   selector: 'app-board-test',
@@ -29,6 +30,7 @@ export class BoardTestComponent implements OnInit {
   chapters: Array<Chapter>;
   topics: Array<Topic>;
   question: QuestionFull;
+  typeQ: QuestionType;
   questionTypes: Array<QuestionType>;
   answer: AnswerFull
   answers: Array<AnswerFull>;
@@ -406,32 +408,29 @@ export class BoardTestComponent implements OnInit {
   }
 
   deleteChapter(): void {
-    if (!this.formChapterCreate.valid) {
-      this.isSubmitted = false;
-    } else {
-      this.chapterService.deleteChapter(this.chapter).subscribe(
-        data => {
-          this.closeModal();
-          this.getTest();
-          this.clearFormCreateChapter();
-        },
-        error => {
-          if (error.statusText == "Unknown Error") {
-            this.errorMessage = "Server is not responding";
-          } else {
-            this.errorMessage = error.message;
-          }
+    this.chapterService.deleteChapter(this.chapter).subscribe(
+      data => {
+        this.closeModal();
+        this.getTest();
+        this.clearFormCreateChapter();
+      },
+      error => {
+        if (error.statusText == "Unknown Error") {
+          this.errorMessage = "Server is not responding";
+        } else {
+          this.errorMessage = error.message;
         }
-      );
-    }
+      }
+    );
   }
 
 //Обработка вопросов
   formQuestionCreate = new FormGroup({
-    chaptersSelect: new FormControl([''], Validators.required),
+    chaptersSelect: new FormControl('', Validators.required),
     questionTypeId: new FormControl('', Validators.required),
     question: new FormControl('', Validators.required),
-    freeAnswer: new FormControl('', Validators.required)
+    answer: new FormControl('', Validators.required),
+    answerTest: new FormControl('', Validators.required)
   });
 
   setForValidation() {
@@ -439,11 +438,21 @@ export class BoardTestComponent implements OnInit {
       this.questionTypes.forEach(value => {
         if (this.question.id != null) {
           if (value.id == this.question.questionTypeId && value.name == 'Вопрос со свободным ответом') {
+            this.answer = this.question.answers[0];
             this.formQuestionCreate.setValue({
               chaptersSelect: this.question.chapters,
               questionTypeId: this.question.questionTypeId,
               question: this.question.question,
-              freeAnswer: this.question.answers[0].answer
+              answer: this.answer,
+              answerTest: this.answer.answer
+            })
+          } else {
+            this.formQuestionCreate.setValue({
+              chaptersSelect: this.question.chapters,
+              questionTypeId: this.question.questionTypeId,
+              question: this.question.question,
+              answer: this.question.answers,
+              answerTest: this.answer.answer
             })
           }
         }
@@ -453,7 +462,8 @@ export class BoardTestComponent implements OnInit {
         chaptersSelect: this.question.chapters,
         questionTypeId: this.question.questionTypeId,
         question: this.question.question,
-        freeAnswer: this.question.answers
+        answer: this.question.answers,
+        answerTest: this.answer.answer
       });
     }
   }
@@ -465,7 +475,7 @@ export class BoardTestComponent implements OnInit {
     hasAllCheckBox: false,
     hasFilter: true,
     hasCollapseExpand: false,
-    maxHeight: 500
+    maxHeight: 300
   });
   countSelect: number;
 
@@ -502,6 +512,9 @@ export class BoardTestComponent implements OnInit {
   clearFormCreateQuestion() {
     this.question = new QuestionFull();
     this.question.topicId = this.test.topicId;
+    this.answers = new Array<AnswerFull>();
+    this.answer = new AnswerFull();
+    this.typeQ = null;
     this.setForValidation();
   }
 
@@ -524,8 +537,10 @@ export class BoardTestComponent implements OnInit {
     this.questionService.getFullQuestion(this.question).subscribe(
       data => {
         this.question = data;
+        this.answers = this.question.answers;
         this.getSelectData();
         this.setForValidation();
+        this.checkTypeQuestionUI(false);
       },
       error => {
         if (error.statusText == "Unknown Error") {
@@ -543,6 +558,7 @@ export class BoardTestComponent implements OnInit {
     if (this.selectQuestions[0] == null) {
       this.clearFormCreateQuestion();
       this.getSelectData();
+      this.checkTypeQuestionUI(true);
     } else {
       //TODO продумать про множественный выбор
       this.question.id = this.selectQuestions[0];
@@ -587,25 +603,35 @@ export class BoardTestComponent implements OnInit {
     })
     this.question.questionTypeId = event.target.value.substring(3);
     this.isSubmitted = true;
-    this.checkTypeQuestion();
+    this.answer = new AnswerFull();
+    this.question.answers = new Array<AnswerFull>();
+    this.checkTypeQuestionUI(true);
   }
 
   createQuestion(): void {
     if (!this.formQuestionCreate.valid) {
       this.isSubmitted = false;
     } else {
+      let answersLoc = new Array<AnswerFull>();
       if (this.question.id == null) {
+        this.question.answers = answersLoc;
         this.questionService.createQuestion(this.question).subscribe(
           data => {
             this.question = data;
-            this.answer.questionId = this.question.id;
-            this.answers = new Array<AnswerFull>();
-            this.answers.push(this.answer);
-            this.question.answers = this.answers;
+            this.questionTypes.forEach(value => {
+              if (value.id == this.question.questionTypeId && value.name == 'Вопрос со свободным ответом') {
+                this.answer.questionId = this.question.id;
+                this.answers.push(this.answer);
+                this.question.answers = this.answers;
+              } else {
+                this.answers.forEach(ans => {
+                  ans.id = null;
+                  ans.questionId = this.question.id;
+                });
+                this.question.answers = this.answers;
+              }
+            });
             this.editQuestion();
-            this.closeModal();
-            this.getTest();
-            this.clearFormCreateQuestion();
           },
           error => {
             if (error.statusText == "Unknown Error") {
@@ -616,6 +642,8 @@ export class BoardTestComponent implements OnInit {
           }
         );
       } else {
+        answersLoc.push(this.answer);
+        this.question.answers = answersLoc;
         this.editQuestion();
       }
     }
@@ -639,44 +667,111 @@ export class BoardTestComponent implements OnInit {
   }
 
   deleteQuestion(): void {
-    if (!this.formQuestionCreate.valid) {
-      this.isSubmitted = false;
-    } else {
-      this.questionService.deleteQuestion(this.question).subscribe(
-        data => {
-          this.closeModal();
-          this.getTest();
-          this.clearFormCreateQuestion();
-        },
-        error => {
-          if (error.statusText == "Unknown Error") {
-            this.errorMessage = "Server is not responding";
-          } else {
-            this.errorMessage = error.message;
-          }
+    this.questionService.deleteQuestion(this.question).subscribe(
+      data => {
+        this.closeModal();
+        this.getTest();
+        this.clearFormCreateQuestion();
+      },
+      error => {
+        if (error.statusText == "Unknown Error") {
+          this.errorMessage = "Server is not responding";
+        } else {
+          this.errorMessage = error.message;
         }
-      );
-    }
+      }
+    );
   }
 
-  checkTypeQuestion(): QuestionType {
-    let typeQ:QuestionType = null;
+  checkTypeQuestionUI(isNewAnswer: boolean) {
     if (this.question.questionTypeId != null) {
       this.questionTypes.forEach(value => {
         if (value.id == this.question.questionTypeId) {
-          typeQ = value;
+          this.typeQ = value;
+          if (this.typeQ.name == 'Одиночный') {
+            if (isNewAnswer) {
+              this.answers = new Array<AnswerFull>();
+              this.newAnswer();
+            }
+          }
+          if (this.typeQ.name == 'Множественный') {
+
+          }
         }
       });
-      if (typeQ != null) return typeQ;
-    } else {
-      return typeQ;
     }
   }
 
 //Обработка ответов
+  newAnswer() {
+    this.answer = new AnswerFull();
+    this.answer.id = "" + this.getRandomInt();
+    this.answers.push(this.answer);
+    this.question.answers = this.answers;
+    this.formQuestionCreate.patchValue({answer: this.answer.id});
+  }
+
   changeFreeAnswer(event) {
     this.answer.answer = event.target.value;
     this.answer.isCorrect = true;
+    this.formQuestionCreate.patchValue({answer: this.answer})
+  }
+
+  addAnswer(): void {
+    this.newAnswer();
+    this.checkTypeQuestionUI(false);
+  }
+
+  deleteAnswer(id: String): void {
+    let buffAnswer = new Array<AnswerFull>();
+    this.answers.forEach(value => {
+      if (value.id != id) buffAnswer.push(value);
+    })
+    this.answers = buffAnswer;
+    this.question.answers = this.answers;
+    this.checkTypeQuestionUI(false);
+  }
+
+  changeRadioButtonAnswer(event) {
+    let checkAnswer = true;
+    let buff = new Array<AnswerFull>();
+    this.answers.forEach(check => {
+      check.isCorrect = check.id == event.target.id;
+      if (check.answer == null || check.answer == "") {
+        checkAnswer = false;
+      }
+      buff.push(check)
+    })
+    if (checkAnswer) {
+      this.answers = buff;
+      this.question.answers = this.answers;
+      this.setForValidation();
+      this.isSubmitted = true;
+    } else {
+      this.isSubmitted = false;
+    }
+  }
+
+  changeInputAnswer(event) {
+    this.formQuestionCreate.patchValue({answerTest: "Варианты ответа"})
+    let checkAnswer = true;
+    let buff = new Array<AnswerFull>();
+    this.answers.forEach(check => {
+      if (check.id == event.target.content) {
+        check.answer = event.target.value;
+        if (check.answer == null || check.answer == "") {
+          checkAnswer = false;
+        }
+      }
+      buff.push(check)
+    })
+    if (checkAnswer) {
+      this.answers = buff;
+      this.question.answers = this.answers;
+      this.isSubmitted = true;
+    } else {
+      this.isSubmitted = false;
+    }
   }
 
   getAnswer() {
@@ -700,5 +795,9 @@ export class BoardTestComponent implements OnInit {
     this.showModalQuestion = false;
     this.showModalChapter = false;
     this.isSubmitted = true;
+  }
+
+  getRandomInt(): number {
+    return Math.floor(Math.random() * 10000);
   }
 }
