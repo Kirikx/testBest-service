@@ -212,8 +212,7 @@
                     <tr *ngFor="let answer of question.answers">
                       <td class="align-middle">
                         <input class="custom-radio" type="radio" id="{{answer.id}}" name="answer"
-                               value="{{answer.answer}}" formControlName="answer" content="{{answer.answer}}"
-                               (change)="changeRadioButtonAnswer($event)">
+                               value="{{answer.answer}}" formControlName="answer" (change)="changeRadioButtonAnswer($event)">
                       </td>
                       <td class="align-middle">
                         <input content="{{answer.id}}" type="text"
@@ -229,7 +228,7 @@
                     </tbody>
                   </table>
                   <div class="alert-danger col-12" role="alert"
-                       *ngIf="validationQuestionForm.answer.invalid && !isSubmitted">
+                       *ngIf="validationQuestionForm.answer.invalid &&!isSubmitted">
                     <div *ngIf="validationQuestionForm.answer.errors.required">Варианты ответа обязательны для
                       заполнения
                     </div>
@@ -265,7 +264,6 @@
             </div>
           </form>
         </app-modal>
-
 
       </div>
     </div>

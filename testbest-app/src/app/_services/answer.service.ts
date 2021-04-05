@@ -4,6 +4,7 @@ import {Observable} from "rxjs";
 import {Global} from "../global";
 import {AnswerFull} from "../_models/createTest/AnswerFull";
 import {Answer} from "../_models/Answer";
+import {QuestionFull} from "../_models/createTest/QuestionFull";
 
 @Injectable({
   providedIn: 'root'
@@ -35,5 +36,9 @@ export class AnswerService {
 
   createAnswer(answerFull: AnswerFull): Observable<any> {
     return this.http.post(Global.ANSWER_API + 'create', answerFull, Global.httpOptions);
+  }
+
+  deleteAnswer(answerFull: AnswerFull): Observable<any> {
+    return this.http.delete(Global.ANSWER_API + answerFull.id, Global.httpOptions);
   }
 }

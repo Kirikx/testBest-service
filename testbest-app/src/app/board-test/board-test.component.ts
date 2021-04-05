@@ -17,7 +17,6 @@ import {QuestionTypeService} from "../_services/question-type.service";
 import {ChapterWrap} from "../_models/ChapterWrap";
 import {AnswerService} from "../_services/answer.service";
 import {AnswerFull} from "../_models/createTest/AnswerFull";
-import {isWebpackFiveOrHigher} from "@angular-devkit/build-angular/src/utils/webpack-version";
 
 @Component({
   selector: 'app-board-test',
@@ -575,7 +574,8 @@ export class BoardTestComponent implements OnInit {
         if (chapter.id == ev) {
           if (!this.question.chapters.find(check => check.id == chapter.id)) {
             this.question.chapters.push(new ChapterWrap(chapter));
-            this.setForValidation();
+            this.setForValidation()
+            this.formQuestionCreate.patchValue({chaptersSelect: this.question.chapters})
           }
         }
       })
@@ -609,6 +609,12 @@ export class BoardTestComponent implements OnInit {
   }
 
   createQuestion(): void {
+    for (let ans of this.question.answers) {
+      if (ans.answer == "" || ans.answer == null) {
+        this.formQuestionCreate.patchValue({answer: null})
+        break;
+      }
+    }
     if (!this.formQuestionCreate.valid) {
       this.isSubmitted = false;
     } else {
@@ -642,14 +648,43 @@ export class BoardTestComponent implements OnInit {
           }
         );
       } else {
-        answersLoc.push(this.answer);
-        this.question.answers = answersLoc;
+        for (let type of this.questionTypes) {
+          if (type.id == this.question.questionTypeId && type.name == 'Вопрос со свободным ответом') {
+            answersLoc.push(this.answer);
+            this.question.answers = answersLoc;
+            break;
+          }
+        }
         this.editQuestion();
       }
     }
   }
 
   editQuestion(): void {
+    let editAnswer = new Array<AnswerFull>();
+    for (let ans of this.question.answers) {
+      if (ans.id != null && ans.id.length < 10) {
+        ans.id = null;
+        ans.questionId = this.question.id;
+        this.answerService.createAnswer(ans).subscribe(
+          data => {
+            ans = data;
+            editAnswer.push(ans);
+          },
+          error => {
+            if (error.statusText == "Unknown Error") {
+              this.errorMessage = "Server is not responding";
+            } else {
+              this.errorMessage = error.message;
+            }
+          }
+        );
+      } else {
+        editAnswer.push(ans);
+      }
+    }
+    this.question.answers = editAnswer;
+    console.log(this.question.answers);
     this.questionService.editQuestion(this.question).subscribe(
       data => {
         this.closeModal();
@@ -692,6 +727,13 @@ export class BoardTestComponent implements OnInit {
             if (isNewAnswer) {
               this.answers = new Array<AnswerFull>();
               this.newAnswer();
+              this.newAnswer();
+            } else {
+              for (let answer of this.answers) {
+                if (answer.isCorrect) {
+                  this.formQuestionCreate.patchValue({answer: answer.answer})
+                }
+              }
             }
           }
           if (this.typeQ.name == 'Множественный') {
@@ -723,54 +765,71 @@ export class BoardTestComponent implements OnInit {
   }
 
   deleteAnswer(id: String): void {
-    let buffAnswer = new Array<AnswerFull>();
-    this.answers.forEach(value => {
-      if (value.id != id) buffAnswer.push(value);
-    })
-    this.answers = buffAnswer;
-    this.question.answers = this.answers;
-    this.checkTypeQuestionUI(false);
-  }
-
-  changeRadioButtonAnswer(event) {
-    let checkAnswer = true;
-    let buff = new Array<AnswerFull>();
-    this.answers.forEach(check => {
-      check.isCorrect = check.id == event.target.id;
-      if (check.answer == null || check.answer == "") {
-        checkAnswer = false;
-      }
-      buff.push(check)
-    })
-    if (checkAnswer) {
-      this.answers = buff;
+    if (id.length < 10) {
+      let buffAnswer = new Array<AnswerFull>();
+      this.answers.forEach(value => {
+        if (value.id != id) buffAnswer.push(value);
+      })
+      this.answers = buffAnswer;
       this.question.answers = this.answers;
-      this.setForValidation();
-      this.isSubmitted = true;
+      this.checkTypeQuestionUI(false);
     } else {
-      this.isSubmitted = false;
+      //TODO В API нет этой возможности
+      // for (let ans of this.answers) {
+      //   if (ans.id == id) {
+      //     this.answerService.deleteAnswer(ans).subscribe(
+      //       data => {
+      //         let buffAnswer = new Array<AnswerFull>();
+      //         this.answers.forEach(value => {
+      //           if (value.id != id) buffAnswer.push(value);
+      //         })
+      //         this.answers = buffAnswer;
+      //         this.question.answers = this.answers;
+      //         this.checkTypeQuestionUI(false);
+      //       },
+      //       error => {
+      //         if (error.statusText == "Unknown Error") {
+      //           this.errorMessage = "Server is not responding";
+      //         } else {
+      //           this.errorMessage = error.message;
+      //         }
+      //       }
+      //     );
+      //   }
+      // }
     }
   }
 
+  changeRadioButtonAnswer(event) {
+    this.formQuestionCreate.patchValue({answerTest: "Варианты ответа"});
+    this.answers.forEach(check => {
+      if (check.id == event.target.id) {
+        check.isCorrect = true;
+        this.formQuestionCreate.patchValue({answer: check.answer})
+      } else {
+        check.isCorrect = false;
+      }
+    })
+    this.question.answers = this.answers;
+  }
+
   changeInputAnswer(event) {
-    this.formQuestionCreate.patchValue({answerTest: "Варианты ответа"})
-    let checkAnswer = true;
+    this.formQuestionCreate.patchValue({answerTest: "Варианты ответа"});
     let buff = new Array<AnswerFull>();
     this.answers.forEach(check => {
       if (check.id == event.target.content) {
         check.answer = event.target.value;
-        if (check.answer == null || check.answer == "") {
-          checkAnswer = false;
-        }
       }
       buff.push(check)
     })
-    if (checkAnswer) {
-      this.answers = buff;
-      this.question.answers = this.answers;
-      this.isSubmitted = true;
-    } else {
-      this.isSubmitted = false;
+    this.answers = buff;
+    this.question.answers = this.answers
+    for (let ans of this.answers) {
+      if (ans.answer != "") {
+        if (ans.isCorrect) {
+          this.isSubmitted = true;
+        }
+      }
     }
   }
 
