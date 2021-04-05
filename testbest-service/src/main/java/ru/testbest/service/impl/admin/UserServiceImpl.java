@@ -1,6 +1,5 @@
 package ru.testbest.service.impl.admin;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -12,8 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.testbest.converter.impl.admin.UserConverter;
-import ru.testbest.dto.admin.UserDto;
-import ru.testbest.dto.admin.security.UserDetailsImpl;
+import ru.testbest.dto.admin.UserDetailsDto;
 import ru.testbest.exception.custom.CustomBadRequest;
 import ru.testbest.exception.custom.CustomNotFoundException;
 import ru.testbest.persistence.dao.RoleDao;
@@ -32,7 +30,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
   @Override
   @Transactional(readOnly = true)
-  public List<UserDto> getUsers() {
+  public List<UserDetailsDto> getUsers() {
     return userDao.findAllByIsDeletedFalse().stream()
         .map(userConverter::convertToDto)
         .collect(Collectors.toList());
@@ -40,7 +38,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
   @Override
   @Transactional(readOnly = true)
-  public UserDto getUserById(UUID uuid) {
+  public UserDetailsDto getUserById(UUID uuid) {
     return userDao.findByIdAndIsDeletedFalse(uuid)
         .map(userConverter::convertToDto)
         .orElseThrow(CustomNotFoundException::new);
@@ -48,23 +46,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
   @Override
   @Transactional
-  public UserDto createUser(UserDto userDto) {
-    if (userDto.getId() != null) {
+  public UserDetailsDto createUser(UserDetailsDto userDetailsDto) {
+    if (userDetailsDto.getId() != null) {
       throw new CustomBadRequest();
     }
     return userConverter.convertToDto(
         userDao.save(
-            userConverter.convertToEntity(userDto)));
+            userConverter.convertToEntity(userDetailsDto)));
   }
 
   @Override
   @Transactional
-  public UserDto editUser(UserDto userDto) {
-    Optional.ofNullable(userDto.getId())
+  public UserDetailsDto editUser(UserDetailsDto userDetailsDto) {
+    Optional.ofNullable(userDetailsDto.getId())
         .orElseThrow(CustomBadRequest::new);
     return userConverter.convertToDto(
         userDao.save(
-            userConverter.convertToEntity(userDto)));
+            userConverter.convertToEntity(userDetailsDto)));
   }
 
   @Override
@@ -79,11 +77,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
   @Override
   @Transactional(readOnly = true)
-  public List<UserDto> getUsersByRoleId(UUID roleId) {
+  public List<UserDetailsDto> getUsersByRoleId(UUID roleId) {
     Role role = roleDao.findById(roleId)
         .orElseThrow(CustomNotFoundException::new);
 
-    return userDao.findAllByRolesIsContaining(Collections.singleton(role)).stream()
+    return userDao.findAllByRolesIsContaining(role).stream()
         .map(userConverter::convertToDto)
         .collect(Collectors.toList());
   }
@@ -106,6 +104,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     User user = userDao.findByUsernameAndIsDeletedFalse(username)
         .orElseThrow(
             () -> new UsernameNotFoundException("User Not Found with username: " + username));
-    return UserDetailsImpl.build(user);
+    return userConverter.convertToDto(user);
   }
 }

@@ -2,7 +2,6 @@ package ru.testbest.persistence.dao;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -22,6 +21,6 @@ public interface UserDao extends JpaRepository<User, UUID> {
 
   Boolean existsByEmailAndIsDeletedFalse(String email);
 
-  List<User> findAllByRolesIsContaining(Set<Role> roles);
+  List<User> findAllByRolesIsContaining(Role role);
 
 }
