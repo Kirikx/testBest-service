@@ -11,9 +11,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.testbest.converter.impl.admin.UserConverter;
-import ru.testbest.dto.admin.UserDto;
-import ru.testbest.dto.admin.security.UserDetailsImpl;
+import ru.testbest.dto.admin.UserDetailsDto;
+import ru.testbest.exception.custom.CustomBadRequest;
+import ru.testbest.exception.custom.CustomNotFoundException;
+import ru.testbest.persistence.dao.RoleDao;
 import ru.testbest.persistence.dao.UserDao;
+import ru.testbest.persistence.entity.Role;
 import ru.testbest.persistence.entity.User;
 import ru.testbest.service.UserService;
 
@@ -22,11 +25,12 @@ import ru.testbest.service.UserService;
 public class UserServiceImpl implements UserService, UserDetailsService {
 
   private final UserDao userDao;
+  private final RoleDao roleDao;
   private final UserConverter userConverter;
 
   @Override
   @Transactional(readOnly = true)
-  public List<UserDto> getUsers() {
+  public List<UserDetailsDto> getUsers() {
     return userDao.findAllByIsDeletedFalse().stream()
         .map(userConverter::convertToDto)
         .collect(Collectors.toList());
@@ -34,49 +38,52 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
   @Override
   @Transactional(readOnly = true)
-  public UserDto getUserById(UUID uuid) {
+  public UserDetailsDto getUserById(UUID uuid) {
     return userDao.findByIdAndIsDeletedFalse(uuid)
         .map(userConverter::convertToDto)
-        .orElse(null);
+        .orElseThrow(CustomNotFoundException::new);
   }
 
   @Override
   @Transactional
-  public UserDto createUser(UserDto userDto) {
-    if (userDto.getId() != null) {
-      throw new RuntimeException();
+  public UserDetailsDto createUser(UserDetailsDto userDetailsDto) {
+    if (userDetailsDto.getId() != null) {
+      throw new CustomBadRequest();
     }
     return userConverter.convertToDto(
         userDao.save(
-            userConverter.convertToEntity(userDto)));
+            userConverter.convertToEntity(userDetailsDto)));
   }
 
   @Override
   @Transactional
-  public UserDto editUser(UserDto userDto) {
+  public UserDetailsDto editUser(UserDetailsDto userDetailsDto) {
+    Optional.ofNullable(userDetailsDto.getId())
+        .orElseThrow(CustomBadRequest::new);
     return userConverter.convertToDto(
         userDao.save(
-            userConverter.convertToEntity(userDto)));
+            userConverter.convertToEntity(userDetailsDto)));
   }
 
   @Override
   @Transactional
   public void deleteUserById(UUID uuid) {
-    Optional<User> oUser = userDao.findByIdAndIsDeletedFalse(uuid);
-    if (oUser.isPresent()) {
-      User user = oUser.get();
-      user.setIsDeleted(true);
-      userDao.save(user);
-    }
+    User user = userDao.findByIdAndIsDeletedFalse(uuid)
+        .orElseThrow(CustomNotFoundException::new);
+
+    user.setIsDeleted(true);
+    userDao.save(user);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public List<UserDto> getUsersByRoleId(UUID roleId) {
-//    return userDao.findByRoleId(roleId).stream()
-//        .map(userConverter::convertToDto)
-//        .collect(Collectors.toList());
-    return null;
+  public List<UserDetailsDto> getUsersByRoleId(UUID roleId) {
+    Role role = roleDao.findById(roleId)
+        .orElseThrow(CustomNotFoundException::new);
+
+    return userDao.findAllByRolesIsContaining(role).stream()
+        .map(userConverter::convertToDto)
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -95,7 +102,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   @Transactional(readOnly = true)
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     User user = userDao.findByUsernameAndIsDeletedFalse(username)
-        .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
-    return UserDetailsImpl.build(user);
+        .orElseThrow(
+            () -> new UsernameNotFoundException("User Not Found with username: " + username));
+    return userConverter.convertToDto(user);
   }
 }

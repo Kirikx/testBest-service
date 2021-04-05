@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import ru.testbest.persistence.entity.Role;
 import ru.testbest.persistence.entity.User;
 
 @Repository
@@ -19,5 +20,7 @@ public interface UserDao extends JpaRepository<User, UUID> {
   Boolean existsByUsernameAndIsDeletedFalse(String username);
 
   Boolean existsByEmailAndIsDeletedFalse(String email);
+
+  List<User> findAllByRolesIsContaining(Role role);
 
 }

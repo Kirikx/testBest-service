@@ -2,7 +2,6 @@ package ru.testbest.rest;
 
 import java.util.List;
 import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.testbest.dto.admin.security.UserDetailsImpl;
+import ru.testbest.dto.admin.UserDetailsDto;
 import ru.testbest.dto.manage.TestFullDto;
 import ru.testbest.dto.test.TestDto;
 import ru.testbest.dto.test.UserTestDto;
@@ -59,7 +58,7 @@ public class TestRestController {
     @PostMapping("/create")
     public TestFullDto createTest(@RequestBody TestFullDto testDto, Authentication authentication) {
         log.info("Create test {}", testDto);
-        UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+        UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
         return testService.createTest(testDto, currentUser.getId());
     }
 
@@ -71,7 +70,7 @@ public class TestRestController {
 
     @GetMapping("/user")
     public List<UserTestDto> getAllTestCurrentUser(Authentication authentication) {
-        UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+        UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
         log.info("Get all test for user {}", currentUser.getId());
         return userTestService.getUserTests(currentUser.getId());
     }

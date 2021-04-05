@@ -11,6 +11,8 @@ import ru.testbest.converter.impl.manage.TestFullConverter;
 import ru.testbest.converter.impl.test.TestConverter;
 import ru.testbest.dto.manage.TestFullDto;
 import ru.testbest.dto.test.TestDto;
+import ru.testbest.exception.custom.CustomBadRequest;
+import ru.testbest.exception.custom.CustomNotFoundException;
 import ru.testbest.persistence.dao.TestDao;
 import ru.testbest.persistence.entity.Test;
 import ru.testbest.service.TestService;
@@ -28,54 +30,54 @@ public class TestServiceImpl implements TestService {
   @Transactional(readOnly = true)
   public List<TestDto> getTests() {
     return testDao.findAllByIsDeletedFalse().stream()
-      .map(testConverter::convertToDto)
-      .collect(Collectors.toList());
+        .map(testConverter::convertToDto)
+        .collect(Collectors.toList());
   }
 
   @Override
   @Transactional(readOnly = true)
   public List<TestFullDto> getFullTests() {
     return testDao.findAll().stream()
-      .map(testFullConverter::convertToDto)
-      .collect(Collectors.toList());
+        .map(testFullConverter::convertToDto)
+        .collect(Collectors.toList());
   }
 
   @Override
   @Transactional(readOnly = true)
   public TestDto getTestById(UUID uuid) {
     return testDao.findByIdAndIsDeletedFalse(uuid)
-      .map(testConverter::convertToDto)
-      .orElse(null);
+        .map(testConverter::convertToDto)
+        .orElseThrow(CustomNotFoundException::new);
   }
 
   @Override
   @Transactional(readOnly = true)
   public TestFullDto getTestFullById(UUID uuid) {
     return testDao.findById(uuid)
-      .map(testFullConverter::convertToDto)
-      .orElse(null);
+        .map(testFullConverter::convertToDto)
+        .orElseThrow(CustomNotFoundException::new);
   }
 
   @Override
   @Transactional
   public TestFullDto createTest(TestFullDto questionDto, UUID userId) {
     if (userId == null && questionDto.getId() != null) {
-      throw new RuntimeException();
+      throw new CustomBadRequest();
     }
     questionDto.setAuthorId(userId);
     return testFullConverter.convertToDto(
-      testDao.save(
-        testFullConverter.convertToEntity(questionDto)));
+        testDao.save(
+            testFullConverter.convertToEntity(questionDto)));
   }
 
   @Override
   @Transactional
   public TestFullDto editTest(TestFullDto questionDto) {
     Optional.ofNullable(questionDto.getId())
-      .orElseThrow(RuntimeException::new);
+        .orElseThrow(CustomBadRequest::new);
     return testFullConverter.convertToDto(
-      testDao.save(
-        testFullConverter.convertToEntity(questionDto)));
+        testDao.save(
+            testFullConverter.convertToEntity(questionDto)));
   }
 
   @Override
@@ -89,11 +91,10 @@ public class TestServiceImpl implements TestService {
   @Override
   @Transactional
   public void deleteTestById(UUID uuid) {
-    Optional<Test> oTest = testDao.findByIdAndIsDeletedFalse(uuid);
-    if (oTest.isPresent()) {
-      Test test = oTest.get();
-      test.setIsDeleted(true);
-      testDao.save(test);
-    }
+    Test test = testDao.findByIdAndIsDeletedFalse(uuid)
+        .orElseThrow(CustomNotFoundException::new);
+
+    test.setIsDeleted(true);
+    testDao.save(test);
   }
 }

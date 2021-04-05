@@ -10,6 +10,10 @@ public class CustomBadRequest extends RuntimeException {
 
     private ErrorType errorType;
 
+    public CustomBadRequest(String message) {
+        super(message);
+    }
+
     public CustomBadRequest() {
         this.errorType = ErrorType.BAD_REQUEST;
     }

@@ -16,6 +16,8 @@ import ru.testbest.converter.impl.test.QuestionConverter;
 import ru.testbest.dto.manage.ChapterWrapDto;
 import ru.testbest.dto.manage.QuestionFullDto;
 import ru.testbest.dto.test.QuestionDto;
+import ru.testbest.exception.custom.CustomBadRequest;
+import ru.testbest.exception.custom.CustomNotFoundException;
 import ru.testbest.persistence.dao.ChapterDao;
 import ru.testbest.persistence.dao.QuestionDao;
 import ru.testbest.persistence.entity.Chapter;
@@ -53,7 +55,7 @@ public class QuestionServiceImpl implements QuestionService {
   public QuestionDto getQuestionById(UUID uuid) {
     return questionDao.findByIdAndIsDeletedFalse(uuid)
         .map(questionConverter::convertToDto)
-        .orElse(null);
+        .orElseThrow(CustomNotFoundException::new);
   }
 
   @Override
@@ -61,21 +63,21 @@ public class QuestionServiceImpl implements QuestionService {
   public QuestionFullDto getQuestionFullById(UUID uuid) {
     return questionDao.findByIdAndIsDeletedFalse(uuid)
         .map(questionFullConverter::convertToDto)
-        .orElse(null);
+        .orElseThrow(CustomNotFoundException::new);
   }
 
   @Override
   @Transactional
   public QuestionFullDto createQuestion(QuestionFullDto questionDto) {
     if (questionDto.getId() != null) {
-      throw new RuntimeException();
+      throw new CustomBadRequest();
     }
     Question question = questionDao.save(
         questionFullConverter.convertToEntity(questionDto));
 
     Set<ChapterWrapDto> questionChapters = Optional
         .ofNullable(questionDto.getChapters())
-        .orElseThrow(() -> new RuntimeException("Question chapter is not null"));
+        .orElseThrow(CustomBadRequest::new);
 
     questionChapters.stream()
         .map(ChapterWrapDto::getId)
@@ -93,10 +95,10 @@ public class QuestionServiceImpl implements QuestionService {
   @Transactional
   public QuestionFullDto editQuestion(QuestionFullDto questionDto) {
     Optional.ofNullable(questionDto.getId())
-        .orElseThrow(RuntimeException::new);
+        .orElseThrow(CustomBadRequest::new);
 
     final Set<UUID> activeChaptersIds = questionDao.findByIdAndIsDeletedFalse(questionDto.getId())
-        .orElseThrow(RuntimeException::new).getChapters().stream()
+        .orElseThrow(CustomNotFoundException::new).getChapters().stream()
         .map(Chapter::getId)
         .collect(Collectors.toSet());
 
@@ -145,11 +147,10 @@ public class QuestionServiceImpl implements QuestionService {
   @Override
   @Transactional
   public void deleteQuestionById(UUID uuid) {
-    Optional<Question> oQuestion = questionDao.findByIdAndIsDeletedFalse(uuid);
-    if (oQuestion.isPresent()) {
-      Question question = oQuestion.get();
-      question.setIsDeleted(true);
-      questionDao.save(question);
-    }
+    Question question = questionDao.findByIdAndIsDeletedFalse(uuid)
+        .orElseThrow(CustomNotFoundException::new);
+
+    question.setIsDeleted(true);
+    questionDao.save(question);
   }
 }
