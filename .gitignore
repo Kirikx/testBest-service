@@ -34,6 +34,7 @@ testbest-service/target/
 testbest-dto/target/
 testbest-persistence/target/
 testbest-db/target/
+testbest-exception/target/
 # IntellijIdea files
 *.iml
 .idea
