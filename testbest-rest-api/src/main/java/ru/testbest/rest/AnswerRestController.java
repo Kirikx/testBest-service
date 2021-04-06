@@ -54,4 +54,10 @@ public class AnswerRestController {
         log.info("Get answer by id {}", id);
         return answerService.getAnswerById(UUID.fromString(id));
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteAnswer(@PathVariable("id") String id) {
+        log.info("Delete test by id {}", id);
+        answerService.deleteAnswerById(UUID.fromString(id));
+    }
 }

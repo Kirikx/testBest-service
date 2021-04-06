@@ -29,8 +29,9 @@ export class BoardTestComponent implements OnInit {
   chapters: Array<Chapter>;
   topics: Array<Topic>;
   question: QuestionFull;
-  typeQ: QuestionType;
+  questionType: QuestionType;
   questionTypes: Array<QuestionType>;
+  currentType: string;
   answer: AnswerFull
   answers: Array<AnswerFull>;
 
@@ -519,7 +520,7 @@ export class BoardTestComponent implements OnInit {
     this.question.topicId = this.test.topicId;
     this.answers = new Array<AnswerFull>();
     this.answer = new AnswerFull();
-    this.typeQ = null;
+    this.questionType = null;
     this.setForValidation();
   }
 
@@ -542,7 +543,15 @@ export class BoardTestComponent implements OnInit {
     this.questionService.getFullQuestion(this.question).subscribe(
       data => {
         this.question = data;
-        this.answers = this.question.answers;
+        let buff = new Array<AnswerFull>();
+        for (let answer of this.question.answers) {
+          if (!answer.isDeleted) {
+            buff.push(answer);
+          }
+        }
+        this.answers = buff;
+        this.question.answers= buff;
+        this.currentType = this.question.questionTypeId;
         this.getSelectData();
         this.setForValidation();
         this.checkTypeQuestionUI(false);
@@ -608,9 +617,25 @@ export class BoardTestComponent implements OnInit {
       onlySelf: true
     })
     this.question.questionTypeId = event.target.value.substring(3);
-    this.isSubmitted = true;
+    this.isSubmitted = true
+    this.formQuestionCreate.patchValue({answerTest: null});
     this.answer = new AnswerFull();
     this.question.answers = new Array<AnswerFull>();
+    if (this.question.id != null) {
+      for (let type of this.questionTypes) {
+        if (type.id == this.question.questionTypeId && type.name == 'Вопрос со свободным ответом'
+          && type.id != this.currentType) {
+          this.formQuestionCreate.patchValue({answerTest: null});
+          break;
+        } else {
+          if (type.id == this.question.questionTypeId) {
+            this.formQuestionCreate.patchValue({answerTest: "_"});
+            if (type.id == this.currentType) this.getQuestion();
+            break;
+          }
+        }
+      }
+    }
     this.checkTypeQuestionUI(true);
   }
 
@@ -727,8 +752,8 @@ export class BoardTestComponent implements OnInit {
     if (this.question.questionTypeId != null) {
       this.questionTypes.forEach(value => {
         if (value.id == this.question.questionTypeId) {
-          this.typeQ = value;
-          if (this.typeQ.name == 'Одиночный') {
+          this.questionType = value;
+          if (this.questionType.name == 'Одиночный') {
             if (isNewAnswer) {
               this.answers = new Array<AnswerFull>();
               this.newAnswer();
@@ -741,7 +766,7 @@ export class BoardTestComponent implements OnInit {
               }
             }
           }
-          if (this.typeQ.name == 'Множественный') {
+          if (this.questionType.name == 'Множественный') {
             if (isNewAnswer) {
               this.answers = new Array<AnswerFull>();
               this.newAnswer();
@@ -790,34 +815,32 @@ export class BoardTestComponent implements OnInit {
       this.question.answers = this.answers;
       this.checkTypeQuestionUI(false);
     } else {
-      //TODO В API нет этой возможности
-      // for (let ans of this.answers) {
-      //   if (ans.id == id) {
-      //     this.answerService.deleteAnswer(ans).subscribe(
-      //       data => {
-      //         let buffAnswer = new Array<AnswerFull>();
-      //         this.answers.forEach(value => {
-      //           if (value.id != id) buffAnswer.push(value);
-      //         })
-      //         this.answers = buffAnswer;
-      //         this.question.answers = this.answers;
-      //         this.checkTypeQuestionUI(false);
-      //       },
-      //       error => {
-      //         if (error.statusText == "Unknown Error") {
-      //           this.errorMessage = "Server is not responding";
-      //         } else {
-      //           this.errorMessage = error.message;
-      //         }
-      //       }
-      //     );
-      //   }
-      // }
+      for (let ans of this.answers) {
+        if (ans.id == id) {
+          this.answerService.deleteAnswer(ans).subscribe(
+            data => {
+              let buffAnswer = new Array<AnswerFull>();
+              this.answers.forEach(value => {
+                if (value.id != id) buffAnswer.push(value);
+              })
+              this.answers = buffAnswer;
+              this.question.answers = this.answers;
+              this.checkTypeQuestionUI(false);
+            },
+            error => {
+              if (error.statusText == "Unknown Error") {
+                this.errorMessage = "Server is not responding";
+              } else {
+                this.errorMessage = error.message;
+              }
+            }
+          );
+        }
+      }
     }
   }
 
   changeRadioButtonAnswer(event) {
-    this.formQuestionCreate.patchValue({answerTest: "Варианты ответа"});
     this.answers.forEach(check => {
       if (check.id == event.target.id) {
         check.isCorrect = true;
@@ -829,8 +852,50 @@ export class BoardTestComponent implements OnInit {
     this.question.answers = this.answers;
   }
 
+  changeCheckboxAnswer(event) {
+    let buffArray = Array<AnswerFull>();
+    const checkArray: FormArray = this.formCheckbox.get('checkArray') as FormArray;
+    if (event.target.checked) {
+      checkArray.push(new FormControl(event.target.value));
+      for (let answer of this.question.answers) {
+        if (answer.id == event.target.content) {
+          answer.isCorrect = true;
+          buffArray.push(answer);
+          if (answer.answer != null) {
+            this.formQuestionCreate.patchValue({answer: answer.answer});
+          }
+        } else {
+          buffArray.push(answer);
+        }
+      }
+    } else {
+      let i: number = 0;
+      checkArray.controls.forEach((item: FormControl) => {
+        if (item.value == event.target.value) {
+          checkArray.removeAt(i);
+          return;
+        }
+        i++;
+      });
+      for (let answer of this.question.answers) {
+        if (answer.id == event.target.content) {
+          answer.isCorrect = false;
+          buffArray.push(answer);
+          if (answer.answer != null) {
+            this.formQuestionCreate.patchValue({answer: answer.answer});
+          } else {
+            this.formQuestionCreate.patchValue({answer: ''});
+          }
+        } else {
+          buffArray.push(answer);
+        }
+      }
+    }
+    this.answers = buffArray;
+    this.question.answers = this.answers;
+  }
+
   changeInputAnswer(event) {
-    this.formQuestionCreate.patchValue({answerTest: "Варианты ответа"});
     let buff = new Array<AnswerFull>();
     this.answers.forEach(check => {
       if (check.id == event.target.content) {
@@ -863,47 +928,6 @@ export class BoardTestComponent implements OnInit {
         }
       }
     );
-  }
-
-  changeCheckboxAnswer(e) {
-    let buffArray = Array<AnswerFull>();
-    const checkArray: FormArray = this.formCheckbox.get('checkArray') as FormArray;
-    if (e.target.checked) {
-      checkArray.push(new FormControl(e.target.value));
-      for (let answer of this.question.answers) {
-        if (answer.id == e.target.content) {
-          answer.isCorrect = true;
-          buffArray.push(answer);
-          if (answer.answer != null) {
-            this.formQuestionCreate.patchValue({answer: answer.answer});
-          }
-        } else {
-          buffArray.push(answer);
-        }
-      }
-    } else {
-      let i: number = 0;
-      checkArray.controls.forEach((item: FormControl) => {
-        if (item.value == e.target.value) {
-          checkArray.removeAt(i);
-          return;
-        }
-        i++;
-      });
-      for (let answer of this.question.answers) {
-        if (answer.id == e.target.content) {
-          answer.isCorrect = false;
-          buffArray.push(answer);
-          if (answer.answer != null) {
-            this.formQuestionCreate.patchValue({answer: answer.answer});
-          }
-        } else {
-          buffArray.push(answer);
-        }
-      }
-    }
-    this.answers = buffArray;
-    this.question.answers = this.answers;
   }
 
 //Общее закрытие модальных окон
