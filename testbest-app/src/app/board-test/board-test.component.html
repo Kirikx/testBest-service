@@ -207,31 +207,31 @@
                   <div class="col-md col-sm-12 form-group">
                     <a (click)="addAnswer()" class="btn btn-success display-4">Добавить вариант ответа</a>
                   </div>
-                  <table class="table table-sm">
+                  <table [formGroup]="formCheckbox" class="table table-sm">
                     <tbody>
-                    <tr *ngFor="let answer of question.answers">
+                    <tr *ngFor="let answer of question.answers; let i=index">
                       <td class="align-middle">
-                        <input type="checkbox" content="{{answer.id}}" value="{{answer.answer}}"  formControlName="answer"
-                               (change)="changeCheckboxAnswer($event)"/>
+                        <input type="checkbox" content="{{answer.id}}" value="{{answer.answer}}"
+                               (change)="changeCheckboxAnswer($event)" [checked]="answer.isCorrect"/>
                       </td>
                       <td class="align-middle">
-                        <input content="{{answer.id}}" type="text"
-                               placeholder="Вариант ответа" class="form-control"
+                        <input content="{{answer.id}}" type="text" placeholder="Вариант ответа" class="form-control"
                                (change)="changeInputAnswer($event)" [value]="answer.answer">
                       </td>
                       <td class="align-middle">
                         <button (click)="deleteAnswer(answer.id)" class="btn btn-danger display-7"
-                                [disabled]="question.answers.length < 4">Х
-                        </button>
+                                [disabled]="question.answers.length < 4">Х</button>
                       </td>
                     </tr>
                     </tbody>
                   </table>
                   <div class="alert-danger col-12" role="alert"
-                       *ngIf="validationQuestionForm.answer.invalid &&!isSubmitted">
-                    <div *ngIf="validationQuestionForm.answer.errors.required">Варианты ответа обязательны для
-                      заполнения
-                    </div>
+                       *ngIf="formCheckbox.controls['checkArray'].errors?.required && !isSubmitted">
+                    <div *ngIf="formCheckbox.controls['checkArray'].errors?.required">Не выбраны правильные варианты ответа</div>
+                  </div>
+                  <div class="alert-danger col-12" role="alert"
+                       *ngIf="validationQuestionForm.answer.invalid && !isSubmitted">
+                    <div *ngIf="validationQuestionForm.answer.errors.required">Варианты ответа обязательны для заполнения</div>
                   </div>
                 </div>
               </div>

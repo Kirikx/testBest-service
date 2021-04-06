@@ -41,10 +41,13 @@ export class BoardTestComponent implements OnInit {
   showModalQuestion = false;
   errorMessage: string;
 
+  formCheckbox: FormGroup; //проверка нескольких Checkbox
+
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private renderer2: Renderer2,
     private router: Router,
+    private fb: FormBuilder,
     private tokenStorage: TokenStorageService,
     private testService: TestService,
     private topicService: TopicService,
@@ -55,6 +58,9 @@ export class BoardTestComponent implements OnInit {
     private route: ActivatedRoute) {
     this.test = new Test();
     this.answer = new AnswerFull();
+    this.formCheckbox = this.fb.group({
+      checkArray: this.fb.array([], [Validators.required])
+    })
   }
 
   ngOnInit(): void {
@@ -430,10 +436,7 @@ export class BoardTestComponent implements OnInit {
     question: new FormControl('', Validators.required),
     answer: new FormControl('', Validators.required),
     answerTest: new FormControl('', Validators.required),
-    //answer: new FormArray([] , Validators.required),
   });
-
-  checkArray = new Array<AnswerFull>();
 
   setForValidation() {
     if (this.question.questionTypeId != null) {
@@ -747,12 +750,10 @@ export class BoardTestComponent implements OnInit {
             } else {
               for (let answer of this.answers) {
                 if (answer.isCorrect) {
-                  this.checkArray.push(answer);
-                  this.formQuestionCreate.patchValue({answer: this.checkArray});
+                  this.formQuestionCreate.patchValue({answer: answer.answer});
                 }
               }
             }
-            console.log(this.checkArray);
           }
         }
       });
@@ -865,30 +866,45 @@ export class BoardTestComponent implements OnInit {
   }
 
   changeCheckboxAnswer(e) {
+    let buffArray = Array<AnswerFull>();
+    const checkArray: FormArray = this.formCheckbox.get('checkArray') as FormArray;
     if (e.target.checked) {
+      checkArray.push(new FormControl(e.target.value));
       for (let answer of this.question.answers) {
         if (answer.id == e.target.content) {
+          answer.isCorrect = true;
+          buffArray.push(answer);
           if (answer.answer != null) {
-            answer.isCorrect = true;
-            this.checkArray.push(answer);
-            break;
+            this.formQuestionCreate.patchValue({answer: answer.answer});
           }
+        } else {
+          buffArray.push(answer);
         }
       }
     } else {
-      let buffArray = Array<AnswerFull>();
-      this.checkArray.forEach(element => {
-        if (element.id != e.target.content) {
-          buffArray.push(element)
+      let i: number = 0;
+      checkArray.controls.forEach((item: FormControl) => {
+        if (item.value == e.target.value) {
+          checkArray.removeAt(i);
           return;
-        } else {
-          element.isCorrect = false;
         }
+        i++;
       });
-      this.checkArray = buffArray;
+      for (let answer of this.question.answers) {
+        if (answer.id == e.target.content) {
+          answer.isCorrect = false;
+          buffArray.push(answer);
+          if (answer.answer != null) {
+            this.formQuestionCreate.patchValue({answer: answer.answer});
+          }
+        } else {
+          buffArray.push(answer);
+        }
+      }
     }
+    this.answers = buffArray;
+    this.question.answers = this.answers;
   }
-
 
 //Общее закрытие модальных окон
   closeModal() {
