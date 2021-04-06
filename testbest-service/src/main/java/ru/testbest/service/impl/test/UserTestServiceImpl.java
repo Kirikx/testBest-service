@@ -17,6 +17,8 @@ import ru.testbest.dto.test.AnswerDto;
 import ru.testbest.dto.test.QuestionDto;
 import ru.testbest.dto.test.UserTestDto;
 import ru.testbest.dto.test.UserTestQuestionDto;
+import ru.testbest.exception.custom.CustomNotFoundException;
+import ru.testbest.exception.custom.GlobalException;
 import ru.testbest.persistence.dao.QuestionDao;
 import ru.testbest.persistence.dao.UserTestDao;
 import ru.testbest.persistence.dao.UserTestQuestionDao;
@@ -54,7 +56,7 @@ public class UserTestServiceImpl implements UserTestService {
     return getLastUserTestByUserId(userId)
         .filter(this::isLegalTime)
         .map(userTestConverter::convertToDto)
-        .orElse(null);
+        .orElseThrow(CustomNotFoundException::new);
   }
 
   private Optional<UserTest> getLastUserTestByUserId(UUID userId) {
@@ -63,9 +65,9 @@ public class UserTestServiceImpl implements UserTestService {
 
   private boolean isLegalTime(UserTest userTest) {
     LocalDateTime timeStart = Optional.ofNullable(userTest.getStarted())
-        .orElseThrow(RuntimeException::new);
+        .orElseThrow(GlobalException::new);
     return timeStart
-        .plusSeconds(userTest.getTest().getDuration())
+        .plusMinutes(userTest.getTest().getDuration())
         .isBefore(LocalDateTime.now());
   }
 
@@ -94,8 +96,7 @@ public class UserTestServiceImpl implements UserTestService {
   @Transactional
   public Optional<QuestionDto> getNextQuestion(UUID userTestId) {
     UserTest userTest = userTestDao.findById(userTestId)
-        .orElseThrow(
-            () -> new RuntimeException(String.format("User test id %s not found", userTestId)));
+        .orElseThrow(CustomNotFoundException::new);
 
     if (isLegalTime(userTest)) {
 
@@ -146,8 +147,7 @@ public class UserTestServiceImpl implements UserTestService {
 
   private Boolean checkCorrectSelectedAnswer(UserTestQuestionDto userTestQuestionDto) {
     Question question = questionDao.findById(userTestQuestionDto.getQuestionId())
-        .orElseThrow(() -> new RuntimeException(
-            String.format("Question id %s not found", userTestQuestionDto.getQuestionId())));
+        .orElseThrow(GlobalException::new);
 
     QuestionTypeEnum questionType = Optional.ofNullable(QuestionTypeEnum
         .fromString(question.getQuestionType().getName()))

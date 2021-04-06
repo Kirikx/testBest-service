@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.testbest.converter.impl.common.TopicConverter;
 import ru.testbest.dto.common.TopicDto;
+import ru.testbest.exception.custom.CustomBadRequest;
+import ru.testbest.exception.custom.CustomNotFoundException;
 import ru.testbest.persistence.dao.TopicDao;
 import ru.testbest.service.TopicService;
 
@@ -32,14 +34,14 @@ public class TopicServiceImpl implements TopicService {
   public TopicDto getTopicById(UUID uuid) {
     return topicDao.findById(uuid)
         .map(topicConverter::convertToDto)
-        .orElse(null);
+        .orElseThrow(CustomNotFoundException::new);
   }
 
   @Override
   @Transactional
   public TopicDto createTopic(TopicDto topicDto) {
     if (topicDto.getId() != null) {
-      throw new RuntimeException();
+      throw new CustomBadRequest();
     }
     return topicConverter.convertToDto(
         topicDao.save(
@@ -50,7 +52,7 @@ public class TopicServiceImpl implements TopicService {
   @Transactional
   public TopicDto editTopic(TopicDto topicDto) {
     Optional.ofNullable(topicDto.getId())
-        .orElseThrow(RuntimeException::new);
+        .orElseThrow(CustomBadRequest::new);
     return topicConverter.convertToDto(
         topicDao.save(
             topicConverter.convertToEntity(topicDto)));

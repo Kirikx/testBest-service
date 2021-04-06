@@ -2,21 +2,21 @@ package ru.testbest.service;
 
 import java.util.List;
 import java.util.UUID;
-import ru.testbest.dto.admin.UserDto;
+import ru.testbest.dto.admin.UserDetailsDto;
 
 public interface UserService {
 
-  List<UserDto> getUsers();
+  List<UserDetailsDto> getUsers();
 
-  UserDto getUserById(UUID uuid);
+  UserDetailsDto getUserById(UUID uuid);
 
-  UserDto createUser(UserDto userDto);
+  UserDetailsDto createUser(UserDetailsDto userDetailsDto);
 
-  UserDto editUser(UserDto userDto);
+  UserDetailsDto editUser(UserDetailsDto userDetailsDto);
 
   void deleteUserById(UUID uuid);
 
-  List<UserDto> getUsersByRoleId(UUID roleId);
+  List<UserDetailsDto> getUsersByRoleId(UUID roleId);
 
   Boolean existEmailUser(String email);
 

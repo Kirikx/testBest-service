@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.testbest.dto.admin.UserDto;
+import ru.testbest.dto.admin.UserDetailsDto;
 import ru.testbest.service.impl.admin.UserServiceImpl;
 
 @Slf4j
@@ -20,15 +20,21 @@ public class UserRestController {
   private final UserServiceImpl userService;
 
   @GetMapping
-  public List<UserDto> getUsers() {
+  public List<UserDetailsDto> getUsers() {
     log.info("Get all users");
     return userService.getUsers();
   }
 
+  @GetMapping("/role/{id}")
+  public List<UserDetailsDto> getUsersByRoleId(@PathVariable String id) {
+    log.info("Get all users by roleId {}", id);
+    return userService.getUsersByRoleId(UUID.fromString(id));
+  }
+
   @GetMapping("/{id}")
-    public UserDto getUser(@PathVariable("id") String id) {
-        log.info("Get user by id {}", id);
-        return userService.getUserById(UUID.fromString(id));
-    }
+  public UserDetailsDto getUser(@PathVariable("id") String id) {
+    log.info("Get user by id {}", id);
+    return userService.getUserById(UUID.fromString(id));
+  }
 
 }

@@ -11,6 +11,8 @@ import ru.testbest.converter.impl.manage.ChapterFullConverter;
 import ru.testbest.converter.impl.test.ChapterConverter;
 import ru.testbest.dto.manage.ChapterFullDto;
 import ru.testbest.dto.test.ChapterDto;
+import ru.testbest.exception.custom.CustomBadRequest;
+import ru.testbest.exception.custom.CustomNotFoundException;
 import ru.testbest.persistence.dao.ChapterDao;
 import ru.testbest.persistence.entity.Chapter;
 import ru.testbest.service.ChapterService;
@@ -27,65 +29,65 @@ public class ChapterServiceImpl implements ChapterService {
   @Transactional(readOnly = true)
   public List<ChapterDto> getChapters() {
     return chapterDao.findAll().stream()
-      .map(chapterConverter::convertToDto)
-      .collect(Collectors.toList());
+        .map(chapterConverter::convertToDto)
+        .collect(Collectors.toList());
   }
 
   @Override
   @Transactional(readOnly = true)
   public List<ChapterFullDto> getFullChapters() {
     return chapterDao.findAll().stream()
-      .map(chapterFullConverter::convertToDto)
-      .collect(Collectors.toList());
+        .map(chapterFullConverter::convertToDto)
+        .collect(Collectors.toList());
   }
 
   @Override
   @Transactional(readOnly = true)
   public ChapterDto getChapterById(UUID uuid) {
     return chapterDao.findByIdAndIsDeletedFalse(uuid)
-      .map(chapterConverter::convertToDto)
-      .orElse(null);
+        .map(chapterConverter::convertToDto)
+        .orElseThrow(CustomNotFoundException::new);
   }
 
   @Override
   @Transactional(readOnly = true)
   public ChapterFullDto getChapterFullById(UUID uuid) {
     return chapterDao.findById(uuid)
-      .map(chapterFullConverter::convertToDto)
-      .orElse(null);
+        .map(chapterFullConverter::convertToDto)
+        .orElseThrow(CustomNotFoundException::new);
   }
 
   @Override
   @Transactional
   public ChapterFullDto createChapter(ChapterFullDto chapterDto) {
     if (chapterDto.getId() != null) {
-      throw new RuntimeException();
+      throw new CustomBadRequest();
     }
     return chapterFullConverter.convertToDto(
-      chapterDao.save(
-        chapterFullConverter.convertToEntity(chapterDto)));
+        chapterDao.save(
+            chapterFullConverter.convertToEntity(chapterDto)));
   }
 
   @Override
   @Transactional
   public ChapterFullDto editChapter(ChapterFullDto chapterDto) {
     Optional.ofNullable(chapterDto.getId())
-      .orElseThrow(RuntimeException::new);
+        .orElseThrow(CustomBadRequest::new);
     return chapterFullConverter.convertToDto(
-      chapterDao.save(
-        chapterFullConverter.convertToEntity(chapterDto)));
+        chapterDao.save(
+            chapterFullConverter.convertToEntity(chapterDto)));
   }
 
   @Override
   @Transactional
   public void deleteChapterById(UUID uuid) {
-    Optional<Chapter> oChapter = chapterDao.findByIdAndIsDeletedFalse(uuid);
-    if (oChapter.isPresent()) {
-      Chapter chapter = oChapter.get();
-      chapter.setIsDeleted(true);
-      chapterDao.save(chapter);
-    }
+    Chapter chapter = chapterDao.findByIdAndIsDeletedFalse(uuid)
+        .orElseThrow(CustomNotFoundException::new);
+
+    chapter.setIsDeleted(true);
+    chapterDao.save(chapter);
   }
 }
+
 
 
