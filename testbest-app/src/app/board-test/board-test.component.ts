@@ -618,7 +618,6 @@ export class BoardTestComponent implements OnInit {
     })
     this.question.questionTypeId = event.target.value.substring(3);
     this.isSubmitted = true
-    this.formQuestionCreate.patchValue({answerTest: null});
     this.answer = new AnswerFull();
     this.question.answers = new Array<AnswerFull>();
     if (this.question.id != null) {
@@ -633,6 +632,15 @@ export class BoardTestComponent implements OnInit {
             if (type.id == this.currentType) this.getQuestion();
             break;
           }
+        }
+      }
+    } else {
+      for (let type of this.questionTypes) {
+        if (type.name == 'Вопрос со свободным ответом') {
+          this.formQuestionCreate.patchValue({answerTest: null});
+          break;
+        } else {
+          this.formQuestionCreate.patchValue({answerTest: "_"});
         }
       }
     }
