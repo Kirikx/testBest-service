@@ -6,7 +6,7 @@ import {Test} from "../_models/createTest/Test";
 import {TestService} from "../_services/test.service";
 import {TopicService} from "../_services/topic.service";
 import {Topic} from "../_models/createTest/parameters/Topic";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Chapter} from "../_models/createTest/Chapter";
 import {ChapterService} from "../_services/chapter.service";
 import {TreeviewComponent, TreeviewConfig, TreeviewItem} from "ngx-treeview";
@@ -429,8 +429,11 @@ export class BoardTestComponent implements OnInit {
     questionTypeId: new FormControl('', Validators.required),
     question: new FormControl('', Validators.required),
     answer: new FormControl('', Validators.required),
-    answerTest: new FormControl('', Validators.required)
+    answerTest: new FormControl('', Validators.required),
+    //answer: new FormArray([] , Validators.required),
   });
+
+  checkArray = new Array<AnswerFull>();
 
   setForValidation() {
     if (this.question.questionTypeId != null) {
@@ -684,7 +687,6 @@ export class BoardTestComponent implements OnInit {
       }
     }
     this.question.answers = editAnswer;
-    console.log(this.question.answers);
     this.questionService.editQuestion(this.question).subscribe(
       data => {
         this.closeModal();
@@ -731,13 +733,26 @@ export class BoardTestComponent implements OnInit {
             } else {
               for (let answer of this.answers) {
                 if (answer.isCorrect) {
-                  this.formQuestionCreate.patchValue({answer: answer.answer})
+                  this.formQuestionCreate.patchValue({answer: answer.answer});
                 }
               }
             }
           }
           if (this.typeQ.name == 'Множественный') {
-
+            if (isNewAnswer) {
+              this.answers = new Array<AnswerFull>();
+              this.newAnswer();
+              this.newAnswer();
+              this.newAnswer();
+            } else {
+              for (let answer of this.answers) {
+                if (answer.isCorrect) {
+                  this.checkArray.push(answer);
+                  this.formQuestionCreate.patchValue({answer: this.checkArray});
+                }
+              }
+            }
+            console.log(this.checkArray);
           }
         }
       });
@@ -750,7 +765,7 @@ export class BoardTestComponent implements OnInit {
     this.answer.id = "" + this.getRandomInt();
     this.answers.push(this.answer);
     this.question.answers = this.answers;
-    this.formQuestionCreate.patchValue({answer: this.answer.id});
+    this.formQuestionCreate.patchValue({answer: this.answer.answer});
   }
 
   changeFreeAnswer(event) {
@@ -848,6 +863,32 @@ export class BoardTestComponent implements OnInit {
       }
     );
   }
+
+  changeCheckboxAnswer(e) {
+    if (e.target.checked) {
+      for (let answer of this.question.answers) {
+        if (answer.id == e.target.content) {
+          if (answer.answer != null) {
+            answer.isCorrect = true;
+            this.checkArray.push(answer);
+            break;
+          }
+        }
+      }
+    } else {
+      let buffArray = Array<AnswerFull>();
+      this.checkArray.forEach(element => {
+        if (element.id != e.target.content) {
+          buffArray.push(element)
+          return;
+        } else {
+          element.isCorrect = false;
+        }
+      });
+      this.checkArray = buffArray;
+    }
+  }
+
 
 //Общее закрытие модальных окон
   closeModal() {

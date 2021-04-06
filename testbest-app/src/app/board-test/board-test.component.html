@@ -199,6 +199,44 @@
               </div>
 
               <div class="col col-sm-12 form-group"
+                   *ngIf="typeQ != null && typeQ.name == 'Множественный'">
+                <div class="row">
+                  <div class="col-md col-sm-12 form-group">
+                    <h7 class="align-center">Варианты ответов</h7>
+                  </div>
+                  <div class="col-md col-sm-12 form-group">
+                    <a (click)="addAnswer()" class="btn btn-success display-4">Добавить вариант ответа</a>
+                  </div>
+                  <table class="table table-sm">
+                    <tbody>
+                    <tr *ngFor="let answer of question.answers">
+                      <td class="align-middle">
+                        <input type="checkbox" content="{{answer.id}}" value="{{answer.answer}}"  formControlName="answer"
+                               (change)="changeCheckboxAnswer($event)"/>
+                      </td>
+                      <td class="align-middle">
+                        <input content="{{answer.id}}" type="text"
+                               placeholder="Вариант ответа" class="form-control"
+                               (change)="changeInputAnswer($event)" [value]="answer.answer">
+                      </td>
+                      <td class="align-middle">
+                        <button (click)="deleteAnswer(answer.id)" class="btn btn-danger display-7"
+                                [disabled]="question.answers.length < 4">Х
+                        </button>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <div class="alert-danger col-12" role="alert"
+                       *ngIf="validationQuestionForm.answer.invalid &&!isSubmitted">
+                    <div *ngIf="validationQuestionForm.answer.errors.required">Варианты ответа обязательны для
+                      заполнения
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col col-sm-12 form-group"
                    *ngIf="typeQ != null && typeQ.name == 'Одиночный'">
                 <div class="row">
                   <div class="col-md col-sm-12 form-group">
@@ -212,7 +250,8 @@
                     <tr *ngFor="let answer of question.answers">
                       <td class="align-middle">
                         <input class="custom-radio" type="radio" id="{{answer.id}}" name="answer"
-                               value="{{answer.answer}}" formControlName="answer" (change)="changeRadioButtonAnswer($event)">
+                               value="{{answer.answer}}" formControlName="answer"
+                               (change)="changeRadioButtonAnswer($event)">
                       </td>
                       <td class="align-middle">
                         <input content="{{answer.id}}" type="text"
@@ -233,22 +272,6 @@
                       заполнения
                     </div>
                   </div>
-                  <!--                  <div class="col" *ngFor="let answer of question.answers">-->
-                  <!--                    <div class="col-md col-sm-12 form-group">-->
-                  <!--                      <input id="{{answer.id}}" type="radio" class="custom-radio" value="{{answer.answer}}"-->
-                  <!--                             formControlName="answer" (select)="changeRadioButtonAnswer($event)">-->
-                  <!--                      <input content="{{answer.id}}" type="text" placeholder="Вариант ответа" class="form-control"-->
-                  <!--                             (change)="changeInputAnswer($event)">-->
-                  <!--                      <a (click)="deleteQuestion()" class="btn btn-danger display-4">-</a>-->
-                  <!--                    </div>-->
-                  <!--                    <div class="col-md col-sm-12 form-group">-->
-                  <!--                      <input content="{{answer.id}}" type="text" placeholder="Вариант ответа" class="form-control"-->
-                  <!--                             (change)="changeInputAnswer($event)">-->
-                  <!--                    </div>-->
-                  <!--                    <div class="col-md col-sm-12 form-group">-->
-                  <!--                      <a (click)="deleteQuestion()" class="btn btn-danger display-4">-</a>-->
-                  <!--                    </div>-->
-                  <!--                  </div>-->
                 </div>
               </div>
 
