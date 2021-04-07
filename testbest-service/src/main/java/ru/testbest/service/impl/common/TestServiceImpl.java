@@ -1,5 +1,6 @@
 package ru.testbest.service.impl.common;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -60,14 +61,15 @@ public class TestServiceImpl implements TestService {
 
   @Override
   @Transactional
-  public TestFullDto createTest(TestFullDto questionDto, UUID userId) {
-    if (userId == null && questionDto.getId() != null) {
+  public TestFullDto createTest(TestFullDto testFullDto, UUID userId) {
+    if (userId == null && testFullDto.getId() != null) {
       throw new CustomBadRequest();
     }
-    questionDto.setAuthorId(userId);
+    testFullDto.setCreated(LocalDateTime.now());
+    testFullDto.setAuthorId(userId);
     return testFullConverter.convertToDto(
         testDao.save(
-            testFullConverter.convertToEntity(questionDto)));
+            testFullConverter.convertToEntity(testFullDto)));
   }
 
   @Override

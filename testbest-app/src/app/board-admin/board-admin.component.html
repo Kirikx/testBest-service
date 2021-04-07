@@ -17,6 +17,9 @@
               <strong>Пользователи</strong>
             </a>
           </li>
+          <div class="col-lg-12 col-md-12 col-sm-12 align-right mbr-section-btn">
+            <button class="btn btn-success display-4" (click)="openModalNewUser()">Добавить</button>
+          </div>
         </ul>
         <div class="tab-content">
           <div id="tab1" class="tab-pane" role="tabpanel">
@@ -41,13 +44,195 @@
                     <td class="align-middle">{{ user.lastName }}</td>
                     <td class="align-middle">{{ user.roles }}</td>
                     <td class="align-right"><a class="btn btn-info-outline display-4"
-                                               (click)="redirectToCreateUser(user.id)">Редактировать</a>
+                                               (click)="openModalEditUser(user.id)">Редактировать</a>
                     </td>
                   </tr>
                   </tbody>
                 </table>
               </div>
             </div>
+
+            <app-modal *ngIf="showModal" (close)="closeModal()">
+              <form *ngIf="newUser" name="formTopic" (ngSubmit)="fUser.form.valid && createUser()"
+                    #fUser="ngForm"
+                    novalidate class="mbr-form form-with-styler">
+                <div class="row">
+                  <div class="col-12 form-group" data-for="name">
+                    <h4 class="align-center">Добавление пользователя</h4>
+                  </div>
+
+                  <div class="col-12 form-group">
+                    <!--                    <ngx-dropdown-treeview formControlName="roleSelect" [config]="select" [items]="selectData"-->
+                    <!--                                           (selectedChange)="onSelectedChangeRole($event)">-->
+                    <!--                    </ngx-dropdown-treeview>-->
+                    <select class="form-control form-select" multiple
+                            (change)="onSelectedChangeRole($event)" formControlName="roleSelect"
+                            aria-label="Default select example">
+                      <option *ngFor="let role of roles" [ngValue]="role.id">{{role.name}}</option>
+                    </select>
+                    <div *ngIf="validationUserForm.rolesSelect.invalid && !isSubmitted"
+                         class="alert-danger col-12"
+                         role="alert">
+                      <div *ngIf="validationUserForm.rolesSelect.errors.required">Поле обязательно
+                        для заполнения
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md col-sm-12 form-group" data-for="name">
+                    <input id="name-form5-y" type="text" name="firstName"
+                           [(ngModel)]="user.firstName" required minlength="3" maxlength="20"
+                           #firstName="ngModel"
+                           placeholder="Фамилия" data-form-field="name" class="form-control">
+                    <div class="alert-danger" *ngIf="firstName.errors && fUser.submitted">
+                      <div *ngIf="firstName.errors.required">Поле обязательно для заполнения</div>
+                      <div *ngIf="firstName.errors.minlength">
+                        Данное поле не может содержать меньше 3 символов
+                      </div>
+                      <div *ngIf="firstName.errors.maxlength">
+                        Данное поле не может содержать больше 20 символов
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md col-sm-12 form-group" data-for="surname">
+                    <input id="surname-form5-y" type="text" name="lastName"
+                           [(ngModel)]="user.lastName" required minlength="3" maxlength="20"
+                           #lastName="ngModel"
+                           placeholder="Имя" data-form-field="name" class="form-control">
+                    <div class="alert-danger" *ngIf="lastName.errors && fUser.submitted">
+                      <div *ngIf="lastName.errors.required">Поле обязательно для заполнения</div>
+                      <div *ngIf="lastName.errors.minlength">
+                        Данное поле не может содержать меньше 3 символов
+                      </div>
+                      <div *ngIf="lastName.errors.maxlength">
+                        Данное поле не может содержать больше 20 символов
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12 form-group" data-for="email">
+                    <input id="email-form5-y" type="email" class="form-control" name="email"
+                           placeholder="Email"
+                           [(ngModel)]="user.email" required email #email="ngModel"/>
+                    <div class="alert-danger" *ngIf="email.errors && fUser.submitted">
+                      <div *ngIf="email.errors.required">Поле обязательно для заполнения</div>
+                      <div *ngIf="email.errors.email">Формат поля email нарушен</div>
+                    </div>
+                  </div>
+
+                  <div class="col-md col-sm-12 form-group" data-for="login">
+                    <input type="text" name="login" placeholder="Логин" data-form-field="username"
+                           class="form-control" value="" id="login-form5-y"
+                           [(ngModel)]="user.username"
+                           required minlength="3" maxlength="20" #username="ngModel">
+                    <div class="alert-danger" *ngIf="lastName.errors && fUser.submitted">
+                      <div *ngIf="username.errors.required">Поле обязательно для заполнения</div>
+                      <div *ngIf="username.errors.minlength">
+                        Данное поле не может содержать меньше 3 символов
+                      </div>
+                      <div *ngIf="username.errors.maxlength">
+                        Данное поле не может содержать больше 20 символов
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md col-sm-12 form-group" data-for="password">
+                    <input type="password" name="password" placeholder="Пароль"
+                           data-form-field="password"
+                           class="form-control" value="" id="password-form5-y"
+                           [(ngModel)]="user.password" required minlength="6" #password="ngModel">
+                    <div class="alert-danger col-12" role="alert"
+                         *ngIf="password.errors && fUser.submitted">
+                      <div *ngIf="password.errors.required">Поле обязательно для заполнения</div>
+                      <div *ngIf="password.errors.minlength">Данное поле не может содержать меньше 6
+                        символов
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-12 form-group" data-for="repeat">
+                    <input type="password" name="repeat" placeholder="Повторите пароль"
+                           data-form-field="repeat"
+                           [(ngModel)]="user.repeatPassword" #repeat="ngModel"
+                           pattern="{{password.value}}" required
+                           class="form-control" value="" id="url-form5-y">
+                    <div class="alert-danger col-12" role="alert"
+                         *ngIf="repeat.errors && fUser.submitted">
+                      <div *ngIf="repeat.errors.required">Поле обязательно для заполнения</div>
+                      <div *ngIf="repeat.errors.pattern">Значение в поле не совпадает</div>
+                    </div>
+                  </div>
+
+                  <!--                  <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">-->
+                  <!--                    <button class="btn btn-success display-4">Создать</button>-->
+                  <!--                  </div>-->
+
+                  <div class="alert alert-danger col-12"
+                       *ngIf="fUser.submitted && isCreateUserFailed">
+                    Ошибка при создании пользователя!<br/>{{ errorMessage }}
+                  </div>
+
+                  <div class="col-md col-sm-12 form-group" data-for="name">
+                    <button type="submit" class="btn btn-success display-4">Создать</button>
+                  </div>
+                  <div class="col-md col-sm-12 form-group" data-for="surname">
+                    <a (click)="closeModal()" class="btn btn-info display-4">Закрыть</a>
+                  </div>
+                </div>
+              </form>
+
+              <!--              <form *ngIf="!newUser" name="formTopic" (ngSubmit)="fUser.form.valid && editTopic()" #fUser="ngForm"-->
+              <!--                    novalidate-->
+              <!--                    class="mbr-form form-with-styler" data-form-title="Form Topic">-->
+              <!--                <div class="row">-->
+              <!--                  <div class="col-md-auto">-->
+              <!--                    <h4 class="align-center mb-0 mt-2 display-5">Редактирование пользователя</h4>-->
+              <!--                    <div class="col-12 form-group" data-for="id">-->
+              <!--                      <input type="hidden" name="id" data-form-field="id" [(ngModel)]="user.id" #id="ngModel">-->
+              <!--                    </div>-->
+              <!--                    <div class="col-12 form-group" data-for="name">-->
+              <!--                      <input id="name-form6-1" type="text" name="nameTopic" placeholder="Наименование тематики"-->
+              <!--                             [(ngModel)]="topic.name" required #name="ngModel"-->
+              <!--                             data-form-field="name" class="form-control">-->
+              <!--                      <div class="col-12 form-group alert-danger" role="alert" *ngIf="name.errors && fUser.submitted">-->
+              <!--                        <div *ngIf="name.errors.required">Поле обязательно для заполнения</div>-->
+              <!--                      </div>-->
+              <!--                    </div>-->
+              <!--                    <div class="col-12 form-group" data-for="textarea">-->
+              <!--                          <textarea name="description" placeholder="Описание" data-form-field="textarea"-->
+              <!--                                    [(ngModel)]="topic.description" #description="ngModel"-->
+              <!--                                    class="form-control"></textarea>-->
+              <!--                      <div class="col-12 form-group alert-danger" role="alert"-->
+              <!--                           *ngIf="fUser.submitted && isCreateTopicFailed && newUser">-->
+              <!--                        Ошибка при добавление тематики: <p>{{ errorMessage }}</p>-->
+              <!--                      </div>-->
+              <!--                      <div class="col-12 form-group alert-danger" role="alert"-->
+              <!--                           *ngIf="fUser.submitted && isCreateTopicFailed && !newUser">-->
+              <!--                        Ошибка при редактировании тематики: <p>{{ errorMessage }}</p>-->
+              <!--                      </div>-->
+              <!--                    </div>-->
+              <!--                    <div class="col-12 mbr-section-btn">-->
+              <!--                      <table class="col-12 form-group align-center">-->
+              <!--                        <tr>-->
+              <!--                          <th scope="col" class="align-middle">-->
+              <!--                            <button type="submit" class="btn btn-success display-4">Сохранить</button>-->
+              <!--                          </th>-->
+              <!--                          <th scope="col" class="align-middle">-->
+              <!--                            <button type="submit" (click)="deleteTopic()" class="btn btn-danger display-4">Удалить-->
+              <!--                            </button>-->
+              <!--                          </th>-->
+              <!--                          <th scope="col" class="align-middle">-->
+              <!--                            <button (click)="closeModal()" class="btn btn-info display-4">Закрыть</button>-->
+              <!--                          </th>-->
+              <!--                        </tr>-->
+              <!--                      </table>-->
+              <!--                    </div>-->
+              <!--                  </div>-->
+              <!--                </div>-->
+              <!--              </form>-->
+            </app-modal>
+
           </div>
         </div>
       </div>
