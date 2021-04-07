@@ -38,8 +38,8 @@ public class Test implements BaseEntity {
     private String description;
 
     @NotNull
-    @Column
-    private LocalDateTime created = LocalDateTime.now();
+    @Column(updatable = false)
+    private LocalDateTime created;
 
     @NotNull
     @Column
