@@ -636,9 +636,8 @@ export class BoardTestComponent implements OnInit {
       }
     } else {
       for (let type of this.questionTypes) {
-        if (type.name == 'Вопрос со свободным ответом') {
+        if (type.name == 'Вопрос со свободным ответом' &&  this.question.questionTypeId == type.id) {
           this.formQuestionCreate.patchValue({answerTest: null});
-          break;
         } else {
           this.formQuestionCreate.patchValue({answerTest: "_"});
         }
