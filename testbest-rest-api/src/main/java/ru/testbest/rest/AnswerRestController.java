@@ -2,10 +2,17 @@ package ru.testbest.rest;
 
 import java.util.List;
 import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.testbest.dto.manage.AnswerFullDto;
 import ru.testbest.dto.test.AnswerDto;
 import ru.testbest.service.impl.common.AnswerServiceImpl;
@@ -57,7 +64,7 @@ public class AnswerRestController {
 
     @DeleteMapping("/{id}")
     public void deleteAnswer(@PathVariable("id") String id) {
-        log.info("Delete test by id {}", id);
+        log.info("Delete answer by id {}", id);
         answerService.deleteAnswerById(UUID.fromString(id));
     }
 }
