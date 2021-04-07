@@ -42,7 +42,7 @@
                     <td class="align-middle">{{ user.email }}</td>
                     <td class="align-middle">{{ user.firstName }}</td>
                     <td class="align-middle">{{ user.lastName }}</td>
-                    <td class="align-middle">{{ user.roles }}</td>
+                    <td class="align-middle">{{ getNamesRoles(user.roles) }}</td>
                     <td class="align-right"><a class="btn btn-info-outline display-4"
                                                (click)="openModalEditUser(user.id)">Редактировать</a>
                     </td>

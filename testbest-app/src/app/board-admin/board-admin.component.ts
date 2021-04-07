@@ -272,4 +272,8 @@ export class BoardAdminComponent implements OnInit {
   closeModal() {
     this.showModal = false;
   }
+
+  getNamesRoles(roles: Array<Role>): String {
+    return roles.map(role => role.name).join(" ");
+  }
 }
