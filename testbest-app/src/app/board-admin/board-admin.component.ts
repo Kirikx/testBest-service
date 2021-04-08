@@ -5,7 +5,7 @@ import {TokenStorageService} from "../_services/token-storage.service";
 import {User} from "../_models/users/User";
 import {DOCUMENT} from "@angular/common";
 import {filter} from "rxjs/operators";
-import {TreeviewConfig, TreeviewItem} from "ngx-treeview";
+import {TreeviewConfig} from "ngx-treeview";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Role} from "../_models/users/Role";
 import {RoleService} from "../_services/role.service";
@@ -40,7 +40,6 @@ export class BoardAdminComponent implements OnInit {
     hasCollapseExpand: false,
     maxHeight: 300
   });
-  selectData: TreeviewItem[];
   countSelect: number;
 
   //Обработка user create
@@ -132,6 +131,7 @@ export class BoardAdminComponent implements OnInit {
   }
 
   createUser(): void {
+    console.log(this.user);
     this.userService.createUser(this.user).subscribe(
       data => {
         if (data.id != null && data.id != '') {
@@ -152,16 +152,24 @@ export class BoardAdminComponent implements OnInit {
     );
   }
 
+  changeRoleSelect(event) {
+    this.formUserCreate.get("rolesSelect").setValue(event.target.value, {
+      onlySelf: true
+    })
+    this.user.roles = event.target.value.substring(3);
+  }
+
   onSelectedChangeRole(event) {
-    // if (this.countSelect > event.length) {
-    //   this.user.roles = new Array<Role>();
-    // }
+    if (this.countSelect > event.length) {
+      this.user.roles = new Array<Role>();
+    }
+    console.log(this.user);
     this.user.roles.forEach(role => {
       event.forEach(ev => {
         if (role.id == ev) {
           if (!this.user.roles.find(check => check.id == role.id)) {
             this.user.roles.push(role);
-            this.setForValidation()
+            // this.setForValidation()
             this.formUserCreate.patchValue({rolesSelect: this.user.roles})
           }
         }
@@ -171,29 +179,19 @@ export class BoardAdminComponent implements OnInit {
   }
 
   setForValidation() {
+    console.log(this.user);
     if (this.user.roles != null) {
-      // this.questionTypes.forEach(value => {
-      //   if (this.user.id != null) {
-      //     if (value.id == this.question.questionTypeId && value.name == 'Вопрос со свободным ответом') {
-      //       this.answer = this.question.answers[0];
-      //       this.formUserCreate.setValue({
-      //         rolesSelect: this.user.roles,
-      //         questionTypeId: this.question.questionTypeId,
-      //         question: this.question.question,
-      //         answer: this.answer,
-      //         answerTest: this.answer.answer
-      //       })
-      //     } else {
-      //       this.formUserCreate.setValue({
-      //         chaptersSelect: this.question.chapters,
-      //         questionTypeId: this.question.questionTypeId,
-      //         question: this.question.question,
-      //         answer: this.question.answers,
-      //         answerTest: this.answer.answer
-      //       })
-      //     }
-      //   }
-      // });
+      if (this.user.id != null) {
+        this.formUserCreate.setValue({
+          rolesSelect: this.user.roles,
+          username: this.user.username,
+          firstName: this.user.firstName,
+          lastName: this.user.lastName,
+          email: this.user.email,
+          password: this.user.password,
+          repeatPassword: this.user.repeatPassword
+        })
+      }
     } else {
       this.formUserCreate.setValue({
         rolesSelect: this.user.roles,
@@ -202,8 +200,7 @@ export class BoardAdminComponent implements OnInit {
         lastName: this.user.lastName,
         email: this.user.email,
         password: this.user.password,
-        repeatPassword: this.user.repeatPassword,
-
+        repeatPassword: this.user.repeatPassword
       });
     }
   }
@@ -212,7 +209,7 @@ export class BoardAdminComponent implements OnInit {
     return this.formUserCreate.controls;
   }
 
-  editTopic(): void {
+  editUser(): void {
     this.userService.editUser(this.user).subscribe(
       data => {
         if (data.id != null && data.id != '') {
@@ -233,7 +230,7 @@ export class BoardAdminComponent implements OnInit {
     );
   }
 
-  deleteTopic(): void {
+  deleteUser(): void {
     this.userService.deleteUser(this.user).subscribe(
       data => {
         this.isCreateTopicFailed = false;

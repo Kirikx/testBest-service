@@ -53,30 +53,33 @@
             </div>
 
             <app-modal *ngIf="showModal" (close)="closeModal()">
-              <form *ngIf="newUser" name="formTopic" (ngSubmit)="fUser.form.valid && createUser()"
-                    #fUser="ngForm"
+              <form name="form" (ngSubmit)="fUser.form.valid && createUser()"
+                    #fUser="ngForm" (click)="fUser"
                     novalidate class="mbr-form form-with-styler">
                 <div class="row">
                   <div class="col-12 form-group" data-for="name">
                     <h4 class="align-center">Добавление пользователя</h4>
                   </div>
 
-                  <div class="col-12 form-group">
-                    <!--                    <ngx-dropdown-treeview formControlName="roleSelect" [config]="select" [items]="selectData"-->
-                    <!--                                           (selectedChange)="onSelectedChangeRole($event)">-->
-                    <!--                    </ngx-dropdown-treeview>-->
-                    <select class="form-control form-select" multiple
-                            (change)="onSelectedChangeRole($event)" formControlName="roleSelect"
+                  <div class="col-12 form-group" data-for="id">
+                    <input type="hidden" name="id" data-form-field="id" [(ngModel)]="user.id"
+                           #id="ngModel">
+                  </div>
+
+                  <div class="col-12 form-group" data-for="selectRole">
+                    <select class="form-control form-select"
+                            (change)="onSelectedChangeRole($event)" formControlName="rolesSelect"
                             aria-label="Default select example">
+                      <!--                      <option selected value="">Выберите роли пользователя</option>-->
                       <option *ngFor="let role of roles" [ngValue]="role.id">{{role.name}}</option>
                     </select>
-                    <div *ngIf="validationUserForm.rolesSelect.invalid && !isSubmitted"
-                         class="alert-danger col-12"
-                         role="alert">
-                      <div *ngIf="validationUserForm.rolesSelect.errors.required">Поле обязательно
-                        для заполнения
-                      </div>
-                    </div>
+                    <!--                    <div *ngIf="validationUserForm.rolesSelect.invalid && !isSubmitted"-->
+                    <!--                         class="alert-danger col-12"-->
+                    <!--                         role="alert">-->
+                    <!--                      <div *ngIf="validationUserForm.rolesSelect.errors.required">Поле обязательно-->
+                    <!--                        для заполнения-->
+                    <!--                      </div>-->
+                    <!--                    </div>-->
                   </div>
 
                   <div class="col-md col-sm-12 form-group" data-for="name">
@@ -179,30 +182,57 @@
                   <div class="col-md col-sm-12 form-group" data-for="surname">
                     <a (click)="closeModal()" class="btn btn-info display-4">Закрыть</a>
                   </div>
+
+                  <div class="col-12 mbr-section-btn">
+                    <table class="col-12 form-group align-center">
+                      <tr>
+                        <th scope="col" class="align-middle">
+                          <button type="submit" class="btn btn-success display-4">Сохранить
+                          </button>
+                        </th>
+                        <th *ngIf="!newUser" scope="col" class="align-middle">
+                          <button type="submit" (click)="deleteUser()"
+                                  class="btn btn-danger display-4">Удалить
+                          </button>
+                        </th>
+                        <th scope="col" class="align-middle">
+                          <button (click)="closeModal()" class="btn btn-info display-4">Закрыть
+                          </button>
+                        </th>
+                      </tr>
+                    </table>
+                  </div>
+
                 </div>
               </form>
 
-              <!--              <form *ngIf="!newUser" name="formTopic" (ngSubmit)="fUser.form.valid && editTopic()" #fUser="ngForm"-->
+              <!--              <form *ngIf="!newUser" name="formTopic" (ngSubmit)="fUser.form.valid && editTopic()"-->
+              <!--                    #fUser="ngForm"-->
               <!--                    novalidate-->
               <!--                    class="mbr-form form-with-styler" data-form-title="Form Topic">-->
               <!--                <div class="row">-->
               <!--                  <div class="col-md-auto">-->
               <!--                    <h4 class="align-center mb-0 mt-2 display-5">Редактирование пользователя</h4>-->
               <!--                    <div class="col-12 form-group" data-for="id">-->
-              <!--                      <input type="hidden" name="id" data-form-field="id" [(ngModel)]="user.id" #id="ngModel">-->
+              <!--                      <input type="hidden" name="id" data-form-field="id" [(ngModel)]="user.id"-->
+              <!--                             #id="ngModel">-->
               <!--                    </div>-->
               <!--                    <div class="col-12 form-group" data-for="name">-->
-              <!--                      <input id="name-form6-1" type="text" name="nameTopic" placeholder="Наименование тематики"-->
+              <!--                      <input id="name-form6-1" type="text" name="nameTopic"-->
+              <!--                             placeholder="Наименование тематики"-->
               <!--                             [(ngModel)]="topic.name" required #name="ngModel"-->
               <!--                             data-form-field="name" class="form-control">-->
-              <!--                      <div class="col-12 form-group alert-danger" role="alert" *ngIf="name.errors && fUser.submitted">-->
+              <!--                      <div class="col-12 form-group alert-danger" role="alert"-->
+              <!--                           *ngIf="name.errors && fUser.submitted">-->
               <!--                        <div *ngIf="name.errors.required">Поле обязательно для заполнения</div>-->
               <!--                      </div>-->
               <!--                    </div>-->
               <!--                    <div class="col-12 form-group" data-for="textarea">-->
-              <!--                          <textarea name="description" placeholder="Описание" data-form-field="textarea"-->
-              <!--                                    [(ngModel)]="topic.description" #description="ngModel"-->
-              <!--                                    class="form-control"></textarea>-->
+              <!--                                        <textarea name="description" placeholder="Описание"-->
+              <!--                                                  data-form-field="textarea"-->
+              <!--                                                  [(ngModel)]="topic.description"-->
+              <!--                                                  #description="ngModel"-->
+              <!--                                                  class="form-control"></textarea>-->
               <!--                      <div class="col-12 form-group alert-danger" role="alert"-->
               <!--                           *ngIf="fUser.submitted && isCreateTopicFailed && newUser">-->
               <!--                        Ошибка при добавление тематики: <p>{{ errorMessage }}</p>-->
@@ -216,14 +246,17 @@
               <!--                      <table class="col-12 form-group align-center">-->
               <!--                        <tr>-->
               <!--                          <th scope="col" class="align-middle">-->
-              <!--                            <button type="submit" class="btn btn-success display-4">Сохранить</button>-->
-              <!--                          </th>-->
-              <!--                          <th scope="col" class="align-middle">-->
-              <!--                            <button type="submit" (click)="deleteTopic()" class="btn btn-danger display-4">Удалить-->
+              <!--                            <button type="submit" class="btn btn-success display-4">Сохранить-->
               <!--                            </button>-->
               <!--                          </th>-->
               <!--                          <th scope="col" class="align-middle">-->
-              <!--                            <button (click)="closeModal()" class="btn btn-info display-4">Закрыть</button>-->
+              <!--                            <button type="submit" (click)="deleteTopic()"-->
+              <!--                                    class="btn btn-danger display-4">Удалить-->
+              <!--                            </button>-->
+              <!--                          </th>-->
+              <!--                          <th scope="col" class="align-middle">-->
+              <!--                            <button (click)="closeModal()" class="btn btn-info display-4">Закрыть-->
+              <!--                            </button>-->
               <!--                          </th>-->
               <!--                        </tr>-->
               <!--                      </table>-->
