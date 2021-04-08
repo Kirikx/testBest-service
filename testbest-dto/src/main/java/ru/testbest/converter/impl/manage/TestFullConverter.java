@@ -41,7 +41,7 @@ public class TestFullConverter extends AbstractMapper<Test, TestFullDto> {
     mapper.createTypeMap(TestFullDto.class, Test.class)
         .addMappings(m -> m.skip(Test::setAuthor))
         .addMappings(m -> m.skip(Test::setTopic))
-        .addMappings(m -> m.skip(Test::setCreated))
+//        .addMappings(m -> m.skip(Test::setCreated))
         .setPostConverter(toEntityConverter());
   }
 
