@@ -1,5 +1,6 @@
 package ru.testbest.dto.admin;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -25,6 +26,7 @@ public class UserDetailsDto implements BaseDTO, UserDetails {
 
 
   @Override
+  @JsonIgnore
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return roles;
   }

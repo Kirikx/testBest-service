@@ -31,21 +31,7 @@ export class UserService {
     return this.http.post(Global.USER_API + 'create', user, Global.httpOptions);
   }
 
-  //Todo Тут будет код про работе юзера
-
-  // getPublicContent(): Observable<any> {
-  //   return this.http.get(API_URL + 'all', { responseType: 'text' });
-  // }
-  //
-  // // getUserBoard(): Observable<any> {
-  // //   return this.http.get(API_URL + 'user', { responseType: 'text' });
-  // // }
-
-  // getManagerBoard(): Observable<any> {
-  //   return this.http.get(API_URL + 'mod', { responseType: 'text' });
-  // }
-
-  // getAdminBoard(): Observable<any> {
-  //   return this.http.get(API_URL + 'admin', { responseType: 'text' });
-  // }
+  resetPassUser(user: User): Observable<any> {
+    return this.http.put(Global.USER_API + 'reset', user, Global.httpOptions);
+  }
 }

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.testbest.converter.impl.admin.UserConverter;
@@ -27,6 +28,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   private final UserDao userDao;
   private final RoleDao roleDao;
   private final UserConverter userConverter;
+  private final PasswordEncoder encoder;
 
   @Override
   @Transactional(readOnly = true)
@@ -50,6 +52,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     if (userDetailsDto.getId() != null) {
       throw new CustomBadRequest();
     }
+    Optional.ofNullable(userDetailsDto.getPassword())
+        .orElseThrow(CustomBadRequest::new);
+    userDetailsDto.setPassword(encoder.encode(userDetailsDto.getPassword()));
     return userConverter.convertToDto(
         userDao.save(
             userConverter.convertToEntity(userDetailsDto)));
@@ -60,6 +65,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   public UserDetailsDto editUser(UserDetailsDto userDetailsDto) {
     Optional.ofNullable(userDetailsDto.getId())
         .orElseThrow(CustomBadRequest::new);
+    User user = userDao.findByIdAndIsDeletedFalse(userDetailsDto.getId())
+        .orElseThrow(CustomNotFoundException::new);
+    userDetailsDto.setPassword(user.getPassword());
     return userConverter.convertToDto(
         userDao.save(
             userConverter.convertToEntity(userDetailsDto)));
@@ -105,5 +113,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         .orElseThrow(
             () -> new UsernameNotFoundException("User Not Found with username: " + username));
     return userConverter.convertToDto(user);
+  }
+
+  @Override
+  @Transactional
+  public UserDetailsDto updatePassword(UserDetailsDto userDetailsDto) {
+    Optional.ofNullable(userDetailsDto.getId())
+        .orElseThrow(CustomBadRequest::new);
+    Optional.ofNullable(userDetailsDto.getPassword())
+        .orElseThrow(CustomBadRequest::new);
+    User user = userDao.findByIdAndIsDeletedFalse(userDetailsDto.getId())
+        .orElseThrow(CustomNotFoundException::new);
+    user.setPassword(encoder.encode(userDetailsDto.getPassword()));
+    return userConverter.convertToDto(
+        userDao.save(user)
+    );
   }
 }

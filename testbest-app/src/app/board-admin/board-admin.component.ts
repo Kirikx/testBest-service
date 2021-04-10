@@ -6,7 +6,6 @@ import {User} from "../_models/users/User";
 import {DOCUMENT} from "@angular/common";
 import {filter} from "rxjs/operators";
 import {TreeviewConfig} from "ngx-treeview";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Role} from "../_models/users/Role";
 import {RoleService} from "../_services/role.service";
 
@@ -18,18 +17,13 @@ import {RoleService} from "../_services/role.service";
 export class BoardAdminComponent implements OnInit {
   //Переменные для Users
   user: User;
-  users: Array<User>;
 
-  roles: Array<Role>;
-  selectedRoles: Array<Role>;
+  users: Array<User>; // список пользователей
+  roles: Array<Role>; // список всех ролей
 
-  buff: User;
-  isCreateTopicFailed = false;
-  newUser = true;
+  showModal = false;  // признак открытого модального окна
 
-  showModal = false;
-
-  isCreateUserFailed = false;
+  isEditUserFailed = false;
   errorMessage: string;
 
   isSubmitted = true; //нужна валидация форм?
@@ -40,18 +34,8 @@ export class BoardAdminComponent implements OnInit {
     hasCollapseExpand: false,
     maxHeight: 300
   });
-  countSelect: number;
 
-  //Обработка user create
-  formUserCreate = new FormGroup({
-    rolesSelect: new FormControl('', Validators.required),
-    username: new FormControl('', Validators.required),
-    firstName: new FormControl('', Validators.required),
-    lastName: new FormControl('', Validators.required),
-    email: new FormControl('', Validators.required),
-    password: new FormControl('', Validators.required),
-    repeatPassword: new FormControl('', Validators.required),
-  });
+  countSelect: number;
 
   constructor(private userService: UserService,
               private roleService: RoleService,
@@ -114,7 +98,6 @@ export class BoardAdminComponent implements OnInit {
     )
   }
 
-  //Обработка ролей
   getRoles() {
     this.roleService.getRoles().subscribe(
       data => {
@@ -130,19 +113,38 @@ export class BoardAdminComponent implements OnInit {
     )
   }
 
-  createUser(): void {
+  onSelectedChangeRole(event) {
+    if (this.countSelect > event.length) {
+      this.user.roles = new Array<Role>();
+    }
     console.log(this.user);
-    this.userService.createUser(this.user).subscribe(
+    this.user.roles.forEach(role => {
+      event.forEach(ev => {
+        if (role.id == ev.id) {
+          if (!this.user.roles.find(check => check.id == role.id)) {
+            this.user.roles.push(role);
+            // this.setForValidation()
+            // this.formUserCreate.patchValue({rolesSelect: this.user.roles})
+          }
+        }
+      })
+    })
+    this.countSelect = event.length;
+  }
+
+  editUser(): void {
+    console.log(this.user);
+    this.userService.editUser(this.user).subscribe(
       data => {
         if (data.id != null && data.id != '') {
-          this.isCreateTopicFailed = false;
+          this.isEditUserFailed = false;
           this.closeModal();
           this.getUsers();
           this.user = new User();
         }
       },
       error => {
-        this.isCreateTopicFailed = true;
+        this.isEditUserFailed = true;
         if (error.statusText == "Unknown Error") {
           this.errorMessage = "Server is not responding";
         } else {
@@ -152,75 +154,20 @@ export class BoardAdminComponent implements OnInit {
     );
   }
 
-  changeRoleSelect(event) {
-    this.formUserCreate.get("rolesSelect").setValue(event.target.value, {
-      onlySelf: true
-    })
-    this.user.roles = event.target.value.substring(3);
-  }
-
-  onSelectedChangeRole(event) {
-    if (this.countSelect > event.length) {
-      this.user.roles = new Array<Role>();
-    }
-    console.log(this.user);
-    this.user.roles.forEach(role => {
-      event.forEach(ev => {
-        if (role.id == ev) {
-          if (!this.user.roles.find(check => check.id == role.id)) {
-            this.user.roles.push(role);
-            // this.setForValidation()
-            this.formUserCreate.patchValue({rolesSelect: this.user.roles})
-          }
-        }
-      })
-    })
-    this.countSelect = event.length;
-  }
-
-  setForValidation() {
-    console.log(this.user);
-    if (this.user.roles != null) {
-      if (this.user.id != null) {
-        this.formUserCreate.setValue({
-          rolesSelect: this.user.roles,
-          username: this.user.username,
-          firstName: this.user.firstName,
-          lastName: this.user.lastName,
-          email: this.user.email,
-          password: this.user.password,
-          repeatPassword: this.user.repeatPassword
-        })
-      }
-    } else {
-      this.formUserCreate.setValue({
-        rolesSelect: this.user.roles,
-        username: this.user.username,
-        firstName: this.user.firstName,
-        lastName: this.user.lastName,
-        email: this.user.email,
-        password: this.user.password,
-        repeatPassword: this.user.repeatPassword
-      });
-    }
-  }
-
-  get validationUserForm() {
-    return this.formUserCreate.controls;
-  }
-
-  editUser(): void {
-    this.userService.editUser(this.user).subscribe(
+  resetPass() {
+    this.editUser();
+    this.user.password = 'password'; // default password
+    this.userService.resetPassUser(this.user).subscribe(
       data => {
         if (data.id != null && data.id != '') {
-          this.isCreateTopicFailed = false;
+          this.isEditUserFailed = false;
           this.closeModal();
           this.getUsers();
           this.user = new User();
         }
       },
       error => {
-        this.isCreateTopicFailed = true;
+        this.isEditUserFailed = true;
         if (error.statusText == "Unknown Error") {
           this.errorMessage = "Server is not responding";
         } else {
@@ -233,13 +180,13 @@ export class BoardAdminComponent implements OnInit {
   deleteUser(): void {
     this.userService.deleteUser(this.user).subscribe(
       data => {
-        this.isCreateTopicFailed = false;
+        this.isEditUserFailed = false;
         this.closeModal();
         this.getUsers();
         this.user = new User();
       },
       error => {
-        this.isCreateTopicFailed = true;
+        this.isEditUserFailed = true;
         if (error.statusText == "Unknown Error") {
           this.errorMessage = "Server is not responding";
         } else {
@@ -251,14 +198,7 @@ export class BoardAdminComponent implements OnInit {
 
   openModalEditUser(id: String) {
     this.showModal = true;
-    this.newUser = false;
     this.getUser(this.users.find(topic => topic.id === id));
-  }
-
-  openModalNewUser() {
-    this.showModal = true;
-    this.newUser = true;
-    this.user = new User();
   }
 
   //Обработка модальных окон
@@ -270,7 +210,8 @@ export class BoardAdminComponent implements OnInit {
     this.showModal = false;
   }
 
+  // предобработка наименования роли
   getNamesRoles(roles: Array<Role>): String {
-    return roles.map(role => role.name).join(" ");
+    return roles.map(role => role.name.substring(5)).join(", ");
   }
 }

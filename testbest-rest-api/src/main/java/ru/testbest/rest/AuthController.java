@@ -12,7 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,7 +36,6 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserServiceImpl userService;
     private final RoleServiceImpl roleService;
-    private final PasswordEncoder encoder;
     private final JwtUtils jwtUtils;
 
     @PostMapping("/signin")
@@ -78,21 +76,21 @@ public class AuthController {
     Set<RoleDto> strRoles = userDetailsDto.getRoles();
     Set<RoleDto> roles = new HashSet<>();
 
-        if (strRoles == null) {
+        if (strRoles.isEmpty()) {
           RoleDto userRole = roleService.getRoleByName("ROLE_USER")
               .orElseThrow(() -> new CustomNotFoundException("Error: Role is not found."));
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
                 switch (role.getName()) {
-                    case "admin":
-                      RoleDto adminRole = roleService.getRoleByName("ROLE_ADMIN")
-                          .orElseThrow(
-                              () -> new CustomNotFoundException("Error: Role is not found."));
-                        roles.add(adminRole);
-
-                        break;
-                    case "manager":
+//                    case "ROLE_ADMIN":
+//                      RoleDto adminRole = roleService.getRoleByName("ROLE_ADMIN")
+//                          .orElseThrow(
+//                              () -> new CustomNotFoundException("Error: Role is not found."));
+//                        roles.add(adminRole);
+//
+//                        break;
+                    case "ROLE_MANAGER":
                       RoleDto modRole = roleService.getRoleByName("ROLE_MANAGER")
                           .orElseThrow(
                               () -> new CustomNotFoundException("Error: Role is not found."));
@@ -107,7 +105,6 @@ public class AuthController {
             });
         }
 
-    userDetailsDto.setPassword(encoder.encode(userDetailsDto.getPassword()));
     userDetailsDto.setIsDeleted(false);
     userDetailsDto.setRoles(roles);
     userService.createUser(userDetailsDto);
