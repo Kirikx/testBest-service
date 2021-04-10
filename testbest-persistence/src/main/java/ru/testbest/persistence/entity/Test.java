@@ -37,9 +37,9 @@ public class Test implements BaseEntity {
     @Column
     private String description;
 
-    @NotNull
-    @Column
-    private LocalDateTime created = LocalDateTime.now();
+//    @NotNull
+    @Column(updatable = false)
+    private LocalDateTime created;
 
     @NotNull
     @Column
