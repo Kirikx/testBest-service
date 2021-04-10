@@ -5,8 +5,10 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,9 +44,27 @@ public class UserRestController {
   }
 
   @PutMapping
-  public UserDetailsDto editTest(@RequestBody UserDetailsDto userDetailsDto) {
+  public UserDetailsDto editUser(@RequestBody UserDetailsDto userDetailsDto) {
     log.info("Edit user {}", userDetailsDto);
     return userService.editUser(userDetailsDto);
+  }
+
+  @PostMapping("/create")
+  public UserDetailsDto createUser(@RequestBody UserDetailsDto userDetailsDto) {
+    log.info("Create user {}", userDetailsDto);
+    return userService.createUser(userDetailsDto);
+  }
+
+  @DeleteMapping("/{id}")
+  public void deleteUser(@PathVariable("id") String id) {
+    log.info("Delete user by id {}", id);
+    userService.deleteUserById(UUID.fromString(id));
+  }
+
+  @PutMapping("/reset")
+  public UserDetailsDto resetPass(@RequestBody UserDetailsDto userDetailsDto) {
+    log.info("Edit user {}", userDetailsDto);
+    return userService.updatePassword(userDetailsDto);
   }
 
 }

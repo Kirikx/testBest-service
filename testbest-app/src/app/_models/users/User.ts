@@ -8,7 +8,6 @@ export class User {
   username: string = null;
   password:	string = null;
   repeatPassword:	string = null;
-  phone:	string = null;
-  roles: Array<Role> = null;
-  isDeleted:	boolean = false;
+  roles: Array<Role> = new Array<Role>();
+  isDeleted: boolean = false;
 }

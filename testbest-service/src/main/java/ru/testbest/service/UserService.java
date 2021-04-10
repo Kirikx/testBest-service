@@ -2,6 +2,7 @@ package ru.testbest.service;
 
 import java.util.List;
 import java.util.UUID;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.testbest.dto.admin.UserDetailsDto;
 
 public interface UserService {
@@ -21,4 +22,7 @@ public interface UserService {
   Boolean existEmailUser(String email);
 
   Boolean existNameUser(String username);
+
+  UserDetailsDto updatePassword(UserDetailsDto userDetailsDto);
+
 }
