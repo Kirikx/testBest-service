@@ -16,8 +16,8 @@ export class RoleService {
     return this.http.get(Global.ROLE_API, Global.httpOptions);
   }
 
-  getRole(role: Role): Observable<any> {
-    return this.http.get(Global.ROLE_API + role.id, Global.httpOptions);
+  getRole(id: string): Observable<any> {
+    return this.http.get(Global.ROLE_API + id, Global.httpOptions);
   }
 
 }

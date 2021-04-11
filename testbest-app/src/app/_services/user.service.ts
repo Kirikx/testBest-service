@@ -15,8 +15,8 @@ export class UserService {
     return this.http.get(Global.USER_API, Global.httpOptions);
   }
 
-  getUser(user: User): Observable<any> {
-    return this.http.get(Global.USER_API + user.id, Global.httpOptions);
+  getUser(id: string): Observable<any> {
+    return this.http.get(Global.USER_API + id, Global.httpOptions);
   }
 
   deleteUser(user: User): Observable<any> {

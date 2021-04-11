@@ -50,16 +50,19 @@
               </div>
             </div>
 
-            <app-modal *ngIf="showModal" (close)="closeModal()">
+            <app-modal class="modal" *ngIf="showModal" (close)="closeModal()">
+
+              <div class="modal-header">
+                <h4 class="modal-title">Редактирование пользователя</h4>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeModal()">
+                  &times;
+                </button>
+              </div>
 
               <form name="form" (ngSubmit)="fUser.form.valid && editUser()"
                     #fUser="ngForm" (click)="fUser"
                     novalidate class="mbr-form form-with-styler">
-                <div class="row">
-
-                  <div class="col-12 form-group" data-for="name">
-                    <h4 class="align-center">Редактирование пользователя</h4>
-                  </div>
+                <div class="row modal-body">
 
                   <div class="col-12 form-group" data-for="id">
                     <input type="hidden" name="id" data-form-field="id" [(ngModel)]="user.id"
@@ -68,7 +71,6 @@
 
                   <div class="col-12 form-group" data-for="selectRole">
                     <select class="form-control form-select" multiple
-                            (change)="onSelectedChangeRole($event)"
                             [(ngModel)]="user.roles"
                             #rolesSelect="ngModel"
                             size="3"
@@ -147,7 +149,7 @@
                     Ошибка редактирования пользователя!<br/>{{ errorMessage }}
                   </div>
 
-                  <div class="col-12 mbr-section-btn">
+                  <div class="col-12 mbr-section-btn modal-footer">
                     <table class="col-12 form-group align-center">
                       <tr>
                         <th scope="col" class="align-middle">
@@ -158,9 +160,6 @@
                         </th>
                         <th scope="col" class="align-middle">
                           <button (click)="resetPass()" class="btn btn-danger display-4">Сбросить пароль</button>
-                        </th>
-                        <th scope="col" class="align-middle">
-                          <button (click)="closeModal()" class="btn btn-info display-4">Закрыть</button>
                         </th>
                       </tr>
                     </table>
