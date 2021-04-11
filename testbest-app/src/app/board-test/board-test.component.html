@@ -140,7 +140,7 @@
           </form>
         </app-modal>
 
-        <app-modal *ngIf="showModalQuestion" (close)="closeModalCreateChapter()">
+        <app-modal *ngIf="showModalQuestion" (close)="closeModalCreateQuestion()">
           <form [formGroup]="formQuestionCreate" (ngSubmit)="createQuestion()" class="mbr-form form-with-styler">
             <div class="row">
               <div class="col-12 form-group" data-for="name">
@@ -219,7 +219,7 @@
                                (change)="changeInputAnswer($event)" [value]="answer.answer">
                       </td>
                       <td class="align-middle">
-                        <button (click)="deleteAnswer(answer.id)" class="btn btn-danger display-7"
+                        <button type="button" (click)="deleteAnswer(answer.id)" class="btn btn-danger display-7"
                                 [disabled]="question.answers.length < 4">Х</button>
                       </td>
                     </tr>
@@ -259,9 +259,8 @@
                                (change)="changeInputAnswer($event)" [value]="answer.answer">
                       </td>
                       <td class="align-middle">
-                        <button (click)="deleteAnswer(answer.id)" class="btn btn-danger display-7"
-                                [disabled]="question.answers.length < 3">Х
-                        </button>
+                        <button type="button" (click)="deleteAnswer(answer.id)" class="btn btn-danger display-7"
+                                [disabled]="question.answers.length < 3">Х</button>
                       </td>
                     </tr>
                     </tbody>

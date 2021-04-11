@@ -31,7 +31,6 @@ export class BoardTestComponent implements OnInit {
   question: QuestionFull;
   questionType: QuestionType;
   questionTypes: Array<QuestionType>;
-  currentType: string;
   answer: AnswerFull
   answers: Array<AnswerFull>;
 
@@ -522,6 +521,8 @@ export class BoardTestComponent implements OnInit {
     this.answer = new AnswerFull();
     this.questionType = null;
     this.setForValidation();
+    let checkArray: FormArray = this.formCheckbox.get('checkArray') as FormArray;
+    checkArray.clear();
   }
 
   getQuestionTypes() {
@@ -550,8 +551,7 @@ export class BoardTestComponent implements OnInit {
           }
         }
         this.answers = buff;
-        this.question.answers= buff;
-        this.currentType = this.question.questionTypeId;
+        this.question.answers = buff;
         this.getSelectData();
         this.setForValidation();
         this.checkTypeQuestionUI(false);
@@ -613,47 +613,75 @@ export class BoardTestComponent implements OnInit {
   }
 
   changeQuestionTypeSelect(event) {
+    let newAnswer = true;
     this.formQuestionCreate.get("questionTypeId").setValue(event.target.value, {
       onlySelf: true
     })
     this.question.questionTypeId = event.target.value.substring(3);
     this.isSubmitted = true
-    this.answer = new AnswerFull();
-    this.question.answers = new Array<AnswerFull>();
+
     if (this.question.id != null) {
       for (let type of this.questionTypes) {
-        if (type.id == this.question.questionTypeId && type.name == 'Вопрос со свободным ответом'
-          && type.id != this.currentType) {
-          this.formQuestionCreate.patchValue({answerTest: null});
+        if (type.id == this.question.questionTypeId && type.name == 'Вопрос со свободным ответом') {
+          for (let ans of this.question.answers) {
+            if (ans.isCorrect) {
+              this.answer = ans;
+              this.formQuestionCreate.patchValue({answerTest: ans.answer});
+            }
+          }
           break;
         } else {
-          if (type.id == this.question.questionTypeId) {
-            this.formQuestionCreate.patchValue({answerTest: "_"});
-            if (type.id == this.currentType) this.getQuestion();
+          newAnswer = false;
+          if (type.name == 'Множественный' && this.question.questionTypeId == type.id) {
+            let checkArray: FormArray = this.formCheckbox.get('checkArray') as FormArray;
+            checkArray.clear();
+            for (let ans of this.question.answers) {
+              if (ans.isCorrect) checkArray.push(new FormControl(ans));
+            }
             break;
           }
         }
       }
     } else {
       for (let type of this.questionTypes) {
-        if (type.name == 'Вопрос со свободным ответом' &&  this.question.questionTypeId == type.id) {
+        if (type.name == 'Вопрос со свободным ответом' && this.question.questionTypeId == type.id) {
           this.formQuestionCreate.patchValue({answerTest: null});
-        } else {
-          this.formQuestionCreate.patchValue({answerTest: "_"});
         }
       }
     }
-    this.checkTypeQuestionUI(true);
+    this.checkTypeQuestionUI(newAnswer);
   }
 
   createQuestion(): void {
-    for (let ans of this.question.answers) {
-      if (ans.answer == "" || ans.answer == null) {
-        this.formQuestionCreate.patchValue({answer: null})
-        break;
+    let isFreeAnswer = true;
+    let isCheckBoxAnswer = false;
+    for (let type of this.questionTypes) {
+      if (type.name != 'Вопрос со свободным ответом' && this.question.questionTypeId == type.id) {
+        this.formQuestionCreate.patchValue({answerTest: "_"});
+        for (let ans of this.question.answers) {
+          if (ans.answer == "" || ans.answer == null) {
+            this.formQuestionCreate.patchValue({answer: null});
+            break;
+          } else {
+            this.formQuestionCreate.patchValue({answer: ans});
+          }
+        }
+        isFreeAnswer = false;
+        if (type.name == 'Множественный' && this.question.questionTypeId == type.id) {
+          isCheckBoxAnswer = true;
+          break;
+        }
+        if (type.name == 'Одиночный' && this.question.questionTypeId == type.id) {
+          let cheekSelect = false;
+          for (let ans of this.question.answers) {
+            if (ans.isCorrect) cheekSelect = true;
+          }
+          if (!cheekSelect) this.formQuestionCreate.patchValue({answer: null});
+          break;
+        }
       }
     }
-    if (!this.formQuestionCreate.valid) {
+    if (!this.formQuestionCreate.valid || (isCheckBoxAnswer && !this.formCheckbox.valid)) {
       this.isSubmitted = false;
     } else {
       let answersLoc = new Array<AnswerFull>();
@@ -662,19 +690,17 @@ export class BoardTestComponent implements OnInit {
         this.questionService.createQuestion(this.question).subscribe(
           data => {
             this.question = data;
-            this.questionTypes.forEach(value => {
-              if (value.id == this.question.questionTypeId && value.name == 'Вопрос со свободным ответом') {
-                this.answer.questionId = this.question.id;
-                this.answers.push(this.answer);
-                this.question.answers = this.answers;
-              } else {
-                this.answers.forEach(ans => {
-                  ans.id = null;
-                  ans.questionId = this.question.id;
-                });
-                this.question.answers = this.answers;
-              }
-            });
+            if (isFreeAnswer) {
+              this.answer.questionId = this.question.id;
+              this.answers.push(this.answer);
+              this.question.answers = this.answers;
+            } else {
+              this.answers.forEach(ans => {
+                ans.id = null;
+                ans.questionId = this.question.id;
+              });
+              this.question.answers = this.answers;
+            }
             this.editQuestion();
           },
           error => {
@@ -686,12 +712,15 @@ export class BoardTestComponent implements OnInit {
           }
         );
       } else {
-        for (let type of this.questionTypes) {
-          if (type.id == this.question.questionTypeId && type.name == 'Вопрос со свободным ответом') {
-            answersLoc.push(this.answer);
-            this.question.answers = answersLoc;
-            break;
+        if (isFreeAnswer) {
+          for (let ans of this.question.answers) {
+            if (ans.id == this.answer.id) {
+              answersLoc.push(this.answer);
+            } else {
+              this.deleteAnswer(ans.id);
+            }
           }
+          this.question.answers = answersLoc;
         }
         this.editQuestion();
       }
@@ -780,9 +809,11 @@ export class BoardTestComponent implements OnInit {
               this.newAnswer();
               this.newAnswer();
             } else {
+              let checkArray: FormArray = this.formCheckbox.get('checkArray') as FormArray;
+              checkArray.clear();
               for (let answer of this.answers) {
                 if (answer.isCorrect) {
-                  this.formQuestionCreate.patchValue({answer: answer.answer});
+                  checkArray.push(new FormControl(answer));
                 }
               }
             }
