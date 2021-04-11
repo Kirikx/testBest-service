@@ -66,7 +66,13 @@
                      *ngIf="validationTestForm.passScore.invalid && !isSubmitted">
                   <div *ngIf="validationTestForm.passScore.errors.required">Поле обязательно для заполнения</div>
                   <div *ngIf="validationTestForm.passScore.errors.min">Минимально доступное значение: 1</div>
-                  <!--                  <div *ngIf="validationTestForm.passScore.errors.max">Максимально доступное время 300 минут</div>-->
+                  <div *ngIf="validationTestForm.passScore.errors.max">Максимально доступное время 300 минут</div>
+                </div>
+              </div>
+
+              <div class="col-12 form-group" data-for="duration">
+                <div class="alert-info col-12" role="alert" *ngIf="message == 'Изменения внесены' && isSubmitted">
+                  <div>{{message}}</div>
                 </div>
               </div>
 

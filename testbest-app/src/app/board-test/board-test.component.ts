@@ -39,7 +39,7 @@ export class BoardTestComponent implements OnInit {
 
   showModalChapter = false;
   showModalQuestion = false;
-  errorMessage: string;
+  message: string;
 
   formCheckbox: FormGroup; //проверка нескольких Checkbox
 
@@ -167,9 +167,9 @@ export class BoardTestComponent implements OnInit {
       },
       error => {
         if (error.statusText == "Unknown Error") {
-          this.errorMessage = "Server is not responding";
+          this.message = "Server is not responding";
         } else {
-          this.errorMessage = error.message;
+          this.message = error.message;
         }
       }
     )
@@ -240,9 +240,9 @@ export class BoardTestComponent implements OnInit {
           },
           error => {
             if (error.statusText == "Unknown Error") {
-              this.errorMessage = "Server is not responding";
+              this.message = "Server is not responding";
             } else {
-              this.errorMessage = error.message;
+              this.message = error.message;
             }
           }
         );
@@ -250,12 +250,13 @@ export class BoardTestComponent implements OnInit {
         this.testService.editTest(this.test).subscribe(
           data => {
             this.test = data;
+            this.message = "Изменения внесены"
           },
           error => {
             if (error.statusText == "Unknown Error") {
-              this.errorMessage = "Server is not responding";
+              this.message = "Server is not responding";
             } else {
-              this.errorMessage = error.message;
+              this.message = error.message;
             }
           }
         );
@@ -270,9 +271,9 @@ export class BoardTestComponent implements OnInit {
       },
       error => {
         if (error.statusText == "Unknown Error") {
-          this.errorMessage = "Server is not responding";
+          this.message = "Server is not responding";
         } else {
-          this.errorMessage = error.message;
+          this.message = error.message;
         }
       }
     );
@@ -297,9 +298,9 @@ export class BoardTestComponent implements OnInit {
         },
         error => {
           if (error.statusText == "Unknown Error") {
-            this.errorMessage = "Server is not responding";
+            this.message = "Server is not responding";
           } else {
-            this.errorMessage = error.message;
+            this.message = error.message;
           }
         }
       );
@@ -322,6 +323,7 @@ export class BoardTestComponent implements OnInit {
   }
 
   openModalChapter() {
+    this.message = null;
     this.showModalChapter = true;
     if (this.selectChapters[0] == null) {
       this.clearFormCreateChapter();
@@ -359,9 +361,9 @@ export class BoardTestComponent implements OnInit {
       },
       error => {
         if (error.statusText == "Unknown Error") {
-          this.errorMessage = "Server is not responding";
+          this.message = "Server is not responding";
         } else {
-          this.errorMessage = error.message;
+          this.message = error.message;
         }
       }
     )
@@ -387,9 +389,9 @@ export class BoardTestComponent implements OnInit {
           },
           error => {
             if (error.statusText == "Unknown Error") {
-              this.errorMessage = "Server is not responding";
+              this.message = "Server is not responding";
             } else {
-              this.errorMessage = error.message;
+              this.message = error.message;
             }
           }
         );
@@ -402,9 +404,9 @@ export class BoardTestComponent implements OnInit {
           },
           error => {
             if (error.statusText == "Unknown Error") {
-              this.errorMessage = "Server is not responding";
+              this.message = "Server is not responding";
             } else {
-              this.errorMessage = error.message;
+              this.message = error.message;
             }
           }
         );
@@ -421,9 +423,9 @@ export class BoardTestComponent implements OnInit {
       },
       error => {
         if (error.statusText == "Unknown Error") {
-          this.errorMessage = "Server is not responding";
+          this.message = "Server is not responding";
         } else {
-          this.errorMessage = error.message;
+          this.message = error.message;
         }
       }
     );
@@ -532,9 +534,9 @@ export class BoardTestComponent implements OnInit {
       },
       error => {
         if (error.statusText == "Unknown Error") {
-          this.errorMessage = "Server is not responding";
+          this.message = "Server is not responding";
         } else {
-          this.errorMessage = error.message;
+          this.message = error.message;
         }
       }
     );
@@ -558,15 +560,16 @@ export class BoardTestComponent implements OnInit {
       },
       error => {
         if (error.statusText == "Unknown Error") {
-          this.errorMessage = "Server is not responding";
+          this.message = "Server is not responding";
         } else {
-          this.errorMessage = error.message;
+          this.message = error.message;
         }
       }
     );
   }
 
   openModalQuestion() {
+    this.message = null;
     this.showModalQuestion = true;
     this.question = new QuestionFull();
     if (this.selectQuestions[0] == null) {
@@ -705,9 +708,9 @@ export class BoardTestComponent implements OnInit {
           },
           error => {
             if (error.statusText == "Unknown Error") {
-              this.errorMessage = "Server is not responding";
+              this.message = "Server is not responding";
             } else {
-              this.errorMessage = error.message;
+              this.message = error.message;
             }
           }
         );
@@ -740,9 +743,9 @@ export class BoardTestComponent implements OnInit {
           },
           error => {
             if (error.statusText == "Unknown Error") {
-              this.errorMessage = "Server is not responding";
+              this.message = "Server is not responding";
             } else {
-              this.errorMessage = error.message;
+              this.message = error.message;
             }
           }
         );
@@ -759,9 +762,9 @@ export class BoardTestComponent implements OnInit {
       },
       error => {
         if (error.statusText == "Unknown Error") {
-          this.errorMessage = "Server is not responding";
+          this.message = "Server is not responding";
         } else {
-          this.errorMessage = error.message;
+          this.message = error.message;
         }
       }
     );
@@ -776,9 +779,9 @@ export class BoardTestComponent implements OnInit {
       },
       error => {
         if (error.statusText == "Unknown Error") {
-          this.errorMessage = "Server is not responding";
+          this.message = "Server is not responding";
         } else {
-          this.errorMessage = error.message;
+          this.message = error.message;
         }
       }
     );
@@ -867,9 +870,9 @@ export class BoardTestComponent implements OnInit {
             },
             error => {
               if (error.statusText == "Unknown Error") {
-                this.errorMessage = "Server is not responding";
+                this.message = "Server is not responding";
               } else {
-                this.errorMessage = error.message;
+                this.message = error.message;
               }
             }
           );
@@ -960,9 +963,9 @@ export class BoardTestComponent implements OnInit {
       },
       error => {
         if (error.statusText == "Unknown Error") {
-          this.errorMessage = "Server is not responding";
+          this.message = "Server is not responding";
         } else {
-          this.errorMessage = error.message;
+          this.message = error.message;
         }
       }
     );
