@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {Router} from "@angular/router";
 
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
@@ -34,5 +35,17 @@ export class TokenStorageService {
       return JSON.parse(user);
     }
     return {};
+  }
+
+  public checkTokenPrivate(router: Router): void {
+    if (!this.getToken()) {
+      router.navigate(["/home"]);
+    }
+  }
+
+  public checkTokenPublic(router: Router): void {
+    if (this.getToken()) {
+      router.navigate(["/home"])
+    }
   }
 }

@@ -21,6 +21,7 @@ import {CommonModule} from "@angular/common";
 import {PortalModule} from "./_modals/portal/portal.module";
 import {BoardTestComponent} from './board-test/board-test.component';
 import {TreeviewModule} from "ngx-treeview";
+import { TestComponent } from './test/test.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import {TreeviewModule} from "ngx-treeview";
     PortalToDirective,
     ModalComponent,
     BoardTestComponent,
+    TestComponent,
   ],
   imports: [
     BrowserModule,

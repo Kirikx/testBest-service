@@ -49,6 +49,9 @@ export class ProfileComponent implements OnInit {
     textScript.src = 'assets/mbr-tabs/mbr-tabs.js';
     this.renderer2.appendChild(this.document.body, textScript);
 
+    // this.tokenStorage.checkTokenPrivate(this.router);
+    // this.currentUser = this.tokenStorage.getUser();
+
     if (!this.tokenStorage.getToken()) {
       this.router.navigate(["/home"])
     }

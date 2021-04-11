@@ -18,7 +18,7 @@ export class RegisterComponent implements OnInit {
   constructor(private authService: AuthService,
               private router: Router,
               private tokenStorage: TokenStorageService) {
-    if (tokenStorage.getToken() != null) router.navigate(["/home"])
+    this.tokenStorage.checkTokenPublic(this.router);
     this.user = new User();
   }
 

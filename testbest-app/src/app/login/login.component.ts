@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
   constructor(private authService: AuthService,
               private tokenStorage: TokenStorageService,
               private router: Router) {
-    if (tokenStorage.getToken() != null) router.navigate(["/home"])
+    this.tokenStorage.checkTokenPublic(this.router);
     this.auth = new Auth();
   }
 
