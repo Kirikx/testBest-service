@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit, Renderer2, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, NavigationEnd, Router, RouterEvent} from "@angular/router";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {DOCUMENT} from "@angular/common";
 import {Test} from "../_models/createTest/Test";
@@ -17,6 +17,7 @@ import {QuestionTypeService} from "../_services/question-type.service";
 import {ChapterWrap} from "../_models/ChapterWrap";
 import {AnswerService} from "../_services/answer.service";
 import {AnswerFull} from "../_models/createTest/AnswerFull";
+import {filter} from "rxjs/operators";
 
 @Component({
   selector: 'app-board-test',
@@ -64,12 +65,11 @@ export class BoardTestComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (!this.tokenStorage.getToken()) {
-      this.router.navigate(["/home"])
-    }
+    this.tokenStorage.checkTokenPrivate(this.router);
+
     this.getTest();
     this.getTopics();
-    this.getQuestionTypes()
+    this.getQuestionTypes();
   }
 
   //Обработка дерева теста

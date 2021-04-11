@@ -14,11 +14,7 @@ export class ProfileComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit(): void {
-
-    if (!this.tokenStorage.getToken()) {
-      this.router.navigate(["/home"])
-    }
-
+    this.tokenStorage.checkTokenPrivate(this.router);
     this.currentUser = this.tokenStorage.getUser();
   }
 }

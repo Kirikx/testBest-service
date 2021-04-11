@@ -45,13 +45,12 @@
                 </div>
               </div>
             </div>
-            <div>
-              <div>
+              <div class="table-responsive">
                 <table class="table table-sm table-hover">
                   <thead class="colorTableHeader">
                   <tr>
                     <th scope="col" class="align-middle">Тематика</th>
-                    <th scope="col" class="align-middle">Наименование теста</th>
+                    <th scope="col" class="align-middle">Тест</th>
                     <th scope="col" class="align-middle">Описание</th>
                     <th scope="col" class="align-middle">Время прохождения</th>
                     <th scope="col" class="align-middle">Тест считается пройде</th>
@@ -65,15 +64,14 @@
                     <td class="align-middle">{{ test.description }}</td>
                     <td class="align-middle">{{ test.duration }}</td>
                     <td class="align-middle">{{ test.passScore }}</td>
-                    <td class="align-right"><a class="btn btn-info-outline display-4"
-                                               (click)="redirectToCreateTest(test.id)">Редактировать</a>
+                    <td class="align-right">
+                      <a class="btn btn-info-outline btn-sm" (click)="redirectToCreateTest(test.id)">Редактировать</a>
                     </td>
                   </tr>
                   </tbody>
                 </table>
               </div>
             </div>
-          </div>
           <div id="tab2" class="tab-pane" role="tabpanel">
             <div class="row">
               <div class="col-md-12">
