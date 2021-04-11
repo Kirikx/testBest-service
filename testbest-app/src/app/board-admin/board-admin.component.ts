@@ -21,7 +21,7 @@ export class BoardAdminComponent implements OnInit {
   users: Array<User>; // список пользователей
   roles: Array<Role>; // список всех ролей
 
-  showModal = false;  // признак открытого модального окна
+  showModal = false;
 
   isEditUserFailed = false;
   errorMessage: string;
@@ -69,7 +69,7 @@ export class BoardAdminComponent implements OnInit {
   }
 
   getUser(user: User) {
-    this.userService.getUser(user).subscribe(
+    this.userService.getUser(user.id).subscribe(
       data => {
         this.user = data;
       },
@@ -111,25 +111,6 @@ export class BoardAdminComponent implements OnInit {
         }
       }
     )
-  }
-
-  onSelectedChangeRole(event) {
-    if (this.countSelect > event.length) {
-      this.user.roles = new Array<Role>();
-    }
-    console.log(this.user);
-    this.user.roles.forEach(role => {
-      event.forEach(ev => {
-        if (role.id == ev.id) {
-          if (!this.user.roles.find(check => check.id == role.id)) {
-            this.user.roles.push(role);
-            // this.setForValidation()
-            // this.formUserCreate.patchValue({rolesSelect: this.user.roles})
-          }
-        }
-      })
-    })
-    this.countSelect = event.length;
   }
 
   editUser(): void {

@@ -10,4 +10,16 @@ export class User {
   repeatPassword:	string = null;
   roles: Array<Role> = new Array<Role>();
   isDeleted: boolean = false;
+
+  cloneUser(user: User) {
+    this.id = user.id;
+    this.firstName = user.firstName;
+    this.lastName = user.lastName;
+    this.email = user.email;
+    this.username = user.username;
+    this.password = user.password;
+    this.repeatPassword = user.repeatPassword;
+    this.roles = user.roles;
+    this.isDeleted = user.isDeleted;
+  }
 }

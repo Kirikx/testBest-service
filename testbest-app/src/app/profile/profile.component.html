@@ -1,26 +1,237 @@
-<div class="container" *ngIf="currentUser; else loggedOut">
-  <header class="jumbotron">
-    <h3>
-      <strong>{{ currentUser.username }}</strong> Profile
-    </h3>
-  </header>
-  <p>
-    <strong>Token:</strong>
-    {{ currentUser.accessToken.substring(0, 20) }} ...
-    {{ currentUser.accessToken.substr(currentUser.accessToken.length - 20) }}
-  </p>
-  <p>
-    <strong>Email:</strong>
-    {{ currentUser.email }}
-  </p>
-  <strong>Roles:</strong>
-  <ul>
-    <li *ngFor="let role of currentUser.roles">
-      {{ role }}
-    </li>
-  </ul>
-</div>
+<section class="form1 cid-srmGhZz8Eh mbr-fullscreen mbr-parallax-background">
+  <div class="mbr-overlay" style="opacity: 1; background-color: rgb(255, 255, 255);"></div>
+  <div class="container" *ngIf="currentUserToken; else loggedOut">
 
-<ng-template #loggedOut>
-  Please login.
-</ng-template>
+    <header class="jumbotron">
+      <h3>
+        Профиль пользователя <strong>{{ currentUserToken.username }}</strong>
+      </h3>
+    </header>
+    <p>
+      <strong>Username:</strong>
+      {{ currentUser.username }}
+    </p>
+    <p>
+      <strong>Имя:</strong>
+      {{ currentUser.firstName }}
+    </p>
+    <p>
+      <strong>Фамилия:</strong>
+      {{ currentUser.lastName }}
+    </p>
+    <p>
+      <strong>Email:</strong>
+      {{ currentUser.email }}
+    </p>
+    <strong>Активные роли:</strong>
+    <ul>
+      <li *ngFor="let role of currentUser.roles">
+        {{ role.name.substring(5) }}
+      </li>
+    </ul>
+
+    <div class="col-12 mbr-section-btn">
+      <table class="col-12 form-group align-center">
+        <tr>
+          <th scope="col" class="align-middle">
+            <button (click)="openModal()" class="btn btn-info display-4">Редактировать профиль
+            </button>
+          </th>
+          <th scope="col" class="align-middle">
+            <button (click)="openModalChangePassword()" class="btn btn-info display-4">Сменить пароль</button>
+          </th>
+        </tr>
+      </table>
+    </div>
+
+
+    <app-modal class="modal" *ngIf="showModal" (close)="closeModal()">
+
+      <div class="modal-header">
+        <h4 class="modal-title">Редактирование профиля</h4>
+        <button type="button" class="close" data-dismiss="modal" (click)="closeModal()">
+          &times;
+        </button>
+      </div>
+
+      <form name="form"
+            (ngSubmit)="fUser.form.valid && confirmPasswordAndEditUserProfile()"
+            #fUser="ngForm"
+            (click)="fUser"
+            novalidate>
+
+        <div class="row modal-body">
+          <div class="col-12 form-group" data-for="id">
+            <input type="hidden" name="id" data-form-field="id" [(ngModel)]="editUser.id"
+                   #id="ngModel">
+          </div>
+
+          <div class="col-md col-sm-12 form-group" data-for="name">
+            <input id="name-form5-y" type="text" name="firstName"
+                   [(ngModel)]="editUser.firstName" required minlength="3" maxlength="20"
+                   #firstName="ngModel"
+                   placeholder="Фамилия" data-form-field="name" class="form-control">
+            <div class="alert-danger" *ngIf="firstName.errors && fUser.submitted">
+              <div *ngIf="firstName.errors.required">Поле обязательно для заполнения</div>
+              <div *ngIf="firstName.errors.minlength">
+                Данное поле не может содержать меньше 3 символов
+              </div>
+              <div *ngIf="firstName.errors.maxlength">
+                Данное поле не может содержать больше 20 символов
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md col-sm-12 form-group" data-for="surname">
+            <input id="surname-form5-y" type="text" name="lastName"
+                   [(ngModel)]="editUser.lastName" required minlength="3" maxlength="20"
+                   #lastName="ngModel"
+                   placeholder="Имя" data-form-field="name" class="form-control">
+            <div class="alert-danger" *ngIf="lastName.errors && fUser.submitted">
+              <div *ngIf="lastName.errors.required">Поле обязательно для заполнения</div>
+              <div *ngIf="lastName.errors.minlength">
+                Данное поле не может содержать меньше 3 символов
+              </div>
+              <div *ngIf="lastName.errors.maxlength">
+                Данное поле не может содержать больше 20 символов
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12 form-group" data-for="email">
+            <input id="email-form5-y" type="email" class="form-control" name="email"
+                   placeholder="Email"
+                   [(ngModel)]="editUser.email" required email #email="ngModel"/>
+            <div class="alert-danger" *ngIf="email.errors && fUser.submitted">
+              <div *ngIf="email.errors.required">Поле обязательно для заполнения</div>
+              <div *ngIf="email.errors.email">Формат поля email нарушен</div>
+            </div>
+          </div>
+
+          <div class="col-sm-12 form-group" data-for="login">
+            <input type="text" name="login" placeholder="Логин" data-form-field="username"
+                   class="form-control" value="" id="login-form5-y"
+                   [(ngModel)]="editUser.username"
+                   required minlength="3" maxlength="20" #username="ngModel">
+            <div class="alert-danger" *ngIf="lastName.errors && fUser.submitted">
+              <div *ngIf="username.errors.required">Поле обязательно для заполнения</div>
+              <div *ngIf="username.errors.minlength">
+                Данное поле не может содержать меньше 3 символов
+              </div>
+              <div *ngIf="username.errors.maxlength">
+                Данное поле не может содержать больше 20 символов
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md col-sm-12">
+              <div class="checkbox">
+                <label><input type="checkbox" name="manager-role"
+                              (change)="changeManagerRole($event)" [(ngModel)]="isManagerFlag"> Менеджер тестов</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert alert-danger col-12"
+               *ngIf="fUser.submitted && isEditUserFailed">
+            Ошибка редактирования пользователя!<br/>{{ errorMessage }}
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <div class="col-sm-12" data-for="password">
+            <input type="password" class="form-control" name="password"
+                   placeholder="Подтвердите пароль"
+                   [(ngModel)]="auth.password" required #confirmPass="ngModel"/>
+            <div class="alert-danger" *ngIf="fUser.submitted">
+              <div *ngIf="confirmPass.errors && confirmPass.errors.required">Поле обязательно для
+                заполнения
+              </div>
+              <div *ngIf="fUser.submitted && failConfirmPassword">Неверный пароль</div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-success display-4">Сохранить</button>
+        </div>
+      </form>
+
+    </app-modal>
+
+    <app-modal class="modal" *ngIf="showModalChangePassword" (close)="closeModal()">
+
+      <div class="modal-header">
+        <h4 class="modal-title">Смена пароля</h4>
+        <button type="button" class="close" data-dismiss="modal" (click)="closeModal()">
+          &times;
+        </button>
+      </div>
+
+      <form name="changePassword"
+            (ngSubmit)="fUser.form.valid && confirmPasswordAndChangePassword()"
+            #fUser="ngForm"
+            (click)="fUser"
+            novalidate>
+
+        <div class="row modal-body">
+
+          <div class="col-12 form-group" data-for="id">
+            <input type="hidden" name="id" data-form-field="id" [(ngModel)]="editUser.id"
+                   #id="ngModel">
+          </div>
+
+          <div class="col-12 form-group" data-for="current">
+            <input type="password"
+                   name="current"
+                   placeholder="Текущий пароль"
+                   class="form-control"
+                   [(ngModel)]="auth.password" required #confirmPass="ngModel"/>
+            <div class="alert-danger" *ngIf="fUser.submitted">
+              <div *ngIf="confirmPass.errors && confirmPass.errors.required">Поле обязательно для
+                заполнения</div>
+              <div *ngIf="fUser.submitted && failConfirmPassword">Неверный пароль</div>
+            </div>
+          </div>
+
+          <div class="col-12 form-group" data-for="password">
+            <input type="password"
+                   name="password"
+                   placeholder="Новый пароль"
+                   data-form-field="password"
+                   class="form-control" value="" id="password-form5-y"
+                   [(ngModel)]="editUser.password" required minlength="6" #password="ngModel">
+            <div class="alert-danger col-12" role="alert" *ngIf="password.errors && fUser.submitted">
+              <div *ngIf="password.errors.required">Поле обязательно для заполнения</div>
+              <div *ngIf="password.errors.minlength">Данное поле не может содержать меньше 6 символов</div>
+            </div>
+          </div>
+
+          <div class="col-12 form-group" data-for="repeat">
+            <input type="password"
+                   name="repeat"
+                   placeholder="Повторите пароль"
+                   data-form-field="repeat"
+                   [(ngModel)]="editUser.repeatPassword" required #repeat="ngModel" pattern="{{password.value}}"
+                   class="form-control" value="" id="url-form5-y">
+            <div class="alert-danger col-12" role="alert" *ngIf="repeat.errors && fUser.submitted">
+              <div *ngIf="repeat.errors.required">Поле обязательно для заполнения</div>
+              <div *ngIf="repeat.errors.pattern">Значение в поле не совпадает</div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success display-4">Сохранить</button>
+        </div>
+      </form>
+
+    </app-modal>
+
+  </div>
+
+  <app-modal-outlet></app-modal-outlet>
+
+  <ng-template #loggedOut>
+    Please login.
+  </ng-template>
+</section>
