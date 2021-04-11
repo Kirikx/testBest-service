@@ -1,8 +1,12 @@
 import {Component, Inject, OnInit, Renderer2} from '@angular/core';
-import { UserService } from '../_services/user.service';
 import {DOCUMENT} from "@angular/common";
 import {TokenStorageService} from "../_services/token-storage.service";
-import {Router} from "@angular/router";
+import {NavigationEnd, Router, RouterEvent} from "@angular/router";
+import {Test} from "../_models/createTest/Test";
+import {TestService} from "../_services/test.service";
+import {TopicService} from "../_services/topic.service";
+import {Topic} from "../_models/createTest/parameters/Topic";
+import {filter} from "rxjs/operators";
 
 @Component({
   selector: 'app-board-user',
@@ -10,12 +14,18 @@ import {Router} from "@angular/router";
   styleUrls: ['./board-user.component.css'],
 })
 export class BoardUserComponent implements OnInit {
-  content?: string;
+
+  tests: Array<Test>;
+  topics: Array<Topic>;
+
+  errorMessage: string;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private renderer2: Renderer2,
     private router: Router,
+    private testService: TestService,
+    private topicService: TopicService,
     private tokenStorage: TokenStorageService) {
   }
 
@@ -24,19 +34,56 @@ export class BoardUserComponent implements OnInit {
     textScript.src = 'assets/mbr-tabs/mbr-tabs.js';
     this.renderer2.appendChild(this.document.body, textScript);
 
-    if (!this.tokenStorage.getToken()) {
-      this.router.navigate(["/home"])
-    }
+    this.tokenStorage.checkTokenPrivate(this.router);
 
-    //TODO Будут запросы на получение данных:
-    //      список тестов
-    // this.userService.getUserBoard().subscribe(
-    //   data => {
-    //     this.content = data;
-    //   },
-    //   err => {
-    //     this.content = JSON.parse(err.error).message;
-    //   }
-    // );
+    this.getTopics();
+    this.getTests();
+
+    this.router.events.pipe(
+      filter((event: RouterEvent) => event instanceof NavigationEnd)).subscribe(() => {
+      if (window.location.href.toString().includes("/tests")) {
+        window.location.reload();
+      }
+    });
+  }
+
+  //Обработка вкладки Тематика тестирования
+  getNameTopic(id: String): String {
+    return this.topics.find(topic => topic.id === id).name;
+  }
+
+  getTopics() {
+    this.topicService.getTopics().subscribe(
+      data => {
+        this.topics = data;
+      },
+      error => {
+        if (error.statusText == "Unknown Error") {
+          this.errorMessage = "Server is not responding";
+        } else {
+          this.errorMessage = error.message;
+        }
+      }
+    )
+  }
+
+  //Обработка вкладки Тематика тестирования
+  getTests() {
+    this.testService.getTests().subscribe(
+      data => {
+        this.tests = data;
+      },
+      error => {
+        if (error.statusText == "Unknown Error") {
+          this.errorMessage = "Server is not responding";
+        } else {
+          this.errorMessage = error.message;
+        }
+      }
+    )
+  }
+
+  redirectToCreateTest(id: string): void {
+    this.router.navigate(["/test/" + id + '/user'])
   }
 }

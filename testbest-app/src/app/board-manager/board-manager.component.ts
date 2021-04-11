@@ -45,9 +45,7 @@ export class BoardManagerComponent implements OnInit {
     textScript.src = 'assets/mbr-tabs/mbr-tabs.js';
     this.renderer2.appendChild(this.document.body, textScript);
 
-    if (!this.tokenStorage.getToken()) {
-      this.router.navigate(["/home"])
-    }
+    this.tokenStorage.checkTokenPrivate(this.router);
 
     this.getTopics();
     this.getTest();
@@ -191,10 +189,6 @@ export class BoardManagerComponent implements OnInit {
   }
 
   //Обработка модальных окон
-  openModal() {
-    this.showModal = true;
-  }
-
   closeModal() {
     this.showModal = false;
   }
