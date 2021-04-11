@@ -188,6 +188,13 @@ export class BoardManagerComponent implements OnInit {
     this.router.navigate(["/test/" + id])
   }
 
+
+  // getText(text:string , length:number): string{
+  //   text = strip_tags($text);
+  //   $substring_limited = substr($text,0,$length);
+  //   return substr($substring_limited, 0, strrpos($substring_limited, ' ' )).'...';
+  // }
+
   //Обработка модальных окон
   closeModal() {
     this.showModal = false;

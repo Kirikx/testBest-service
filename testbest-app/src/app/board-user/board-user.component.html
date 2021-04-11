@@ -31,12 +31,12 @@
             </div>
             <div class="col-md-12">
               <div class="table-responsive">
-                <table class="table table-sm table-hover">
+                <table class="table table-hover">
                   <thead class="colorTableHeader">
                   <tr>
-                    <th scope="col">Тематика</th>
-                    <th scope="col">Тест</th>
-                    <th scope="col">Описание</th>
+                    <th scope="col" class="align-middle">Тематика</th>
+                    <th scope="col" class="align-middle">Тест</th>
+                    <th scope="col" class="align-middle">Описание</th>
                     <th scope="col"></th>
                   </tr>
                   </thead>
@@ -45,8 +45,9 @@
                     <td class="align-middle">{{ getNameTopic(test.topicId) }}</td>
                     <td class="align-middle">{{ test.name }}</td>
                     <td class="align-middle">{{ test.description }}</td>
-                    <td class="align-center">
-                      <a class="btn btn-info-outline btn-sm" (click)="redirectToCreateTest(test.id)">Подробнее</a>
+                    <td class="align-middle">
+                      <a class="btn btn-info-outline btn-sm" (click)="redirectToCreateTest(test.id)"
+                         style="white-space: nowrap;">Подробнее</a>
                     </td>
                   </tr>
                   </tbody>
@@ -64,12 +65,12 @@
             </div>
             <div class="col-md-12">
               <div class="table-responsive">
-                <table class="table table-sm table-hover">
+                <table class="table table-hover">
                   <thead class="colorTableHeader">
                   <tr>
-                    <th scope="col">Тематика</th>
-                    <th scope="col">Тест</th>
-                    <th scope="col">Описание</th>
+                    <th scope="col" class="align-middle">Тематика</th>
+                    <th scope="col" class="align-middle">Тест</th>
+                    <th scope="col" class="align-middle">Описание</th>
                     <th scope="col"></th>
                   </tr>
                   </thead>
@@ -78,8 +79,9 @@
                     <td class="align-middle">{{ getNameTopic(test.topicId) }}</td>
                     <td class="align-middle">{{ test.name }}</td>
                     <td class="align-middle">{{ test.description }}</td>
-                    <td class="align-center">
-                      <a class="btn btn-info-outline btn-sm" (click)="redirectToCreateTest(test.id)">Подробнее</a>
+                    <td class="align-middle">
+                      <a class="btn btn-info-outline btn-sm" (click)="redirectToCreateTest(test.id)"
+                         style="white-space: nowrap;">Подробнее</a>
                     </td>
                   </tr>
                   </tbody>
