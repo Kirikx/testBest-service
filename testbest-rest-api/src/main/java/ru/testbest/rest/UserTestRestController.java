@@ -1,5 +1,6 @@
 package ru.testbest.rest;
 
+import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import ru.testbest.dto.admin.UserDetailsDto;
 import ru.testbest.dto.test.QuestionDto;
 import ru.testbest.dto.test.UserTestDto;
 import ru.testbest.dto.test.UserTestQuestionDto;
+import ru.testbest.exception.custom.CustomNotFoundException;
 import ru.testbest.service.UserTestService;
 
 @Slf4j
@@ -25,55 +27,68 @@ import ru.testbest.service.UserTestService;
 @RequestMapping("/api/user-test")
 public class UserTestRestController {
 
-    private final UserTestService userTestService;
+  private final UserTestService userTestService;
 
-    @GetMapping
-    public List<UserTestDto> getUserTests(Authentication authentication) {
-      UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
-        log.info("Get all user tests by userId {}", currentUser.getId());
-        return userTestService.getUserTests(currentUser.getId());
-    }
+  @GetMapping
+  @ApiOperation(value = "Возвращает список всех пройденных (включая текущие) тестов", tags = "User test")
+  public List<UserTestDto> getUserTests(Authentication authentication) {
+    UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
+    log.info("Get all user tests by userId {}", currentUser.getId());
+    return userTestService.getUserTests(currentUser.getId());
+  }
 
-    @GetMapping("/active")
-    public UserTestDto getActiveUserTest(Authentication authentication) {
-      UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
-        log.info("Get active user test by userId {}", currentUser.getId());
-        return userTestService.getActiveUserTest(currentUser.getId());
-    }
+  @GetMapping("/active")
+  @ApiOperation(value = "Возвращает последний активный тест, если нет то 404", tags = "User test")
+  public UserTestDto getActiveUserTest(Authentication authentication) {
+    UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
+    log.info("Get active user test by userId {}", currentUser.getId());
+    return userTestService.getActiveUserTest(currentUser.getId());
+  }
 
-    @GetMapping("/test/{id}")
-    public QuestionDto startUserTest(@PathVariable("id") String testId,
-        Authentication authentication) {
-      UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
-        log.info("Start user test by testId {} and userId {}", testId, currentUser.getId());
-        return userTestService.startUserTest(UUID.fromString(testId), currentUser.getId())
-            .orElse(null);
-    }
+  @GetMapping("/test/{id}")
+  @ApiOperation(value = "Создает новый пользовательский тест и возвращает первый вопрос. В карестве параметра принимает id теста", tags = "User test")
+  public QuestionDto startUserTest(@PathVariable("id") String testId,
+      Authentication authentication) {
+    UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
+    log.info("Start user test by testId {} and userId {}", testId, currentUser.getId());
+    return userTestService.startUserTest(UUID.fromString(testId), currentUser.getId())
+        .orElse(null);
+  }
 
-    @PostMapping("/create-answer")
-    public QuestionDto createUserAnswer(@RequestBody UserTestQuestionDto userTestQuestionDto,
-        Authentication authentication) {
-      UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
-        log.info("Create user answer {} by userId {}", userTestQuestionDto, currentUser.getId());
-        return userTestService.createUserAnswer(userTestQuestionDto, currentUser.getId())
-            .orElse(null);
-    }
+  @PostMapping("/create-answer")
+  @ApiOperation(value = "Сохраняет пользовательский ответ на вопрос из теста. Возвращает следующий вопрос или 404 если его нет", tags = "User test")
+  public QuestionDto createUserAnswer(@RequestBody UserTestQuestionDto userTestQuestionDto,
+      Authentication authentication) {
+    UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
+    log.info("Create user answer {} by userId {}", userTestQuestionDto, currentUser.getId());
+    return userTestService.createUserAnswer(userTestQuestionDto, currentUser.getId())
+        .orElseThrow(CustomNotFoundException::new);
+  }
 
-    @GetMapping("/next-question")
-    public QuestionDto getNextQuestion(Authentication authentication) {
-      UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
-      UserTestDto activeUserTest = userTestService.getActiveUserTest(currentUser.getId());
-        log.info("Next question by userTestId {} and userId {}", activeUserTest.getId(),
-            currentUser.getId());
-        return userTestService.getNextQuestion(activeUserTest.getId())
-            .orElse(null);
-    }
+  @GetMapping("/next-question")
+  @ApiOperation(value = "Возвращает следующий вопрос активного теста или 404 если его нет (или если нет активного теста)", tags = "User test")
+  public QuestionDto getNextQuestion(Authentication authentication) {
+    UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
+    UserTestDto activeUserTest = userTestService.getActiveUserTest(currentUser.getId());
+    log.info("Next question by userTestId {} and userId {}", activeUserTest.getId(),
+        currentUser.getId());
+    return userTestService.getNextQuestion(activeUserTest.getId())
+        .orElseThrow(CustomNotFoundException::new);
+  }
 
-    @GetMapping("/{id}/fails")
-    public List<UserTestQuestionDto> getFailQuestionsByUserTestId(
-        @PathVariable("id") String userTestId) {
-        log.info("Get fails question by userTestId {}", userTestId);
-        return userTestService.getFailQuestionsByUserTestId(UUID.fromString(userTestId));
-    }
+  @GetMapping("/{id}/fails")
+  @ApiOperation(value = "Возвращает список всех неверных пользовательских ответов на тест", tags = "User test")
+  public List<UserTestQuestionDto> getFailQuestionsByUserTestId(
+      @PathVariable("id") String userTestId) {
+    log.info("Get fails question by userTestId {}", userTestId);
+    return userTestService.getFailQuestionsByUserTestId(UUID.fromString(userTestId));
+  }
+
+  @GetMapping("/{id}")
+  @ApiOperation(value = "Возвращает пользовательский тест по id, 404 если его нет", tags = "User test")
+  public UserTestDto getUserTest(@PathVariable("id") UUID userTestId) {
+    log.info("Get user test by id {}", userTestId);
+    return userTestService.getUserTestById(userTestId);
+  }
 
 }

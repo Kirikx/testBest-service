@@ -21,4 +21,6 @@ public interface UserTestService {
 
   List<UserTestQuestionDto> getFailQuestionsByUserTestId(UUID userTestId);
 
+  UserTestDto getUserTestById(UUID userTestId);
+
 }
