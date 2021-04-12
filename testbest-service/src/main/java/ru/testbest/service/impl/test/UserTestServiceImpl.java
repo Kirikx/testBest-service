@@ -74,7 +74,14 @@ public class UserTestServiceImpl implements UserTestService {
   @Override
   @Transactional
   public Optional<QuestionDto> startUserTest(UUID testId, UUID userId) {
-    UserTestDto findActiveUserTest = getActiveUserTest(userId);
+    UserTestDto findActiveUserTest;
+    try {
+      findActiveUserTest = getActiveUserTest(userId);
+    }
+    catch (CustomNotFoundException ignored) {
+      findActiveUserTest = null;
+    }
+
     UserTestDto activeUserTest;
     if (findActiveUserTest != null) {
       activeUserTest = findActiveUserTest;
@@ -211,5 +218,14 @@ public class UserTestServiceImpl implements UserTestService {
         .filter(utq -> !utq.getIsCorrect())
         .map(userTestQuestionConverter::convertToDto)
         .collect(Collectors.toList());
+  }
+
+  @Override
+  public UserTestDto getUserTestById(UUID userTestId) {
+    UserTest userTest = userTestDao.findById(userTestId)
+        .orElseThrow(CustomNotFoundException::new);
+    return userTestConverter.convertToDto(
+        userTest
+    );
   }
 }
