@@ -2,7 +2,7 @@ import {Component, Inject, OnInit, Renderer2} from '@angular/core';
 import {DOCUMENT} from "@angular/common";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {NavigationEnd, Router, RouterEvent} from "@angular/router";
-import {Test} from "../_models/createTest/Test";
+import {TestFull} from "../_models/createTest/TestFull";
 import {TestService} from "../_services/test.service";
 import {TopicService} from "../_services/topic.service";
 import {Topic} from "../_models/createTest/parameters/Topic";
@@ -15,7 +15,7 @@ import {filter} from "rxjs/operators";
 })
 export class BoardUserComponent implements OnInit {
 
-  tests: Array<Test>;
+  tests: Array<TestFull>;
   topics: Array<Topic>;
 
   errorMessage: string;
@@ -47,7 +47,7 @@ export class BoardUserComponent implements OnInit {
     });
   }
 
-  //Обработка вкладки Тематика тестирования
+  //Обработка тематики тестирования
   getNameTopic(id: String): String {
     return this.topics.find(topic => topic.id === id).name;
   }
@@ -67,7 +67,7 @@ export class BoardUserComponent implements OnInit {
     )
   }
 
-  //Обработка вкладки Тематика тестирования
+  //Обработка вкладки Тесты
   getTests() {
     this.testService.getTests().subscribe(
       data => {

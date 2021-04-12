@@ -1,6 +1,6 @@
-import {Chapter} from "./Chapter";
+import {ChapterFull} from "./ChapterFull";
 
-export class Test {
+export class TestFull {
   topicId: string = null;
 
   id: string = null;
@@ -9,7 +9,7 @@ export class Test {
   duration:	number = null;
   passScore: number = null;
 
-  chapters: Array<Chapter> = null;
+  chapters: Array<ChapterFull> = null;
 
   isDeleted: boolean = false;
   authorId: string = null;

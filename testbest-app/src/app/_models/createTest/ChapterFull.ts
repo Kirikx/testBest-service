@@ -1,6 +1,6 @@
 import {QuestionFull} from "./QuestionFull";
 
-export class Chapter {
+export class ChapterFull {
   id: string = null;
   name: string = null;
   description: string = null;

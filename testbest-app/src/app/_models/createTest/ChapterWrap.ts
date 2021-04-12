@@ -1,8 +1,8 @@
-import {Chapter} from "./createTest/Chapter";
+import {ChapterFull} from "./ChapterFull";
 
 export class ChapterWrap {
 
-  constructor(chapter: Chapter) {
+  constructor(chapter: ChapterFull) {
     this.id = chapter.id;
     this.name = chapter.name;
     this.description = chapter.description;

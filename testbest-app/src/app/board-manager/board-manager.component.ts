@@ -2,7 +2,7 @@ import {Component, Inject, OnInit, Renderer2} from '@angular/core';
 import {NavigationEnd, Router, RouterEvent} from "@angular/router";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {DOCUMENT} from "@angular/common";
-import {Test} from "../_models/createTest/Test";
+import {TestFull} from "../_models/createTest/TestFull";
 import {TestService} from "../_services/test.service";
 import {TopicService} from "../_services/topic.service";
 import {Topic} from "../_models/createTest/parameters/Topic";
@@ -22,8 +22,8 @@ export class BoardManagerComponent implements OnInit {
   topics: Array<Topic>;
 
   //Переменные для Test
-  test: Test;
-  tests: Array<Test>;
+  test: TestFull;
+  tests: Array<TestFull>;
 
 
   showModal = false;
@@ -36,7 +36,7 @@ export class BoardManagerComponent implements OnInit {
     private tokenStorage: TokenStorageService,
     private testService: TestService,
     private topicService: TopicService) {
-    this.test = new Test();
+    this.test = new TestFull();
     this.topic = new Topic();
   }
 
@@ -187,13 +187,6 @@ export class BoardManagerComponent implements OnInit {
   redirectToCreateTest(id: string): void {
     this.router.navigate(["/test/" + id])
   }
-
-
-  // getText(text:string , length:number): string{
-  //   text = strip_tags($text);
-  //   $substring_limited = substr($text,0,$length);
-  //   return substr($substring_limited, 0, strrpos($substring_limited, ' ' )).'...';
-  // }
 
   //Обработка модальных окон
   closeModal() {

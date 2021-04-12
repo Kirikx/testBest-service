@@ -1,8 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Test} from "../_models/createTest/Test";
+import {TestFull} from "../_models/createTest/TestFull";
 import {Global} from "../global";
+import {Test} from "../_models/Test";
+import {User} from "../_models/users/User";
 
 @Injectable({
   providedIn: 'root'
@@ -15,25 +17,31 @@ export class TestService {
     return this.http.get(Global.TEST_API, Global.httpOptions);
   }
 
-  //TODO Не хватает!!!
-  // getManagerTest(): Observable<any> {
-  //   return this.http.get(TEST_API, httpOptions);
-  // }
-
   getTest(test: Test): Observable<any> {
     return this.http.get(Global.TEST_API + test.id, Global.httpOptions);
   }
 
-  editTest(test: Test): Observable<any> {
+  getTestFull(test: TestFull): Observable<any> {
+    return this.http.get(Global.TEST_API + test.id, Global.httpOptions);
+  }
+
+  editTestFull(test: TestFull): Observable<any> {
     return this.http.put(Global.TEST_API, test, Global.httpOptions);
   }
 
-  deleteTest(test: Test): Observable<any> {
+  deleteTestFull(test: TestFull): Observable<any> {
     return this.http.delete(Global.TEST_API + test.id, Global.httpOptions);
   }
 
-  createTest(test: Test): Observable<any> {
+  createTestFull(test: TestFull): Observable<any> {
     return this.http.post(Global.TEST_API + 'create', test, Global.httpOptions);
   }
 
+  getUserTests(user: User): Observable<any> {
+    return this.http.get(Global.TEST_API + 'user/' + user.id, Global.httpOptions);
+  }
+
+  getCurrentUserTests(): Observable<any> {
+    return this.http.get(Global.TEST_API + 'user', Global.httpOptions);
+  }
 }
