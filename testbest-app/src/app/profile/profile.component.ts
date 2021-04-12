@@ -45,28 +45,11 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const textScript = this.renderer2.createElement('script');
-    textScript.src = 'assets/mbr-tabs/mbr-tabs.js';
-    this.renderer2.appendChild(this.document.body, textScript);
-
-    // this.tokenStorage.checkTokenPrivate(this.router);
-    // this.currentUser = this.tokenStorage.getUser();
-
-    if (!this.tokenStorage.getToken()) {
-      this.router.navigate(["/home"])
-    }
+    this.tokenStorage.checkTokenPrivate(this.router);
 
     this.currentUserToken = this.tokenStorage.getUser();
     this.getCurrentUser()
     this.getManagerRole();
-
-    this.router.events.pipe(
-      filter((event: RouterEvent) => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      if (window.location.href.toString().includes("/profile")) {
-        window.location.reload();
-      }
-    });
   }
 
   getCurrentUser() {
