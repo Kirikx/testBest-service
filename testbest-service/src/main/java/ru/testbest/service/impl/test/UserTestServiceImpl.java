@@ -68,7 +68,7 @@ public class UserTestServiceImpl implements UserTestService {
         .orElseThrow(GlobalException::new);
     return timeStart
         .plusMinutes(userTest.getTest().getDuration())
-        .isBefore(LocalDateTime.now());
+        .isAfter(LocalDateTime.now());
   }
 
   @Override
