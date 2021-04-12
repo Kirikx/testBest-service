@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Global} from "../global";
-import {Chapter} from "../_models/createTest/Chapter";
+import {ChapterFull} from "../_models/createTest/ChapterFull";
 
 @Injectable({
   providedIn: 'root'
@@ -15,19 +15,19 @@ export class ChapterService {
     return this.http.get(Global.CHAPTER_API, Global.httpOptions);
   }
 
-  getChapter(chapter: Chapter): Observable<any> {
+  getChapter(chapter: ChapterFull): Observable<any> {
     return this.http.get(Global.CHAPTER_API + chapter.id, Global.httpOptions);
   }
 
-  editChapter(chapter: Chapter): Observable<any> {
+  editChapter(chapter: ChapterFull): Observable<any> {
     return this.http.put(Global.CHAPTER_API, chapter, Global.httpOptions);
   }
 
-  deleteChapter(chapter: Chapter): Observable<any> {
+  deleteChapter(chapter: ChapterFull): Observable<any> {
     return this.http.delete(Global.CHAPTER_API + chapter.id, Global.httpOptions);
   }
 
-  createChapter(chapter: Chapter): Observable<any> {
+  createChapter(chapter: ChapterFull): Observable<any> {
     return this.http.post(Global.CHAPTER_API + 'create', chapter, Global.httpOptions);
   }
 

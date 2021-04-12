@@ -1,5 +1,5 @@
 import {AnswerFull} from "./AnswerFull";
-import {ChapterWrap} from "../ChapterWrap";
+import {ChapterWrap} from "./ChapterWrap";
 
 export class QuestionFull {
   id: string = null;

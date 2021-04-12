@@ -2,19 +2,19 @@ import {Component, Inject, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router, RouterEvent} from "@angular/router";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {DOCUMENT} from "@angular/common";
-import {Test} from "../_models/createTest/Test";
+import {TestFull} from "../_models/createTest/TestFull";
 import {TestService} from "../_services/test.service";
 import {TopicService} from "../_services/topic.service";
 import {Topic} from "../_models/createTest/parameters/Topic";
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {Chapter} from "../_models/createTest/Chapter";
+import {ChapterFull} from "../_models/createTest/ChapterFull";
 import {ChapterService} from "../_services/chapter.service";
 import {TreeviewComponent, TreeviewConfig, TreeviewItem} from "ngx-treeview";
 import {QuestionFull} from "../_models/createTest/QuestionFull";
 import {QuestionType} from "../_models/createTest/parameters/QuestionType";
 import {QuestionService} from "../_services/question.service";
 import {QuestionTypeService} from "../_services/question-type.service";
-import {ChapterWrap} from "../_models/ChapterWrap";
+import {ChapterWrap} from "../_models/createTest/ChapterWrap";
 import {AnswerService} from "../_services/answer.service";
 import {AnswerFull} from "../_models/createTest/AnswerFull";
 import {filter} from "rxjs/operators";
@@ -25,9 +25,9 @@ import {filter} from "rxjs/operators";
   styleUrls: ['./board-test.component.css']
 })
 export class BoardTestComponent implements OnInit {
-  test: Test;
-  chapter: Chapter;
-  chapters: Array<Chapter>;
+  test: TestFull;
+  chapter: ChapterFull;
+  chapters: Array<ChapterFull>;
   topics: Array<Topic>;
   question: QuestionFull;
   questionType: QuestionType;
@@ -57,7 +57,7 @@ export class BoardTestComponent implements OnInit {
     private questionTypeService: QuestionTypeService,
     private answerService: AnswerService,
     private route: ActivatedRoute) {
-    this.test = new Test();
+    this.test = new TestFull();
     this.answer = new AnswerFull();
     this.formCheckbox = this.fb.group({
       checkArray: this.fb.array([], [Validators.required])
@@ -233,7 +233,7 @@ export class BoardTestComponent implements OnInit {
       this.isSubmitted = false;
     } else {
       if (!this.isCreateTest) {
-        this.testService.createTest(this.test).subscribe(
+        this.testService.createTestFull(this.test).subscribe(
           data => {
             this.test = data;
             this.router.navigate(["/test/" + this.test.id])
@@ -247,7 +247,7 @@ export class BoardTestComponent implements OnInit {
           }
         );
       } else {
-        this.testService.editTest(this.test).subscribe(
+        this.testService.editTestFull(this.test).subscribe(
           data => {
             this.test = data;
             this.message = "Изменения внесены"
@@ -265,7 +265,7 @@ export class BoardTestComponent implements OnInit {
   }
 
   deleteTest(): void {
-    this.testService.deleteTest(this.test).subscribe(
+    this.testService.deleteTestFull(this.test).subscribe(
       data => {
         this.router.navigate(["/manager"])
       },
@@ -283,7 +283,7 @@ export class BoardTestComponent implements OnInit {
     let id = this.route.snapshot.paramMap.get('id');
     if (id != null) {
       this.test.id = id;
-      this.testService.getTest(this.test).subscribe(
+      this.testService.getTestFull(this.test).subscribe(
         data => {
           this.isCreateTest = true;
           this.test = data;
@@ -314,7 +314,7 @@ export class BoardTestComponent implements OnInit {
   });
 
   clearFormCreateChapter() {
-    this.chapter = new Chapter();
+    this.chapter = new ChapterFull();
     this.chapter.testId = this.test.id;
     this.formChapterCreate.setValue({
       name: this.chapter.name,
@@ -350,7 +350,7 @@ export class BoardTestComponent implements OnInit {
     this.chapter.name = event.target.value;
   }
 
-  getChapter(chapter: Chapter) {
+  getChapter(chapter: ChapterFull) {
     this.chapterService.getChapter(chapter).subscribe(
       data => {
         this.chapter = data;
@@ -370,7 +370,7 @@ export class BoardTestComponent implements OnInit {
   }
 
   getChapters() {
-    this.chapters = new Array<Chapter>();
+    this.chapters = new Array<ChapterFull>();
     this.test.chapters.forEach(chapter => {
       this.chapters.push(chapter);
     })
