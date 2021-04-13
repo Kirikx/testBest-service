@@ -92,6 +92,7 @@ public class UserTestServiceImpl implements UserTestService {
       newUserTest.setTestId(testId);
       newUserTest.setStarted(LocalDateTime.now());
       newUserTest.setFinished(LocalDateTime.now());
+      newUserTest.setScore((short) 0);
 
       activeUserTest = userTestConverter.convertToDto(
           userTestDao.save(
