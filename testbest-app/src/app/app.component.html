@@ -1,4 +1,4 @@
-<section class="menu cid-s48OLK6784" once="menu" id="menu1-h">
+<section class="menu cid-s48OLK6784" nonce="menu" id="menu1-h">
   <nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
     <div class="container-fluid">
       <div class="navbar-brand">
@@ -21,10 +21,10 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav nav-dropdown nav-right" data-app-modern-menu="true" *ngIf="!isLoggedIn">
           <li class="nav-item mbr-section-btn">
-            <a class="btn btn-success-outline display-7" routerLink="/login">Войти</a>
+            <a class="btn btn-success-outline display-7" routerLink="/register">Регистрация</a>
           </li>
           <li class="nav-item mbr-section-btn">
-            <a class="btn btn-success-outline display-7" routerLink="/register">Регистрация</a>
+            <a class="btn btn-success-outline display-7" routerLink="/login">Войти</a>
           </li>
         </ul>
         <ul class="navbar-nav nav-dropdown nav-right" data-app-modern-menu="true" *ngIf="isLoggedIn">
@@ -43,15 +43,10 @@
           <li class="nav-item">
             <a class="nav-link link text-white display-7" routerLink="/profile">{{ username }}</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link link text-white display-7" (click)="logout()">Выйти</a>
+          <li class="nav-item mbr-section-btn">
+            <a class="btn btn-success-outline display-7" (click)="logout()">Выйти</a>
           </li>
         </ul>
-        <div class="icons-menu">
-          <a class="iconfont-wrapper" href="#" target="_blank">
-            <span class="p-2 mbr-iconfont socicon-telegram socicon"></span>
-          </a>
-        </div>
       </div>
     </div>
   </nav>
