@@ -1,48 +1,49 @@
 <section class="form1 cid-srmGhZz8Eh mbr-fullscreen mbr-parallax-background">
-  <div class="mbr-overlay" style="opacity: 1; background-color: rgb(255, 255, 255);"></div>
+  <div class="mbr-overlay" style="opacity: 0.7; background-color: rgb(255, 255, 255);"></div>
   <div class="container" *ngIf="currentUserToken; else loggedOut">
 
-    <header class="jumbotron">
-      <h3>
+    <div>
+      <h2 class="text-center">
         Профиль пользователя <strong>{{ currentUserToken.username }}</strong>
-      </h3>
-    </header>
-    <p>
-      <strong>Username:</strong>
-      {{ currentUser.username }}
-    </p>
-    <p>
-      <strong>Имя:</strong>
-      {{ currentUser.firstName }}
-    </p>
-    <p>
-      <strong>Фамилия:</strong>
-      {{ currentUser.lastName }}
-    </p>
-    <p>
-      <strong>Email:</strong>
-      {{ currentUser.email }}
-    </p>
-    <strong>Активные роли:</strong>
-    <ul>
-      <li *ngFor="let role of currentUser.roles">
-        {{ role.name.substring(5) }}
-      </li>
-    </ul>
+      </h2>
+      <p>
+        <strong>Username:</strong>
+        {{ currentUser.username }}
+      </p>
+      <p>
+        <strong>Имя:</strong>
+        {{ currentUser.firstName }}
+      </p>
+      <p>
+        <strong>Фамилия:</strong>
+        {{ currentUser.lastName }}
+      </p>
+      <p>
+        <strong>Email:</strong>
+        {{ currentUser.email }}
+      </p>
+      <strong>Активные роли:</strong>
+      <ul>
+        <li *ngFor="let role of currentUser.roles">
+          {{ role.name.substring(5) }}
+        </li>
+      </ul>
 
-    <div class="col-12 mbr-section-btn">
-      <table class="col-12 form-group align-center">
-        <tr>
-          <th scope="col" class="align-middle">
-            <button (click)="openModal()" class="btn btn-info display-4">Редактировать профиль
-            </button>
-          </th>
-          <th scope="col" class="align-middle">
-            <button (click)="openModalChangePassword()" class="btn btn-info display-4">Сменить пароль</button>
-          </th>
-        </tr>
-      </table>
+      <div class="col-12 mbr-section-btn">
+        <table class="col-12 form-group align-center">
+          <tr>
+            <th scope="col" class="align-middle">
+              <button (click)="openModal()" class="btn btn-info display-4">Редактировать профиль
+              </button>
+            </th>
+            <th scope="col" class="align-middle">
+              <button (click)="openModalChangePassword()" class="btn btn-info display-4">Сменить пароль</button>
+            </th>
+          </tr>
+        </table>
+      </div>
     </div>
+
 
 
     <app-modal class="modal" *ngIf="showModal" (close)="closeModal()">
