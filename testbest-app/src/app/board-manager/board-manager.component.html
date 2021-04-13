@@ -53,7 +53,7 @@
                     <th scope="col" class="align-middle">Тест</th>
                     <th scope="col" class="align-middle">Описание</th>
                     <th scope="col" class="align-middle">Время прохождения</th>
-                    <th scope="col" class="align-middle">Тест считается пройде</th>
+                    <th scope="col" class="align-middle">Проходной балл</th>
                     <th scope="col"></th>
                   </tr>
                   </thead>
@@ -66,7 +66,7 @@
                     <td class="align-middle">{{ test.passScore }}</td>
                     <td class="align-middle">
                       <a class="btn btn-info-outline btn-sm" (click)="redirectToCreateTest(test.id)"
-                         style="white-space: nowrap;">Редактировать</a>
+                         style="white-space: nowrap;"><span class="mobi-mbri-edit-2" aria-hidden="true"></span></a>
                     </td>
                   </tr>
                   </tbody>
@@ -108,7 +108,7 @@
                     <td class="align-middle">{{ topic.description }}</td>
                     <td class="align-right">
                       <a class="btn btn-info-outline btn-sm" (click)="openModalEditTopic(topic.id)"
-                         style="white-space: nowrap;">Редактировать</a></td>
+                         style="white-space: nowrap;"><span class="mobi-mbri-edit-2" aria-hidden="true"></span></a></td>
                   </tr>
                   </tbody>
                 </table>

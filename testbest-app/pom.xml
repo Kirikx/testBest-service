@@ -13,13 +13,6 @@
   <artifactId>testbest-app</artifactId>
 
   <dependencies>
-
-    <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-boot-starter</artifactId>
-      <version>3.0.0</version>
-    </dependency>
-
     <dependency>
       <groupId>ru.testbest</groupId>
       <artifactId>testbest-rest-api</artifactId>

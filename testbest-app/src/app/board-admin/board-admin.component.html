@@ -20,7 +20,7 @@
         </ul>
         <div class="tab-content">
           <div id="tab1" class="tab-pane" role="tabpanel">
-            <div>
+            <div class="col-md-12">
               <div class="table-responsive">
                 <table class="table table-hover">
                   <thead class="colorTableHeader">
@@ -42,7 +42,7 @@
                     <td class="align-middle">{{ getNamesRoles(user.roles) }}</td>
                     <td class="align-middle">
                       <a class="btn btn-info-outline btn-sm" (click)="openModalEditUser(user.id)"
-                         style="white-space: nowrap;">Редактировать</a>
+                         style="white-space: nowrap;"><span class="mobi-mbri-edit-2" aria-hidden="true"></span></a>
                     </td>
                   </tr>
                   </tbody>
@@ -69,24 +69,17 @@
                            #id="ngModel">
                   </div>
 
-                  <div class="col-12 form-group" data-for="selectRole">
-                    <select class="form-control form-select" multiple
-                            [(ngModel)]="user.roles"
-                            #rolesSelect="ngModel"
-                            size="3"
-                            aria-label="Default select example" name="selectRole">
-                      <option *ngFor="let role of roles" [ngValue]="role">{{role.name.substring(5)}}</option>
-                    </select>
-                    <div *ngIf="rolesSelect.errors && !isSubmitted"
-                         class="alert-danger col-12"
-                         role="alert">
-                      <div *ngIf="rolesSelect.errors.required">Поле обязательно
-                        для заполнения
+                  <div class="col-sm-12 form-group">
+                    <div>
+                      <label>Роли пользователя:</label>
+                      <div class="checkbox" *ngFor="let role of roles">
+                        <label><input type="checkbox"
+                                      [checked]="isActiveRole(role)" (change)="changeRole(role)"> {{ role.name.substring(5) }}</label>
                       </div>
                     </div>
                   </div>
 
-                  <div class="col-md col-sm-12 form-group" data-for="name">
+                  <div class="col-md form-group" data-for="name">
                     <input id="name-form5-y" type="text" name="firstName"
                            [(ngModel)]="user.firstName" required minlength="3" maxlength="20"
                            #firstName="ngModel"
@@ -102,7 +95,7 @@
                     </div>
                   </div>
 
-                  <div class="col-md col-sm-12 form-group" data-for="surname">
+                  <div class="col-md form-group" data-for="surname">
                     <input id="surname-form5-y" type="text" name="lastName"
                            [(ngModel)]="user.lastName" required minlength="3" maxlength="20"
                            #lastName="ngModel"

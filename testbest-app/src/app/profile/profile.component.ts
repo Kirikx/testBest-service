@@ -1,10 +1,9 @@
 import {Component, Inject, OnInit, Renderer2} from '@angular/core';
 import {TokenStorageService} from '../_services/token-storage.service';
-import {NavigationEnd, Router, RouterEvent} from "@angular/router";
+import {Router} from "@angular/router";
 import {User} from "../_models/users/User";
 import {UserService} from "../_services/user.service";
 import {DOCUMENT} from "@angular/common";
-import {filter} from "rxjs/operators";
 import {Auth} from "../_models/users/Auth";
 import {AuthService} from "../_services/auth.service";
 import {RoleService} from "../_services/role.service";
