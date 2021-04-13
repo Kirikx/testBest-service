@@ -4,7 +4,7 @@ import {HttpHeaders} from "@angular/common/http";
 @Injectable()
 export class Global {
   static PROD: string = 'http://devstend.ru:8080';
-  // static PROD: string = 'http://localhost:8080';
+  //static PROD: string = 'http://localhost:8080';
 
   static httpOptions = {
     headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -21,4 +21,5 @@ export class Global {
   static ANSWER_API = Global.PROD + '/api/answers/';
   static USER_API = Global.PROD + '/api/users/';
   static ROLE_API = Global.PROD + '/api/roles/';
+  static USER_TEST_API = Global.PROD + '/api/user-test/';
 }

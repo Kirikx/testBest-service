@@ -1,11 +1,11 @@
 <section class="cid-srmGhZz8Eh mbr-fullscreen">
   <div class="mbr-overlay" style="opacity: 0.7; background-color: rgb(255, 255, 255);"></div>
   <div class="container">
-    <div class="row justify-content-center">
+    <div *ngIf="!startTest" class="row justify-content-center">
       <div class="col-12 col-lg-6">
         <div class="dragArea row">
           <div class="col-sm-3 form-group">
-            <a class="btn btn-info display-8" routerLink="/tests">Назад</a>
+            <a class="btn-sm btn-info display-8" routerLink="/tests">Назад</a>
           </div>
         </div>
         <div class="card-wrapper">
@@ -17,7 +17,7 @@
               Тематика: {{getNameTopic(test.topicId)}}
             </p>
             <div class="mbr-section-btn">
-              <a class="btn btn-primary-outline display-2" routerLink="/tests">НАЧАТЬ</a>
+              <a class="btn btn-primary-outline display-2" (click)="playTest()">НАЧАТЬ</a>
             </div>
           </div>
         </div>
@@ -60,6 +60,82 @@
             <h5 class="icon-text mbr-black mbr-fonts-style display-4">
               После начала тестирования, приостановить тест не возможно.
             </h5>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="startTest">
+      <form [formGroup]="formUserAnswer" (ngSubmit)="saveAnswer()" class="mbr-form form-with-styler">
+        <div class="row">
+          <div class="col-12 form-group" data-for="name">
+            <h4 class="align-center">{{question.question}}</h4>
+          </div>
+
+          <div class="col col-12 form-group" *ngIf="questionType.name == 'Вопрос со свободным ответом'">
+            <div class="col-12 form-group">
+              <h5 class="align-left">Ваш ответ:</h5>
+            </div>
+            <div class="col-12 form-group">
+              <textarea (change)="changeFreeAnswer($event)" name="answer" placeholder="Ответ в свободной форме"
+                        class="form-control" [value]="freeAnswer"></textarea>
+            </div>
+          </div>
+
+          <div class="col col-12 form-group" *ngIf="questionType.name == 'Одиночный'">
+            <div class="row">
+              <div class="col-12 form-group">
+                <h5 class="align-left">Варианты ответа:</h5>
+              </div>
+              <div *ngFor="let answer of question.answers" class="col-12 form-check">
+                <input id="{{answer.id}}" type="radio" class="form-check-input" value="{{answer.answer}}" name="answer">
+                <label class="form-check-label form-group" for="{{answer.id}}">{{answer.answer}}</label>
+<!--                (change)="changeRadioButtonAnswer($event)"-->
+              </div>
+            </div>
+          </div>
+
+          <!--          <div class="col col-sm-12 form-group" *ngIf="questionType.name == 'Множественный'">-->
+          <!--            <div class="row">-->
+          <!--              <div class="col-md col-sm-12 form-group">-->
+          <!--                <h7 class="align-center">Ваш ответ</h7>-->
+          <!--              </div>-->
+          <!--              <table [formGroup]="formCheckbox" class="table table-sm">-->
+          <!--                <tbody>-->
+          <!--                <tr *ngFor="let answer of question.answers; let i=index">-->
+          <!--                  <td class="align-middle">-->
+          <!--                    <input type="checkbox" content="{{answer.id}}" value="{{answer.answer}}"-->
+          <!--                           (change)="changeCheckboxAnswer($event)" [checked]="answer.isCorrect"/>-->
+          <!--                  </td>-->
+          <!--                </tr>-->
+          <!--                </tbody>-->
+          <!--              </table>-->
+          <!--            </div>-->
+          <!--          </div>-->
+
+          <div class="col-12 col-lg-6"></div>
+          <div class="col-md col-sm-12 form-group" data-for="name">
+            <button type="submit" class="btn btn-primary display-4">Дальше</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div *ngIf="startTest" class="col-12 col-lg-6">
+      <div class="card-wrapper">
+        <div class="card-box align-left">
+          <div>
+            <div class="item mbr-flex">
+              <div class="icon-box">
+                <span class="mbr-iconfont mobi-mbri-clock mobi-mbri"></span>
+              </div>
+              <div class="text-box">
+                <h4 class="icon-title mbr-black mbr-fonts-style display-7">
+                  <strong>{{timeLeft}} Seconds Left....</strong>
+                </h4>
+              </div>
+            </div>
+            <!--            <button (click)='startTimer()'>Start Timer</button>-->
           </div>
         </div>
       </div>
