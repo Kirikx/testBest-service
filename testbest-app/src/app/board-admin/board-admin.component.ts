@@ -51,9 +51,7 @@ export class BoardAdminComponent implements OnInit {
     textScript.src = 'assets/mbr-tabs/mbr-tabs.js';
     this.renderer2.appendChild(this.document.body, textScript);
 
-    if (!this.tokenStorage.getToken()) {
-      this.router.navigate(["/home"])
-    }
+    this.tokenStorage.checkTokenPrivate(this.router);
 
     this.getUsers();
     this.getRoles();
@@ -194,5 +192,17 @@ export class BoardAdminComponent implements OnInit {
   // предобработка наименования роли
   getNamesRoles(roles: Array<Role>): String {
     return roles.map(role => role.name.substring(5)).join(", ");
+  }
+
+  isActiveRole(role: Role): boolean {
+    return  this.user.roles.map(r => r.name).includes(role.name)
+  }
+
+  changeRole(changeRole: Role) {
+    if (this.user.roles.map(role => role.name).includes(changeRole.name)) {
+      this.user.roles = this.user.roles.filter(role => role.name != changeRole.name);
+    } else {
+      this.user.roles.push(changeRole);
+    }
   }
 }
