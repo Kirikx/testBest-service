@@ -1,60 +1,51 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
+import {HttpClient} from "@angular/common/http";
+import {Observable} from "rxjs";
+import {Global} from "../global";
+import {Test} from "../_models/Test";
+import {UserQuestion} from "../_models/playTest/UserQuestion";
+import {UserTest} from "../_models/playTest/UserTest";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserTestService {
 
-  constructor() { }
-}
+  constructor(private http: HttpClient) {
+  }
 
-/*
-@GetMapping
-public List<UserTestDto> getUserTests(Authentication authentication) {
-  UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
-  log.info("Get all user tests by userId {}", currentUser.getId());
-  return userTestService.getUserTests(currentUser.getId());
-}
+  //Возвращает лист List<UserTest>
+  getUserTests(): Observable<any> {
+    return this.http.get(Global.USER_TEST_API, Global.httpOptions);
+  }
 
-@GetMapping("/active")
-public UserTestDto getActiveUserTest(Authentication authentication) {
-  UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
-  log.info("Get active user test by userId {}", currentUser.getId());
-  return userTestService.getActiveUserTest(currentUser.getId());
-}
+  //Возвращает последний активный UserTest
+  getActiveUserTest(): Observable<any> {
+    return this.http.get(Global.USER_TEST_API + 'active', Global.httpOptions);
+  }
 
-@GetMapping("/test/{id}")
-public QuestionDto startUserTest(@PathVariable("id") String testId,
-  Authentication authentication) {
-  UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
-  log.info("Start user test by testId {} and userId {}", testId, currentUser.getId());
-  return userTestService.startUserTest(UUID.fromString(testId), currentUser.getId())
-    .orElse(null);
-}
+  //Возвращает вопрос Question (первый вопрос по тесту, после его старта)
+  startUserTest(test: Test): Observable<any> {
+    return this.http.get(Global.USER_TEST_API + 'test/' + test.id, Global.httpOptions);
+  }
 
-@PostMapping("/create-answer")
-public QuestionDto createUserAnswer(@RequestBody UserTestQuestionDto userTestQuestionDto,
-  Authentication authentication) {
-  UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
-  log.info("Create user answer {} by userId {}", userTestQuestionDto, currentUser.getId());
-  return userTestService.createUserAnswer(userTestQuestionDto, currentUser.getId())
-    .orElse(null);
-}
+  //Возвращает вопрос Question (следующий)
+  createUserAnswer(userQuestion: UserQuestion): Observable<any> {
+    return this.http.post(Global.USER_TEST_API + 'create-answer', userQuestion, Global.httpOptions);
+  }
 
-@GetMapping("/next-question")
-public QuestionDto getNextQuestion(Authentication authentication) {
-  UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
-  UserTestDto activeUserTest = userTestService.getActiveUserTest(currentUser.getId());
-  log.info("Next question by userTestId {} and userId {}", activeUserTest.getId(),
-    currentUser.getId());
-  return userTestService.getNextQuestion(activeUserTest.getId())
-    .orElse(null);
-}
+  //Возвращает следующий вопрос Question
+  getNextQuestion(): Observable<any> {
+    return this.http.get(Global.USER_TEST_API + 'next-question', Global.httpOptions);
+  }
 
-@GetMapping("/{id}/fails")
-public List<UserTestQuestionDto> getFailQuestionsByUserTestId(
-  @PathVariable("id") String userTestId) {
-  log.info("Get fails question by userTestId {}", userTestId);
-  return userTestService.getFailQuestionsByUserTestId(UUID.fromString(userTestId));
+  //Возвращает лист List<UserQuestion>
+  getFailQuestionsByUserTestId(userTest: UserTest): Observable<any> {
+    return this.http.get(Global.USER_TEST_API + userTest.id + '/fails', Global.httpOptions);
+  }
+
+  //Возвращает UserTest
+  getUserTest(userTest: UserTest): Observable<any> {
+    return this.http.get(Global.USER_TEST_API + userTest.id, Global.httpOptions);
+  }
 }
-*/
