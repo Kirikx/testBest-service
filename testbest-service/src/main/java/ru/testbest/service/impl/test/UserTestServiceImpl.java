@@ -1,5 +1,7 @@
 package ru.testbest.service.impl.test;
 
+import static ru.testbest.service.impl.test.QuestionTypeEnum.FREE;
+
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -77,8 +79,7 @@ public class UserTestServiceImpl implements UserTestService {
     UserTestDto findActiveUserTest;
     try {
       findActiveUserTest = getActiveUserTest(userId);
-    }
-    catch (CustomNotFoundException ignored) {
+    } catch (CustomNotFoundException ignored) {
       findActiveUserTest = null;
     }
 
@@ -117,6 +118,11 @@ public class UserTestServiceImpl implements UserTestService {
       return testQuestions.stream()
           .filter(q -> userTestQuestions.stream()
               .noneMatch(utq -> q.getId().equals(utq.getQuestion().getId())))
+          .peek(qEntity -> { // затираем ответ для вопроса со свободным ответом
+            if (qEntity.getQuestionType().getName().equals(FREE.getText())) {
+              qEntity.setAnswers(null);
+            }
+          })
           .map(questionConverter::convertToDto)
           .findAny();
     }
