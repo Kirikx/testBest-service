@@ -10,7 +10,7 @@ import {QuestionTypeService} from "../_services/question-type.service";
 import {UserTestService} from "../_services/user-test.service";
 import {UserTest} from "../_models/playTest/UserTest";
 import {UserQuestion} from "../_models/playTest/UserQuestion";
-import {FormGroup} from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {QuestionService} from "../_services/question.service";
 import {Question} from "../_models/Question";
 import {Answer} from "../_models/Answer";
@@ -38,6 +38,9 @@ export class TestComponent implements OnInit {
   freeAnswer: string = null;
   errorMessage: string;
 
+  formUserAnswer = new FormGroup({});
+  formCheckboxAnswer: FormGroup;
+
   constructor(
     private router: Router,
     private tokenStorage: TokenStorageService,
@@ -46,7 +49,11 @@ export class TestComponent implements OnInit {
     private topicService: TopicService,
     private questionService: QuestionService,
     private questionTypeService: QuestionTypeService,
-    private userTestService: UserTestService) {
+    private userTestService: UserTestService,
+    private formBuilder: FormBuilder) {
+    this.formCheckboxAnswer = this.formBuilder.group({
+      checkArray: this.formBuilder.array([],)
+    })
   }
 
   ngOnInit(): void {
@@ -55,8 +62,6 @@ export class TestComponent implements OnInit {
     this.getTopics();
     this.getQuestionTypes();
   }
-
-  formUserAnswer = new FormGroup({});
 
   startTimer() {
     this.interval = setInterval(() => {
@@ -75,8 +80,6 @@ export class TestComponent implements OnInit {
   updateDataQuestion(data) {
     this.userQuestion = new UserQuestion();
     this.question = data;
-    console.log("Объект question")
-    console.log(this.question)
     for (let type of this.questionTypes) {
       if (this.question.questionTypeId != null && type.id == this.question.questionTypeId) {
         this.questionType = type;
@@ -84,11 +87,11 @@ export class TestComponent implements OnInit {
       }
     }
     this.userQuestion.questionId = this.question.id;
-    if (this.question.answers == null) {
-      this.userQuestion.answers = new Array<Answer>();
-      this.freeAnswer = null;
-    }
+    this.userQuestion.answers = new Array<Answer>();
+    this.freeAnswer = null;
     if (this.userTest != null) this.userQuestion.userTestId = this.userTest.id;
+    let checkArray: FormArray = this.formCheckboxAnswer.get('checkArray') as FormArray;
+    checkArray.clear();
   }
 
   getQuestionTypes() {
@@ -150,11 +153,7 @@ export class TestComponent implements OnInit {
         this.userTestService.getActiveUserTest().subscribe(
           data => {
             this.userTest = data;
-            console.log("Объект userTest")
-            console.log(this.userTest)
             this.userQuestion.userTestId = this.userTest.id;
-            console.log("Объект userQuestion")
-            console.log(this.userQuestion)
           },
           error => {
             if (error.statusText == "Unknown Error") {
@@ -178,6 +177,44 @@ export class TestComponent implements OnInit {
   changeFreeAnswer(event) {
     this.freeAnswer = event.target.value;
     this.userQuestion.freeAnswer = this.freeAnswer;
+  }
+
+  changeRadioButtonAnswer(event) {
+    let userAnswer = Array<Answer>();
+    for (let answer of this.question.answers) {
+      if (answer.id == event.target.id) {
+        userAnswer.push(answer);
+        break;
+      }
+    }
+    this.userQuestion.answers = userAnswer;
+  }
+
+  changeCheckboxAnswer(event) {
+    let checkArray: FormArray = this.formCheckboxAnswer.get('checkArray') as FormArray;
+    if (event.target.checked) {
+      for (let answer of this.question.answers) {
+        if (answer.id == event.target.content) {
+          checkArray.push(new FormControl(answer));
+          break;
+        }
+      }
+    } else {
+      let i: number = 0;
+      checkArray.controls.forEach((item: FormControl) => {
+        if (item.value.id == event.target.content) {
+          checkArray.removeAt(i);
+          return;
+        }
+        i++;
+      });
+    }
+    let userAnswer = Array<Answer>();
+    for (let check of checkArray.controls) {
+      userAnswer.push(check.value);
+    }
+    this.userQuestion.answers = userAnswer;
+    console.log(this.userQuestion);
   }
 
   saveAnswer() {
