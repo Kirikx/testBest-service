@@ -1572,7 +1572,7 @@ a {
   color: #232323;
 }
 .cid-srmGhZz8Eh .btn {
-  width: 95%;
+  width: 100%;
 }
 .cid-srmGhZz8Eh .mbr-section-btn {
   margin-bottom: 1.2rem;
@@ -3338,4 +3338,8 @@ a {
 }
 .cid-s48P1Icc8J .media-container-row .row-copirayt p {
   width: 100%;
+}
+
+.cid-srmGhZz8Eh .myWidth {
+  width: 95%;
 }
