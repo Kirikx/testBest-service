@@ -78,28 +78,16 @@ public class UserTestServiceImpl implements UserTestService {
   @Override
   @Transactional
   public Optional<QuestionDto> startUserTest(UUID testId, UUID userId) {
-//    UserTestDto findActiveUserTest;
-//    try {
-//      findActiveUserTest = getActiveUserTest(userId);
-//    } catch (CustomNotFoundException ignored) {
-//      findActiveUserTest = null;
-//    }
-//
-    UserTestDto activeUserTest;
-//    if (findActiveUserTest != null) {
-//      activeUserTest = findActiveUserTest;
-//    } else {
-      UserTestDto newUserTest = new UserTestDto();
-      newUserTest.setUserId(userId);
-      newUserTest.setTestId(testId);
-      newUserTest.setStarted(LocalDateTime.now());
-      newUserTest.setFinished(LocalDateTime.now());
-      newUserTest.setScore((short) 0);
+    UserTestDto newUserTest = new UserTestDto();
+    newUserTest.setUserId(userId);
+    newUserTest.setTestId(testId);
+    newUserTest.setStarted(LocalDateTime.now());
+    newUserTest.setFinished(LocalDateTime.now());
+    newUserTest.setScore((short) 0);
 
-      activeUserTest = userTestConverter.convertToDto(
-          userTestDao.save(
-              userTestConverter.convertToEntity(newUserTest)));
-//    }
+    UserTestDto activeUserTest = userTestConverter.convertToDto(
+        userTestDao.save(
+            userTestConverter.convertToEntity(newUserTest)));
     return getNextQuestion(activeUserTest.getId());
   }
 
@@ -121,7 +109,6 @@ public class UserTestServiceImpl implements UserTestService {
       return testQuestions.stream()
           .filter(q -> userTestQuestions.stream()
               .noneMatch(utq -> q.getId().equals(utq.getQuestion().getId())))
-          .peek(System.out::println)
           .peek(qEntity -> { // затираем ответ для вопроса со свободным ответом
             if (qEntity.getQuestionType().getName().equals(FREE.getText())) {
               qEntity.setAnswers(null);
@@ -138,15 +125,13 @@ public class UserTestServiceImpl implements UserTestService {
   @Transactional
   public Optional<QuestionDto> createUserAnswer(UserTestQuestionDto userTestQuestionDto,
       UUID userId) {
-//    Optional<UserTest> lastUserTestByUserId = getLastUserTestByUserId(userId);
-//    UserTest userTest = lastUserTestByUserId.orElse(null);
-    if (userTestQuestionDto == null || userTestQuestionDto.getUserTestId() == null){
+    if (userTestQuestionDto == null || userTestQuestionDto.getUserTestId() == null) {
       throw new CustomBadRequest();
     }
     UserTest userTest = userTestDao.findById(userTestQuestionDto.getUserTestId())
         .orElseThrow(CustomNotFoundException::new);
 
-    if (/*lastUserTestByUserId.isPresent() && */isLegalTime(userTest)) {
+    if (isLegalTime(userTest)) {
       userTest.setFinished(LocalDateTime.now());
 
       userTestQuestionDto.setAnswered(LocalDateTime.now());
@@ -160,12 +145,11 @@ public class UserTestServiceImpl implements UserTestService {
       UserTestQuestion userTestQuestion = userTestQuestionConverter
           .convertToEntity(userTestQuestionDto);
 
+      UserTestQuestion saveUserTestQuestion = userTestQuestionDao.save(userTestQuestion);
+      userTest.addUserTestQuestion(saveUserTestQuestion);
       userTestDao.save(userTest);
-      userTestQuestionDao.save(userTestQuestion);
 
-      Optional<QuestionDto> nextQuestion = getNextQuestion(userTestQuestionDto.getUserTestId());
-      System.out.println("!!!!" + nextQuestion.orElse(null));
-      return nextQuestion;
+      return getNextQuestion(userTestQuestionDto.getUserTestId());
     }
     return Optional.empty();
   }
