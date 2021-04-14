@@ -88,30 +88,28 @@
                 <h5 class="align-left">Варианты ответа:</h5>
               </div>
               <div *ngFor="let answer of question.answers" class="col-12 form-check">
-                <input id="{{answer.id}}" type="radio" class="form-check-input" value="{{answer.answer}}" name="answer">
+                <input id="{{answer.id}}" type="radio" class="form-check-input" value="{{answer.answer}}"
+                       (change)="changeRadioButtonAnswer($event)" name="answer">
                 <label class="form-check-label form-group" for="{{answer.id}}">{{answer.answer}}</label>
-<!--                (change)="changeRadioButtonAnswer($event)"-->
               </div>
             </div>
           </div>
 
-          <!--          <div class="col col-sm-12 form-group" *ngIf="questionType.name == 'Множественный'">-->
-          <!--            <div class="row">-->
-          <!--              <div class="col-md col-sm-12 form-group">-->
-          <!--                <h7 class="align-center">Ваш ответ</h7>-->
-          <!--              </div>-->
-          <!--              <table [formGroup]="formCheckbox" class="table table-sm">-->
-          <!--                <tbody>-->
-          <!--                <tr *ngFor="let answer of question.answers; let i=index">-->
-          <!--                  <td class="align-middle">-->
-          <!--                    <input type="checkbox" content="{{answer.id}}" value="{{answer.answer}}"-->
-          <!--                           (change)="changeCheckboxAnswer($event)" [checked]="answer.isCorrect"/>-->
-          <!--                  </td>-->
-          <!--                </tr>-->
-          <!--                </tbody>-->
-          <!--              </table>-->
-          <!--            </div>-->
-          <!--          </div>-->
+          <div class="col col-sm-12 form-group" *ngIf="questionType.name == 'Множественный'">
+            <div class="row">
+              <div class="col-md col-sm-12 form-group">
+                <h7 class="align-center">Варианты ответа:</h7>
+              </div>
+              <div class="col-12 form-check" [formGroup]="formCheckboxAnswer">
+                <div *ngFor="let answer of question.answers">
+                  <label>
+                    <input type="checkbox" content="{{answer.id}}" [value]="answer.answer" (change)="changeCheckboxAnswer($event)"/>
+                    {{answer.answer}}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div class="col-12 col-lg-6"></div>
           <div class="col-md col-sm-12 form-group" data-for="name">
