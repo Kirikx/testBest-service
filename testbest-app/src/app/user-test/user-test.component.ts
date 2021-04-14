@@ -89,7 +89,6 @@ export class UserTestComponent implements OnInit {
     this.userTestService.getFailQuestionsByUserTestId(this.userTest).subscribe(
       data => {
         this.userQuestion = data;
-        console.log(this.userQuestion);
       },
       error => {
         if (error.statusText == "Unknown Error") {
@@ -99,6 +98,10 @@ export class UserTestComponent implements OnInit {
         }
       }
     )
+  }
+
+  checkFullAnswer(): boolean {
+    return this.userTest.userTestQuestions.length == this.passedQuestion;
   }
 
   getQuestion(id: string): string {
