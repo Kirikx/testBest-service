@@ -11,6 +11,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.testbest.converter.impl.test.QuestionConverter;
 import ru.testbest.converter.impl.test.UserTestConverter;
@@ -19,6 +20,7 @@ import ru.testbest.dto.test.AnswerDto;
 import ru.testbest.dto.test.QuestionDto;
 import ru.testbest.dto.test.UserTestDto;
 import ru.testbest.dto.test.UserTestQuestionDto;
+import ru.testbest.exception.custom.CustomBadRequest;
 import ru.testbest.exception.custom.CustomNotFoundException;
 import ru.testbest.exception.custom.GlobalException;
 import ru.testbest.persistence.dao.QuestionDao;
@@ -76,28 +78,16 @@ public class UserTestServiceImpl implements UserTestService {
   @Override
   @Transactional
   public Optional<QuestionDto> startUserTest(UUID testId, UUID userId) {
-    UserTestDto findActiveUserTest;
-    try {
-      findActiveUserTest = getActiveUserTest(userId);
-    } catch (CustomNotFoundException ignored) {
-      findActiveUserTest = null;
-    }
+    UserTestDto newUserTest = new UserTestDto();
+    newUserTest.setUserId(userId);
+    newUserTest.setTestId(testId);
+    newUserTest.setStarted(LocalDateTime.now());
+    newUserTest.setFinished(LocalDateTime.now());
+    newUserTest.setScore((short) 0);
 
-    UserTestDto activeUserTest;
-    if (findActiveUserTest != null) {
-      activeUserTest = findActiveUserTest;
-    } else {
-      UserTestDto newUserTest = new UserTestDto();
-      newUserTest.setUserId(userId);
-      newUserTest.setTestId(testId);
-      newUserTest.setStarted(LocalDateTime.now());
-      newUserTest.setFinished(LocalDateTime.now());
-      newUserTest.setScore((short) 0);
-
-      activeUserTest = userTestConverter.convertToDto(
-          userTestDao.save(
-              userTestConverter.convertToEntity(newUserTest)));
-    }
+    UserTestDto activeUserTest = userTestConverter.convertToDto(
+        userTestDao.save(
+            userTestConverter.convertToEntity(newUserTest)));
     return getNextQuestion(activeUserTest.getId());
   }
 
@@ -115,7 +105,7 @@ public class UserTestServiceImpl implements UserTestService {
           .collect(Collectors.toSet());
 
       Set<UserTestQuestion> userTestQuestions = userTest.getUserTestQuestions();
-
+      System.out.println(userTestQuestions);
       return testQuestions.stream()
           .filter(q -> userTestQuestions.stream()
               .noneMatch(utq -> q.getId().equals(utq.getQuestion().getId())))
@@ -135,9 +125,13 @@ public class UserTestServiceImpl implements UserTestService {
   @Transactional
   public Optional<QuestionDto> createUserAnswer(UserTestQuestionDto userTestQuestionDto,
       UUID userId) {
-    Optional<UserTest> lastUserTestByUserId = getLastUserTestByUserId(userId);
-    UserTest userTest = lastUserTestByUserId.orElse(null);
-    if (lastUserTestByUserId.isPresent() && isLegalTime(userTest)) {
+    if (userTestQuestionDto == null || userTestQuestionDto.getUserTestId() == null) {
+      throw new CustomBadRequest();
+    }
+    UserTest userTest = userTestDao.findById(userTestQuestionDto.getUserTestId())
+        .orElseThrow(CustomNotFoundException::new);
+
+    if (isLegalTime(userTest)) {
       userTest.setFinished(LocalDateTime.now());
 
       userTestQuestionDto.setAnswered(LocalDateTime.now());
@@ -151,8 +145,9 @@ public class UserTestServiceImpl implements UserTestService {
       UserTestQuestion userTestQuestion = userTestQuestionConverter
           .convertToEntity(userTestQuestionDto);
 
+      UserTestQuestion saveUserTestQuestion = userTestQuestionDao.save(userTestQuestion);
+      userTest.addUserTestQuestion(saveUserTestQuestion);
       userTestDao.save(userTest);
-      userTestQuestionDao.save(userTestQuestion);
 
       return getNextQuestion(userTestQuestionDto.getUserTestId());
     }
