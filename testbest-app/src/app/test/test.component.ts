@@ -10,7 +10,7 @@ import {QuestionTypeService} from "../_services/question-type.service";
 import {UserTestService} from "../_services/user-test.service";
 import {UserTest} from "../_models/playTest/UserTest";
 import {UserQuestion} from "../_models/playTest/UserQuestion";
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {QuestionService} from "../_services/question.service";
 import {Question} from "../_models/Question";
 import {Answer} from "../_models/Answer";
@@ -174,6 +174,24 @@ export class TestComponent implements OnInit {
     )
   }
 
+  saveAnswer() {
+    this.userTestService.createUserAnswer(this.userQuestion).subscribe(
+      data => {
+        this.updateDataQuestion(data);
+      },
+      error => {
+        if (error.statusText == "Unknown Error") {
+          this.errorMessage = "Server is not responding";
+        } else {
+          this.startTest = false;
+          this.router.navigate(["/user/test/" + this.userTest.id])
+          //this.errorMessage = error.message;
+        }
+      }
+    )
+  }
+
+  //Обработка вводимых значений
   changeFreeAnswer(event) {
     this.freeAnswer = event.target.value;
     this.userQuestion.freeAnswer = this.freeAnswer;
@@ -215,21 +233,5 @@ export class TestComponent implements OnInit {
     }
     this.userQuestion.answers = userAnswer;
     console.log(this.userQuestion);
-  }
-
-  saveAnswer() {
-    this.userTestService.createUserAnswer(this.userQuestion).subscribe(
-      data => {
-        this.updateDataQuestion(data);
-      },
-      error => {
-        if (error.statusText == "Unknown Error") {
-          this.errorMessage = "Server is not responding";
-        } else {
-          this.startTest = false;
-          this.errorMessage = error.message;
-        }
-      }
-    )
   }
 }
