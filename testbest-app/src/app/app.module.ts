@@ -22,6 +22,7 @@ import {PortalModule} from "./_modals/portal/portal.module";
 import {BoardTestComponent} from './board-test/board-test.component';
 import {TreeviewModule} from "ngx-treeview";
 import { TestComponent } from './test/test.component';
+import { UserTestComponent } from './user-test/user-test.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { TestComponent } from './test/test.component';
     ModalComponent,
     BoardTestComponent,
     TestComponent,
+    UserTestComponent,
   ],
   imports: [
     BrowserModule,

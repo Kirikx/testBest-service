@@ -10,6 +10,7 @@ import {BoardManagerComponent} from './board-manager/board-manager.component';
 import {BoardAdminComponent} from './board-admin/board-admin.component';
 import {BoardTestComponent} from "./board-test/board-test.component";
 import {TestComponent} from "./test/test.component";
+import {UserTestComponent} from "./user-test/user-test.component";
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -18,6 +19,7 @@ const routes: Routes = [
   {path: 'profile', component: ProfileComponent},
   {path: 'tests', component: BoardUserComponent},
   {path: 'test/:id/user', component: TestComponent},
+  {path: 'user/test/:id', component: UserTestComponent},
   {path: 'manager', component: BoardManagerComponent},
   {path: 'test/new', component: BoardTestComponent},
   {path: 'test/:id', component: BoardTestComponent},
