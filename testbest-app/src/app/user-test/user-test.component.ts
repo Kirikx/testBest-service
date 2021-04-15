@@ -8,7 +8,6 @@ import {QuestionTypeService} from "../_services/question-type.service";
 import {UserTestService} from "../_services/user-test.service";
 import {UserTest} from "../_models/playTest/UserTest";
 import {Test} from "../_models/Test";
-import {Question} from "../_models/Question";
 import {UserQuestion} from "../_models/playTest/UserQuestion";
 
 @Component({
@@ -17,6 +16,8 @@ import {UserQuestion} from "../_models/playTest/UserQuestion";
   styleUrls: ['./user-test.component.css']
 })
 export class UserTestComponent implements OnInit {
+
+  isTimer:boolean = false;
 
   userTest: UserTest;
   passedQuestion: number = 0;
@@ -34,7 +35,7 @@ export class UserTestComponent implements OnInit {
     private topicService: TopicService,
     private questionService: QuestionService,
     private questionTypeService: QuestionTypeService,
-    private userTestService: UserTestService,) {
+    private userTestService: UserTestService) {
   }
 
   ngOnInit(): void {
@@ -45,6 +46,9 @@ export class UserTestComponent implements OnInit {
   getUserTest() {
     let userTest = new UserTest();
     userTest.id = this.route.snapshot.paramMap.get('id');
+    if (this.route.snapshot.queryParamMap.has("isTimer")) {
+      this.isTimer = this.route.snapshot.queryParamMap.get("isTimer") as unknown as boolean;
+    }
     this.userTestService.getUserTest(userTest).subscribe(
       data => {
         this.userTest = data;
@@ -101,7 +105,11 @@ export class UserTestComponent implements OnInit {
   }
 
   checkFullAnswer(): boolean {
-    return this.userTest.userTestQuestions.length == this.passedQuestion;
+    if (this.userTest.userTestQuestions.length > 0) {
+      return this.userTest.userTestQuestions.length == this.passedQuestion;
+    } else {
+      return false;
+    }
   }
 
   getQuestion(id: string): string {

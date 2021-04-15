@@ -21,7 +21,9 @@ import {Answer} from "../_models/Answer";
   styleUrls: ['./test.component.css']
 })
 export class TestComponent implements OnInit {
-  timeLeft: number = 60;
+  timeSecond: number = 0;
+  timeMinute: number = 0;
+  timeHours: number = 0;
   interval;
 
   test: Test;
@@ -65,16 +67,40 @@ export class TestComponent implements OnInit {
 
   startTimer() {
     this.interval = setInterval(() => {
-      if(this.timeLeft > 0) {
-        this.timeLeft--;
+      if (this.timeHours == 0 && this.timeMinute == 0 && this.timeSecond == 0) {
+        this.pauseTimer();
+        this.saveAnswer(true);
       } else {
-        this.timeLeft = 60;
+        if (this.timeSecond > 0) {
+          this.timeSecond--;
+        } else {
+          if (this.timeSecond == 0) {
+            if (this.timeMinute == 0 && this.timeHours > 0) {
+              this.timeHours--;
+              this.timeMinute = 59;
+            } else {
+              this.timeMinute--;
+            }
+            this.timeSecond = 59;
+          }
+        }
       }
-    },1000)
+    }, 1000)
   }
 
   pauseTimer() {
     clearInterval(this.interval);
+  }
+
+  checkTimer() {
+    this.startTest = false;
+    this.router.navigate(["/user/test/" + this.userTest.id], {
+      relativeTo: this.route,
+      queryParams: {
+        isTimer: 'true'
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 
   updateDataQuestion(data) {
@@ -134,6 +160,17 @@ export class TestComponent implements OnInit {
     this.testService.getTest(test).subscribe(
       data => {
         this.test = data;
+        if (this.test.duration % 60 == 0) {
+          this.timeHours = this.test.duration / 60;
+          this.timeMinute = 0;
+        } else {
+          if (this.test.duration / 60 > 1) {
+            this.timeHours = Math.trunc(this.test.duration / 60)
+            this.timeMinute = this.test.duration % 60;
+          } else {
+            this.timeMinute = this.test.duration % 60;
+          }
+        }
       },
       error => {
         if (error.statusText == "Unknown Error") {
@@ -154,6 +191,7 @@ export class TestComponent implements OnInit {
           data => {
             this.userTest = data;
             this.userQuestion.userTestId = this.userTest.id;
+            this.startTimer();
           },
           error => {
             if (error.statusText == "Unknown Error") {
@@ -174,17 +212,21 @@ export class TestComponent implements OnInit {
     )
   }
 
-  saveAnswer() {
+  saveAnswer(isTimer: boolean) {
     this.userTestService.createUserAnswer(this.userQuestion).subscribe(
       data => {
+        if (isTimer) this.checkTimer();
         this.updateDataQuestion(data);
       },
       error => {
         if (error.statusText == "Unknown Error") {
           this.errorMessage = "Server is not responding";
         } else {
-          this.startTest = false;
-          this.router.navigate(["/user/test/" + this.userTest.id])
+          if (isTimer) this.checkTimer();
+          else {
+            this.startTest = false;
+            this.router.navigate(["/user/test/" + this.userTest.id])
+          }
           //this.errorMessage = error.message;
         }
       }

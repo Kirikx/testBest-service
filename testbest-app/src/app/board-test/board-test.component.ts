@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit, Renderer2, ViewChild} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Router, RouterEvent} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {DOCUMENT} from "@angular/common";
 import {TestFull} from "../_models/createTest/TestFull";
@@ -17,7 +17,6 @@ import {QuestionTypeService} from "../_services/question-type.service";
 import {ChapterWrap} from "../_models/createTest/ChapterWrap";
 import {AnswerService} from "../_services/answer.service";
 import {AnswerFull} from "../_models/createTest/AnswerFull";
-import {filter} from "rxjs/operators";
 
 @Component({
   selector: 'app-board-test',
@@ -953,22 +952,6 @@ export class BoardTestComponent implements OnInit {
         }
       }
     }
-  }
-
-  getAnswer() {
-    this.answerService.getFullAnswer(this.answer).subscribe(
-      data => {
-        // this.question = data;
-        // this.setForValidation();
-      },
-      error => {
-        if (error.statusText == "Unknown Error") {
-          this.message = "Server is not responding";
-        } else {
-          this.message = error.message;
-        }
-      }
-    );
   }
 
 //Общее закрытие модальных окон
