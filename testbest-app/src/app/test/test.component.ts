@@ -68,29 +68,39 @@ export class TestComponent implements OnInit {
   startTimer() {
     this.interval = setInterval(() => {
       if (this.timeHours == 0 && this.timeMinute == 0 && this.timeSecond == 0) {
-        //TODO продумать, что должно происходить, когда кончилось время.
-        console.log("Время вышло");
         this.pauseTimer();
+        this.saveAnswer(true);
       } else {
-        if(this.timeSecond > 0) {
+        if (this.timeSecond > 0) {
           this.timeSecond--;
         } else {
-            if (this.timeSecond == 0) {
-              if (this.timeMinute == 0 && this.timeHours > 0) {
-                this.timeHours--;
-                this.timeMinute = 59;
-              } else {
-                this.timeMinute--;
-              }
-              this.timeSecond = 59;
+          if (this.timeSecond == 0) {
+            if (this.timeMinute == 0 && this.timeHours > 0) {
+              this.timeHours--;
+              this.timeMinute = 59;
+            } else {
+              this.timeMinute--;
             }
+            this.timeSecond = 59;
+          }
         }
       }
-    },10)
+    }, 1000)
   }
 
   pauseTimer() {
     clearInterval(this.interval);
+  }
+
+  checkTimer() {
+    this.startTest = false;
+    this.router.navigate(["/user/test/" + this.userTest.id], {
+      relativeTo: this.route,
+      queryParams: {
+        isTimer: 'true'
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 
   updateDataQuestion(data) {
@@ -161,9 +171,6 @@ export class TestComponent implements OnInit {
             this.timeMinute = this.test.duration % 60;
           }
         }
-        console.log(this.timeHours)
-        console.log(this.timeMinute)
-        console.log(this.timeSecond)
       },
       error => {
         if (error.statusText == "Unknown Error") {
@@ -205,17 +212,21 @@ export class TestComponent implements OnInit {
     )
   }
 
-  saveAnswer() {
+  saveAnswer(isTimer: boolean) {
     this.userTestService.createUserAnswer(this.userQuestion).subscribe(
       data => {
+        if (isTimer) this.checkTimer();
         this.updateDataQuestion(data);
       },
       error => {
         if (error.statusText == "Unknown Error") {
           this.errorMessage = "Server is not responding";
         } else {
-          this.startTest = false;
-          this.router.navigate(["/user/test/" + this.userTest.id])
+          if (isTimer) this.checkTimer();
+          else {
+            this.startTest = false;
+            this.router.navigate(["/user/test/" + this.userTest.id])
+          }
           //this.errorMessage = error.message;
         }
       }

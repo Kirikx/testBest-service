@@ -66,7 +66,7 @@
     </div>
 
     <div *ngIf="startTest">
-      <form [formGroup]="formUserAnswer" (ngSubmit)="saveAnswer()" class="mbr-form form-with-styler">
+      <form [formGroup]="formUserAnswer" (ngSubmit)="saveAnswer(false)" class="mbr-form form-with-styler">
         <div class="row">
           <div class="col-12 form-group" data-for="name">
             <h4 class="align-center">{{question.question}}</h4>
