@@ -8,7 +8,6 @@ import {QuestionTypeService} from "../_services/question-type.service";
 import {UserTestService} from "../_services/user-test.service";
 import {UserTest} from "../_models/playTest/UserTest";
 import {Test} from "../_models/Test";
-import {Question} from "../_models/Question";
 import {UserQuestion} from "../_models/playTest/UserQuestion";
 
 @Component({
