@@ -25,22 +25,22 @@
                 <table class="table table-hover">
                   <thead class="colorTableHeader">
                   <tr>
-                    <th scope="col" class="align-middle">Username</th>
-                    <th scope="col" class="align-middle">Email</th>
-                    <th scope="col" class="align-middle">Имя</th>
-                    <th scope="col" class="align-middle">Фамилия</th>
-                    <th scope="col" class="align-middle">Активные роли</th>
-                    <th scope="col"></th>
+                    <th scope="col" class="align-middle text-center">Username</th>
+                    <th scope="col" class="align-middle text-center">Email</th>
+                    <th scope="col" class="align-middle text-center">Имя</th>
+                    <th scope="col" class="align-middle text-center">Фамилия</th>
+                    <th scope="col" class="align-middle text-center">Активные роли</th>
+                    <th scope="col" class="align-middle text-center">Действия</th>
                   </tr>
                   </thead>
                   <tbody>
                   <tr *ngFor="let user of users">
-                    <td class="align-middle">{{ user.username }}</td>
-                    <td class="align-middle">{{ user.email }}</td>
-                    <td class="align-middle">{{ user.firstName }}</td>
-                    <td class="align-middle">{{ user.lastName }}</td>
-                    <td class="align-middle">{{ getNamesRoles(user.roles) }}</td>
-                    <td class="align-middle">
+                    <td class="align-middle text-center">{{ user.username }}</td>
+                    <td class="align-middle text-center">{{ user.email }}</td>
+                    <td class="align-middle text-center">{{ user.firstName }}</td>
+                    <td class="align-middle text-center">{{ user.lastName }}</td>
+                    <td class="align-middle text-center">{{ getNamesRoles(user.roles) }}</td>
+                    <td class="align-middle text-center">
                       <a class="btn btn-info-outline btn-sm" (click)="openModalEditUser(user.id)"
                          style="white-space: nowrap;"><span class="mobi-mbri-edit-2" aria-hidden="true"></span></a>
                     </td>

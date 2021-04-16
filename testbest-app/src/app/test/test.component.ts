@@ -114,6 +114,7 @@ export class TestComponent implements OnInit {
     }
     this.userQuestion.questionId = this.question.id;
     this.userQuestion.answers = new Array<Answer>();
+    this.userQuestion.userTestId = this.userTest.id;
     this.freeAnswer = null;
     if (this.userTest != null) this.userQuestion.userTestId = this.userTest.id;
     let checkArray: FormArray = this.formCheckboxAnswer.get('checkArray') as FormArray;
@@ -185,22 +186,10 @@ export class TestComponent implements OnInit {
   playTest() {
     this.userTestService.startUserTest(this.test).subscribe(
       data => {
-        this.updateDataQuestion(data);
+        this.userTest = data;
+        this.startTimer();
         this.startTest = true;
-        this.userTestService.getActiveUserTest().subscribe(
-          data => {
-            this.userTest = data;
-            this.userQuestion.userTestId = this.userTest.id;
-            this.startTimer();
-          },
-          error => {
-            if (error.statusText == "Unknown Error") {
-              this.errorMessage = "Server is not responding";
-            } else {
-              this.errorMessage = error.message;
-            }
-          }
-        )
+        this.getNextQuestion(false);
       },
       error => {
         if (error.statusText == "Unknown Error") {
@@ -216,7 +205,7 @@ export class TestComponent implements OnInit {
     this.userTestService.createUserAnswer(this.userQuestion).subscribe(
       data => {
         if (isTimer) this.checkTimer();
-        this.updateDataQuestion(data);
+        this.getNextQuestion(isTimer)
       },
       error => {
         if (error.statusText == "Unknown Error") {
@@ -227,7 +216,27 @@ export class TestComponent implements OnInit {
             this.startTest = false;
             this.router.navigate(["/user/test/" + this.userTest.id])
           }
-          //this.errorMessage = error.message;
+        }
+      }
+    )
+  }
+
+  getNextQuestion(isTimer: boolean) {
+    this.userTestService.getNextQuestion(this.userTest).subscribe(
+      data => {
+        if (isTimer) this.checkTimer();
+        this.updateDataQuestion(data);
+        this.userQuestion.userTestId = this.userTest.id;
+      },
+      error => {
+        if (error.statusText == "Unknown Error") {
+          this.errorMessage = "Server is not responding";
+        } else {
+          if (isTimer) this.checkTimer();
+          else {
+            this.startTest = false;
+            this.router.navigate(["/user/test/" + this.userTest.id])
+          }
         }
       }
     )

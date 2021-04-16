@@ -35,8 +35,8 @@ export class UserTestService {
   }
 
   //Возвращает следующий вопрос Question
-  getNextQuestion(): Observable<any> {
-    return this.http.get(Global.USER_TEST_API + 'next-question', Global.httpOptions);
+  getNextQuestion(userTest: UserTest): Observable<any> {
+    return this.http.get(Global.USER_TEST_API + 'test/'+ userTest.id + '/next-question/', Global.httpOptions);
   }
 
   //Возвращает лист List<UserQuestion>

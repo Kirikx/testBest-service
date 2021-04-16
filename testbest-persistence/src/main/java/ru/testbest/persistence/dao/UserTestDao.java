@@ -10,7 +10,7 @@ import ru.testbest.persistence.entity.UserTest;
 @Repository
 public interface UserTestDao extends JpaRepository<UserTest, UUID> {
 
-  List<UserTest> findAllByUserId(UUID userId);
+  List<UserTest> findAllByUserIdOrderByStartedDesc(UUID userId);
 
   Optional<UserTest> findFirstByUserIdOrderByStartedDesc(UUID userId);
 

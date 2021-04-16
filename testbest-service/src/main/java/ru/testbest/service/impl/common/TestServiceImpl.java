@@ -99,4 +99,12 @@ public class TestServiceImpl implements TestService {
     test.setIsDeleted(true);
     testDao.save(test);
   }
+
+  @Override
+  @Transactional
+  public List<TestDto> getTestsByTopicId(UUID topicId) {
+    return testDao.findAllByTopicId(topicId).stream()
+        .map(testConverter::convertToDto)
+        .collect(Collectors.toList());
+  }
 }

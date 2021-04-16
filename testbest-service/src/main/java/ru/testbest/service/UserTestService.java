@@ -13,7 +13,7 @@ public interface UserTestService {
 
   UserTestDto getActiveUserTest(UUID userId);
 
-  Optional<QuestionDto> startUserTest(UUID testId, UUID userId);
+  UserTestDto startUserTest(UUID testId, UUID userId);
 
   Optional<QuestionDto> createUserAnswer(UserTestQuestionDto userTestQuestionDto, UUID userId);
 

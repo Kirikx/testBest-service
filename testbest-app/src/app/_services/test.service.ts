@@ -38,10 +38,23 @@ export class TestService {
   }
 
   getUserTests(user: User): Observable<any> {
-    return this.http.get(Global.TEST_API + 'user/' + user.id, Global.httpOptions);
+    return this.http.get(Global.TEST_API + 'user-test/' + user.id, Global.httpOptions);
   }
 
   getCurrentUserTests(): Observable<any> {
+    return this.http.get(Global.TEST_API + 'user-test', Global.httpOptions);
+  }
+
+  getTestsByUserId(user: User): Observable<any> {
+    return this.http.get(Global.TEST_API + 'user/' + user.id, Global.httpOptions);
+  }
+
+  getMyTests(): Observable<any> {
     return this.http.get(Global.TEST_API + 'user', Global.httpOptions);
   }
+
+  getTestsByTopicId(id: String): Observable<any> {
+    return this.http.get(Global.TEST_API + 'topic/' + id, Global.httpOptions);
+  }
+
 }

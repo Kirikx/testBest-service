@@ -23,4 +23,5 @@ public interface TestService {
 
   List<TestDto> getTestsByAuthorId(UUID authorId);
 
+  List<TestDto> getTestsByTopicId(UUID topicId);
 }

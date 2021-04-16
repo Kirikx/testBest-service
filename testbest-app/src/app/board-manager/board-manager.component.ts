@@ -48,7 +48,7 @@ export class BoardManagerComponent implements OnInit {
     this.tokenStorage.checkTokenPrivate(this.router);
 
     this.getTopics();
-    this.getTest();
+    this.getMyTests();
 
     this.router.events.pipe(
       filter((event: RouterEvent) => event instanceof NavigationEnd)
@@ -97,6 +97,7 @@ export class BoardManagerComponent implements OnInit {
     this.topicService.getTopics().subscribe(
       data => {
         this.topics = data;
+        data.forEach(topic => this.getTestsByTopic(topic))
       },
       error => {
         if (error.statusText == "Unknown Error") {
@@ -170,9 +171,8 @@ export class BoardManagerComponent implements OnInit {
   }
 
   //Обработка вкладки Тест
-  getTest() {
-    //TODO как сделаю метод на основании конкретного автора, переключиться
-    this.testService.getTests().subscribe(
+  getMyTests() {
+    this.testService.getMyTests().subscribe(
       data => {
         this.tests = data;
       },
@@ -193,5 +193,27 @@ export class BoardManagerComponent implements OnInit {
   //Обработка модальных окон
   closeModal() {
     this.showModal = false;
+  }
+
+  getTestsByTopic(topic: Topic) {
+    this.testService.getTestsByTopicId(topic.id).subscribe(
+        data => {
+          topic.tests = data;
+        },
+        error => {
+          if (error.statusText == "Unknown Error") {
+            this.errorMessage = "Server is not responding";
+          } else {
+            this.errorMessage = error.message;
+          }
+        }
+    )
+  }
+
+  getTestsTopicText(tests: Array<TestFull>): string {
+    // TODO сделать как ссылки
+    if (typeof tests !== "undefined") {
+      return tests.map(test => test.name).join(', ');
+    }
   }
 }
