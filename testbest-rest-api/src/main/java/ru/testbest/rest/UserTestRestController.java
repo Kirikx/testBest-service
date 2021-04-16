@@ -46,17 +46,16 @@ public class UserTestRestController {
   }
 
   @GetMapping("/test/{id}")
-  @ApiOperation(value = "Создает новый пользовательский тест и возвращает первый вопрос. В карестве параметра принимает id теста", tags = "User test")
-  public QuestionDto startUserTest(@PathVariable("id") String testId,
+  @ApiOperation(value = "Создает новый пользовательский тест. В карестве параметра принимает id теста", tags = "User test")
+  public UserTestDto startUserTest(@PathVariable("id") String testId,
       Authentication authentication) {
     UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
     log.info("Start user test by testId {} and userId {}", testId, currentUser.getId());
-    return userTestService.startUserTest(UUID.fromString(testId), currentUser.getId())
-        .orElse(null);
+    return userTestService.startUserTest(UUID.fromString(testId), currentUser.getId());
   }
 
   @PostMapping("/create-answer")
-  @ApiOperation(value = "Сохраняет пользовательский ответ на вопрос из теста. Возвращает следующий вопрос или 404 если его нет", tags = "User test")
+  @ApiOperation(value = "Сохраняет пользовательский ответ на вопрос из теста", tags = "User test")
   public QuestionDto createUserAnswer(@RequestBody UserTestQuestionDto userTestQuestionDto,
       Authentication authentication) {
     UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
@@ -65,14 +64,11 @@ public class UserTestRestController {
         .orElseThrow(CustomNotFoundException::new);
   }
 
-  @GetMapping("/next-question")
-  @ApiOperation(value = "Возвращает следующий вопрос активного теста или 404 если его нет (или если нет активного теста)", tags = "User test")
-  public QuestionDto getNextQuestion(Authentication authentication) {
-    UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
-    UserTestDto activeUserTest = userTestService.getActiveUserTest(currentUser.getId());
-    log.info("Next question by userTestId {} and userId {}", activeUserTest.getId(),
-        currentUser.getId());
-    return userTestService.getNextQuestion(activeUserTest.getId())
+  @GetMapping("/test/{id}/next-question")
+  @ApiOperation(value = "Возвращает следующий вопрос теста по id или 404 если его нет", tags = "User test")
+  public QuestionDto getNextQuestion(@PathVariable("id") UUID userTestId) {
+    log.info("Next question by userTestId {}", userTestId);
+    return userTestService.getNextQuestion(userTestId)
         .orElseThrow(CustomNotFoundException::new);
   }
 

@@ -14,13 +14,13 @@
           <li class="nav-item first mbr-fonts-style">
             <a class="nav-link mbr-fonts-style show active display-7"
                role="tab" data-toggle="tab" href="#tabs1-14_tab0" aria-selected="true">
-              <strong>Тесты</strong>
+              <strong>Мои тесты</strong>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link mbr-fonts-style active display-7"
                role="tab" data-toggle="tab" href="#tabs1-14_tab1" aria-selected="true">
-              <strong>Тематика тестирования</strong>
+              <strong>Тематики тестирования</strong>
             </a>
           </li>
         </ul>
@@ -50,22 +50,22 @@
               <table class="table table-hover">
                 <thead class="colorTableHeader">
                 <tr>
-                  <th scope="col" class="align-middle">Тематика</th>
-                  <th scope="col" class="align-middle">Тест</th>
-                  <th scope="col" class="align-middle">Описание</th>
-                  <th scope="col" class="align-middle">Время прохождения</th>
-                  <th scope="col" class="align-middle">Проходной балл</th>
-                  <th scope="col"></th>
+                  <th scope="col" class="align-middle text-center">Тематика</th>
+                  <th scope="col" class="align-middle text-center">Наименование</th>
+                  <th scope="col" class="align-middle text-center">Описание</th>
+                  <th scope="col" class="align-middle text-center">Время прохождения (мин)</th>
+                  <th scope="col" class="align-middle text-center">Проходной балл</th>
+                  <th scope="col" class="align-middle text-center">Действия</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr *ngFor="let test of tests">
-                  <td class="align-middle">{{ getNameTopic(test.topicId) }}</td>
-                  <td class="align-middle">{{ test.name }}</td>
-                  <td class="align-middle">{{ test.description }}</td>
-                  <td class="align-middle">{{ test.duration }}</td>
-                  <td class="align-middle">{{ test.passScore }}</td>
-                  <td class="align-middle">
+                  <td class="align-middle text-center">{{ getNameTopic(test.topicId) }}</td>
+                  <td class="align-middle text-center">{{ test.name }}</td>
+                  <td class="align-middle text-center">{{ test.description }}</td>
+                  <td class="align-middle text-center">{{ test.duration }}</td>
+                  <td class="align-middle text-center">{{ test.passScore }}</td>
+                  <td class="align-middle text-center">
                     <a class="btn btn-info-outline btn-sm" (click)="redirectToCreateTest(test.id)"
                        style="white-space: nowrap;"><span class="mobi-mbri-edit-2"
                                                           aria-hidden="true"></span></a>
@@ -100,16 +100,18 @@
                 <table class="table table-hover">
                   <thead class="colorTableHeader">
                   <tr>
-                    <th scope="col">Наименование тематики</th>
-                    <th scope="col">Описание</th>
-                    <th scope="col"></th>
+                    <th scope="col" class="align-middle text-center">Наименование тематики</th>
+                    <th scope="col" class="align-middle text-center">Описание</th>
+                    <th scope="col" class="align-middle text-center">Связанные тесты</th>
+                    <th scope="col" class="align-middle text-center">Действия</th>
                   </tr>
                   </thead>
                   <tbody>
                   <tr *ngFor="let topic of topics">
-                    <td class="align-middle">{{ topic.name }}</td>
-                    <td class="align-middle">{{ topic.description }}</td>
-                    <td class="align-right">
+                    <td class="align-middle text-center">{{ topic.name }}</td>
+                    <td class="align-middle text-center">{{ topic.description }}</td>
+                    <td class="align-middle text-center">{{ getTestsTopicText(topic.tests) }}</td>
+                    <td class="align-middle text-center">
                       <a class="btn btn-info-outline btn-sm" (click)="openModalEditTopic(topic.id)"
                          style="white-space: nowrap;"><span class="mobi-mbri-edit-2"
                                                             aria-hidden="true"></span></a></td>

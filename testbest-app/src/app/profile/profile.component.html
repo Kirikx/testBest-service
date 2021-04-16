@@ -2,48 +2,50 @@
   <div class="mbr-overlay" style="opacity: 0.7; background-color: rgb(255, 255, 255);"></div>
   <div class="container" *ngIf="currentUserToken; else loggedOut">
 
-    <div>
-      <h2 class="text-center">
+    <div class="row justify-content-center mt-4 card">
+      <h1 class="text-center card-header">
         Профиль пользователя <strong>{{ currentUserToken.username }}</strong>
-      </h2>
-      <p>
-        <strong>Username:</strong>
-        {{ currentUser.username }}
-      </p>
-      <p>
-        <strong>Имя:</strong>
-        {{ currentUser.firstName }}
-      </p>
-      <p>
-        <strong>Фамилия:</strong>
-        {{ currentUser.lastName }}
-      </p>
-      <p>
-        <strong>Email:</strong>
-        {{ currentUser.email }}
-      </p>
-      <strong>Активные роли:</strong>
-      <ul>
-        <li *ngFor="let role of currentUser.roles">
-          {{ role.name.substring(5) }}
-        </li>
-      </ul>
-
-      <div class="col-12 mbr-section-btn">
-        <table class="col-12 form-group align-center">
+      </h1>
+      <div class="text-center card-body">
+        <table class="table table-th-block">
+          <tbody>
           <tr>
-            <th scope="col" class="align-middle">
-              <button (click)="openModal()" class="btn btn-info display-4">Редактировать профиль
-              </button>
-            </th>
-            <th scope="col" class="align-middle">
-              <button (click)="openModalChangePassword()" class="btn btn-info display-4">Сменить пароль</button>
-            </th>
+            <td class="active"><strong>Username:</strong></td>
+            <td>{{ currentUser.username }}</td>
           </tr>
+          <tr>
+            <td class="active"><strong>Имя:</strong></td>
+            <td>{{ currentUser.firstName }}</td>
+          </tr>
+          <tr>
+            <td class="active"><strong>Фамилия:</strong></td>
+            <td>{{ currentUser.lastName }}</td>
+          </tr>
+          <tr>
+            <td class="active"><strong>Email:</strong></td>
+            <td>{{ currentUser.email }}</td>
+          </tr>
+          <tr>
+            <td class="active"><strong>Активные роли:</strong></td>
+            <td>{{ getNamesRoles(currentUser.roles) }}</td>
+          </tr>
+          </tbody>
         </table>
       </div>
-    </div>
 
+      <div class="card-footer justify-content-center row">
+        <div class="col-12 col-sm-6">
+          <button (click)="openModal()" class="btn btn-info display-4">
+            Редактировать профиль
+          </button>
+        </div>
+        <div class="col-12 col-sm-6">
+          <button (click)="openModalChangePassword()" class="btn btn-info display-4">
+            Сменить пароль
+          </button>
+        </div>
+      </div>
+    </div>
 
 
     <app-modal class="modal" *ngIf="showModal" (close)="closeModal()">
@@ -129,7 +131,8 @@
             <div class="col-md col-sm-12">
               <div class="checkbox">
                 <label><input type="checkbox" name="manager-role"
-                              (change)="changeManagerRole($event)" [(ngModel)]="isManagerFlag"> Менеджер тестов</label>
+                              (change)="changeManagerRole($event)" [(ngModel)]="isManagerFlag">
+                  Менеджер тестов</label>
               </div>
             </div>
           </div>
@@ -188,7 +191,8 @@
                    [(ngModel)]="auth.password" required #confirmPass="ngModel"/>
             <div class="alert-danger" *ngIf="fUser.submitted">
               <div *ngIf="confirmPass.errors && confirmPass.errors.required">Поле обязательно для
-                заполнения</div>
+                заполнения
+              </div>
               <div *ngIf="fUser.submitted && failConfirmPassword">Неверный пароль</div>
             </div>
           </div>
@@ -200,9 +204,12 @@
                    data-form-field="password"
                    class="form-control" value="" id="password-form5-y"
                    [(ngModel)]="editUser.password" required minlength="6" #password="ngModel">
-            <div class="alert-danger col-12" role="alert" *ngIf="password.errors && fUser.submitted">
+            <div class="alert-danger col-12" role="alert"
+                 *ngIf="password.errors && fUser.submitted">
               <div *ngIf="password.errors.required">Поле обязательно для заполнения</div>
-              <div *ngIf="password.errors.minlength">Данное поле не может содержать меньше 6 символов</div>
+              <div *ngIf="password.errors.minlength">Данное поле не может содержать меньше 6
+                символов
+              </div>
             </div>
           </div>
 
@@ -211,7 +218,8 @@
                    name="repeat"
                    placeholder="Повторите пароль"
                    data-form-field="repeat"
-                   [(ngModel)]="editUser.repeatPassword" required #repeat="ngModel" pattern="{{password.value}}"
+                   [(ngModel)]="editUser.repeatPassword" required #repeat="ngModel"
+                   pattern="{{password.value}}"
                    class="form-control" value="" id="url-form5-y">
             <div class="alert-danger col-12" role="alert" *ngIf="repeat.errors && fUser.submitted">
               <div *ngIf="repeat.errors.required">Поле обязательно для заполнения</div>

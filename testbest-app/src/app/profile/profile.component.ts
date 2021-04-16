@@ -187,4 +187,8 @@ export class ProfileComponent implements OnInit {
       }
     );
   }
+
+  getNamesRoles(roles: Array<Role>) {
+    return roles.map(role => role.name.substring(5)).join(', ');
+  }
 }

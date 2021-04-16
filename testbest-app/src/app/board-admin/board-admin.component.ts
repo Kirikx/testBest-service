@@ -37,12 +37,13 @@ export class BoardAdminComponent implements OnInit {
 
   countSelect: number;
 
-  constructor(private userService: UserService,
-              private roleService: RoleService,
-              @Inject(DOCUMENT) private document: Document,
-              private renderer2: Renderer2,
-              private router: Router,
-              private tokenStorage: TokenStorageService) {
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    private userService: UserService,
+    private roleService: RoleService,
+    private renderer2: Renderer2,
+    private router: Router,
+    private tokenStorage: TokenStorageService) {
     this.user = new User();
   }
 
@@ -191,11 +192,11 @@ export class BoardAdminComponent implements OnInit {
 
   // предобработка наименования роли
   getNamesRoles(roles: Array<Role>): String {
-    return roles.map(role => role.name.substring(5)).join(", ");
+    return roles.map(role => role.name.substring(5)).join(', ');
   }
 
   isActiveRole(role: Role): boolean {
-    return  this.user.roles.map(r => r.name).includes(role.name)
+    return this.user.roles.map(r => r.name).includes(role.name)
   }
 
   changeRole(changeRole: Role) {

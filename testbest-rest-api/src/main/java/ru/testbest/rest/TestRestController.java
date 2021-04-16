@@ -63,16 +63,35 @@ public class TestRestController {
     }
 
     @GetMapping("/user/{id}")
-    public List<UserTestDto> getAllTestOfUser(@PathVariable("id") UUID id) {
-        log.info("Get all test for user {}", id);
-        return userTestService.getUserTests(id);
+    public List<TestDto> getTestsByUserId(@PathVariable("id") UUID id) {
+        log.info("Get all test for user id {}", id);
+        return testService.getTestsByAuthorId(id);
     }
 
     @GetMapping("/user")
-    public List<UserTestDto> getAllTestCurrentUser(Authentication authentication) {
+    public List<TestDto> getAllTestCurrentUser(Authentication authentication) {
         UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
         log.info("Get all test for user {}", currentUser.getId());
+        return testService.getTestsByAuthorId(currentUser.getId());
+    }
+
+    @GetMapping("/user-test/{id}")
+    public List<UserTestDto> getUserTestById(@PathVariable("id") UUID id) {
+        log.info("Get all user test for user id {}", id);
+        return userTestService.getUserTests(id);
+    }
+
+    @GetMapping("/user-test")
+    public List<UserTestDto> getAllUserTestCurrentUser(Authentication authentication) {
+        UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
+        log.info("Get all user test for user {}", currentUser.getId());
         return userTestService.getUserTests(currentUser.getId());
+    }
+
+    @GetMapping("/topic/{id}")
+    public List<TestDto> getAllTestByTopic(@PathVariable("id") UUID id) {
+        log.info("Get all test by topicId {}", id);
+        return testService.getTestsByTopicId(id);
     }
 
 }

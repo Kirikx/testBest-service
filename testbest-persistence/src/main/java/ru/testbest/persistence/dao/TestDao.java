@@ -16,4 +16,6 @@ public interface TestDao extends JpaRepository<Test, UUID> {
 
   List<Test> findAllByAuthorId(UUID userId);
 
+  List<Test> findAllByTopicId(UUID topicId);
+
 }

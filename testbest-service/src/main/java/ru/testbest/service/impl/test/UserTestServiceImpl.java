@@ -24,11 +24,13 @@ import ru.testbest.exception.custom.CustomBadRequest;
 import ru.testbest.exception.custom.CustomNotFoundException;
 import ru.testbest.exception.custom.GlobalException;
 import ru.testbest.persistence.dao.QuestionDao;
+import ru.testbest.persistence.dao.TestDao;
 import ru.testbest.persistence.dao.UserTestDao;
 import ru.testbest.persistence.dao.UserTestQuestionDao;
 import ru.testbest.persistence.entity.Answer;
 import ru.testbest.persistence.entity.Chapter;
 import ru.testbest.persistence.entity.Question;
+import ru.testbest.persistence.entity.Test;
 import ru.testbest.persistence.entity.UserTest;
 import ru.testbest.persistence.entity.UserTestQuestion;
 import ru.testbest.service.UserTestService;
@@ -36,6 +38,8 @@ import ru.testbest.service.UserTestService;
 @Service
 @RequiredArgsConstructor
 public class UserTestServiceImpl implements UserTestService {
+
+  private final TestDao testDao;
 
   private final UserTestDao userTestDao;
   private final UserTestConverter userTestConverter;
@@ -49,7 +53,7 @@ public class UserTestServiceImpl implements UserTestService {
   @Override
   @Transactional(readOnly = true)
   public List<UserTestDto> getUserTests(UUID userId) {
-    return userTestDao.findAllByUserId(userId).stream()
+    return userTestDao.findAllByUserIdOrderByStartedDesc(userId).stream()
         .map(userTestConverter::convertToDto)
         .collect(Collectors.toList());
   }
@@ -77,18 +81,20 @@ public class UserTestServiceImpl implements UserTestService {
 
   @Override
   @Transactional
-  public Optional<QuestionDto> startUserTest(UUID testId, UUID userId) {
+  public UserTestDto startUserTest(UUID testId, UUID userId) {
+    Test test = testDao.findById(testId)
+        .orElseThrow(CustomNotFoundException::new);
+
     UserTestDto newUserTest = new UserTestDto();
     newUserTest.setUserId(userId);
     newUserTest.setTestId(testId);
     newUserTest.setStarted(LocalDateTime.now());
-    newUserTest.setFinished(LocalDateTime.now());
+    newUserTest.setFinished(LocalDateTime.now().plusMinutes(test.getDuration()));
     newUserTest.setScore((short) 0);
 
-    UserTestDto activeUserTest = userTestConverter.convertToDto(
+    return userTestConverter.convertToDto(
         userTestDao.save(
             userTestConverter.convertToEntity(newUserTest)));
-    return getNextQuestion(activeUserTest.getId());
   }
 
   @Override
