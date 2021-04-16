@@ -58,7 +58,9 @@ export class BoardUserComponent implements OnInit {
 
   //Обработка тематики тестирования
   getNameTopic(id: String): String {
-    return this.topics.find(topic => topic.id === id).name;
+    if (id !=null) {
+      return this.topics.find(topic => topic.id === id).name;
+    }
   }
 
   getTopics() {
