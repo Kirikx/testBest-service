@@ -17,6 +17,7 @@ import {QuestionTypeService} from "../_services/question-type.service";
 import {ChapterWrap} from "../_models/createTest/ChapterWrap";
 import {AnswerService} from "../_services/answer.service";
 import {AnswerFull} from "../_models/createTest/AnswerFull";
+import {CheckFrom} from "../_helpers/checkFrom";
 
 @Component({
   selector: 'app-board-test',
@@ -24,6 +25,8 @@ import {AnswerFull} from "../_models/createTest/AnswerFull";
   styleUrls: ['./board-test.component.css']
 })
 export class BoardTestComponent implements OnInit {
+  checkForm = new CheckFrom();
+
   test: TestFull;
   chapter: ChapterFull;
   chapters: Array<ChapterFull>;

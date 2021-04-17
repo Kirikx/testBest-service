@@ -316,6 +316,10 @@ nav .mbr-section-btn {
   margin-left: 0.8rem;
 }
 
+.btn-full {
+  width: 100%;
+}
+
 .mbr-regular {
   font-weight: 400;
 }

@@ -8,7 +8,7 @@
           тестов</strong></h3>
       </div>
     </div>
-    <div class="row justify-content-center mt-4">
+    <div class="row justify-content-center">
       <div class="col-12">
         <ul class="nav nav-tabs mb-4" role="tablist">
           <li class="nav-item first mbr-fonts-style">
@@ -120,120 +120,49 @@
                 </table>
               </div>
             </div>
-
-            <app-modal class="modal" *ngIf="showModal" (close)="closeModal()">
-
-              <div class="modal-header">
-                <h4 class="modal-title" *ngIf="newTopic">Добавление тематики</h4>
-                <h4 class="modal-title" *ngIf="!newTopic">Редактирование тематики</h4>
-                <button type="button" class="close" data-dismiss="modal" (click)="closeModal()">
-                  &times;
-                </button>
-              </div>
-
-
-              <form *ngIf="newTopic" name="formTopic"
-                    (ngSubmit)="fTopic.form.valid && createTopic()" #fTopic="ngForm"
-                    novalidate class="mbr-form form-with-styler">
-
-                <div class="row modal-body">
-                  <div class="col-12 form-group" data-for="name">
-                    <input type="text" name="nameTopic" placeholder="Наименование тематики"
-                           [(ngModel)]="topic.name" required #name="ngModel"
-                           data-form-field="name" class="form-control">
-                    <div class="col-12 form-group alert-danger" role="alert"
-                         *ngIf="name.errors && fTopic.submitted">
-                      <div *ngIf="name.errors.required">Поле обязательно для заполнения</div>
-                    </div>
-                  </div>
-
-                  <div class="col-12 form-group" data-for="textarea">
-                    <textarea name="description" placeholder="Описание" data-form-field="textarea"
-                              [(ngModel)]="topic.description" class="form-control">
-                    </textarea>
-                    <div class="col-12 form-group alert-danger" role="alert"
-                         *ngIf="fTopic.submitted && isCreateTopicFailed && newTopic">
-                      Ошибка при добавление тематики: <p>{{ errorMessage }}</p>
-                    </div>
-                    <div class="col-12 form-group alert-danger" role="alert"
-                         *ngIf="fTopic.submitted && isCreateTopicFailed && !newTopic">
-                      Ошибка при редактировании тематики: <p>{{ errorMessage }}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-12 modal-footer">
-                  <div class="col-md col-sm-12 form-group" data-for="name">
-                    <button type="submit" class="btn btn-success display-4">Добавить</button>
-                  </div>
-                </div>
-
-              </form>
-
-              <form *ngIf="!newTopic" name="formTopic" (ngSubmit)="fTopic.form.valid && editTopic()"
-                    #fTopic="ngForm"
-                    novalidate
-                    class="mbr-form form-with-styler" data-form-title="Form Topic">
-
-                <div class="row modal-body">
-                  <div class="col-md-auto">
-
-                    <div class="col-12 form-group" data-for="id">
-                      <input type="hidden" name="id" data-form-field="id" [(ngModel)]="topic.id"
-                             #id="ngModel">
-                    </div>
-
-                    <div class="col-12 form-group" data-for="name">
-                      <input id="name-form6-1" type="text" name="nameTopic"
-                             placeholder="Наименование тематики"
-                             [(ngModel)]="topic.name" required #name="ngModel"
-                             data-form-field="name" class="form-control">
-                      <div class="col-12 form-group alert-danger" role="alert"
-                           *ngIf="name.errors && fTopic.submitted">
-                        <div *ngIf="name.errors.required">Поле обязательно для заполнения</div>
-                      </div>
-                    </div>
-
-                    <div class="col-12 form-group" data-for="textarea">
-                          <textarea name="description" placeholder="Описание"
-                                    data-form-field="textarea"
-                                    [(ngModel)]="topic.description" #description="ngModel"
-                                    class="form-control"></textarea>
-                      <div class="col-12 form-group alert-danger" role="alert"
-                           *ngIf="fTopic.submitted && isCreateTopicFailed && newTopic">
-                        Ошибка при добавление тематики: <p>{{ errorMessage }}</p>
-                      </div>
-                      <div class="col-12 form-group alert-danger" role="alert"
-                           *ngIf="fTopic.submitted && isCreateTopicFailed && !newTopic">
-                        Ошибка при редактировании тематики: <p>{{ errorMessage }}</p>
-                      </div>
-                    </div>
-
-                    <div class="col-12 modal-footer mbr-section-btn">
-                      <table class="col-12 form-group align-center">
-                        <tr>
-                          <th scope="col" class="align-middle">
-                            <button type="submit" class="btn btn-success display-4">Сохранить
-                            </button>
-                          </th>
-                          <th scope="col" class="align-middle">
-                            <button type="submit" (click)="deleteTopic()"
-                                    class="btn btn-danger display-4">Удалить
-                            </button>
-                          </th>
-                        </tr>
-                      </table>
-                    </div>
-
-                  </div>
-                </div>
-
-              </form>
-            </app-modal>
-
           </div>
         </div>
       </div>
+      <app-modal *ngIf="showModal" (close)="closeModal()">
+        <div class="modal-header">
+          <h4 class="align-center">{{getNameCreateButton()}} тематику</h4>
+          <button type="button" class="close" data-dismiss="modal" (click)="closeModal()">&times;</button>
+        </div>
+
+        <form [formGroup]="formTopicCreate" (ngSubmit)="createTopic()">
+
+          <div class="row modal-body">
+            <div class="col-12 form-group" data-for="name">
+              <label *ngIf="checkForm.checkRequired(formTopicCreate,'name')">Наименование тематики</label>
+              <input formControlName="name" type="text" placeholder="Наименование раздела" data-form-field="name"
+                     class="form-control" (change)="changeTopicName($event)">
+              <div class="alert-danger col-12" role="alert" *ngIf="validationTopicForm.name.invalid && !isSubmitted">
+                <div *ngIf="validationTopicForm.name.errors.required">Поле обязательно для заполнения</div>
+              </div>
+            </div>
+
+            <div class="col-12 form-group" data-for="textarea">
+              <label *ngIf="checkForm.checkRequired(formTopicCreate,'description')">Описание</label>
+              <textarea (change)="changeTopicDescription($event)" formControlName="description"
+                        name="description" placeholder="Описание" class="form-control"></textarea>
+              <div class="col-12 form-group alert-danger" role="alert"
+                   *ngIf="validationTopicForm.submitted && isCreateTopicFailed">
+                Ошибка при добавление тематики: <p>{{ errorMessage }}</p>
+              </div>
+            </div>
+
+            <div class="col-12 modal-footer">
+              <div class="col-md col-sm-12">
+                <a type="submit" (click)="createTopic()" class="btn btn-success display-4">{{getNameUpdateButton()}} тематику</a>
+              </div>
+              <div class="col-md col-sm-12" *ngIf="topic.id != null">
+                <a (click)="deleteTopic()" class="btn btn-danger display-4">Удалить</a>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </app-modal>
     </div>
   </div>
   <app-modal-outlet></app-modal-outlet>
