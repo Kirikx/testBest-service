@@ -62,6 +62,10 @@ export class BoardAdminComponent implements OnInit {
     ).subscribe(() => {
       if (window.location.href.toString().includes("/admin")) {
         window.location.reload();
+      } else if (window.location.href.toString().includes("/manager")) {
+        window.location.reload();
+      } else if (window.location.href.toString().includes("/tests")) {
+        window.location.reload();
       }
     });
 

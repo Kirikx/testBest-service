@@ -50,6 +50,8 @@ export class BoardUserComponent implements OnInit {
       filter((event: RouterEvent) => event instanceof NavigationEnd)).subscribe(() => {
       if (window.location.href.toString().includes("/tests")) {
         window.location.reload();
+      } else if (window.location.href.toString().includes("/admin")) {
+        window.location.reload();
       } else if (window.location.href.toString().includes("/manager")) {
         window.location.reload();
       }
