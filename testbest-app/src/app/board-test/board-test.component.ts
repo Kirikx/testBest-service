@@ -368,13 +368,6 @@ export class BoardTestComponent implements OnInit {
     )
   }
 
-  getChapters() {
-    this.chapters = new Array<ChapterFull>();
-    this.test.chapters.forEach(chapter => {
-      this.chapters.push(chapter);
-    })
-  }
-
   createChapter(): void {
     if (!this.formChapterCreate.valid) {
       this.isSubmitted = false;
@@ -439,6 +432,16 @@ export class BoardTestComponent implements OnInit {
     answerTest: new FormControl('', Validators.required),
   });
 
+  getChapterId(): string {
+    let id: string;
+    if (this.question.chapters.length > 0) {
+      id = this.question.chapters[0].id;
+    } else {
+      id = null;
+    }
+    return id;
+  }
+
   setForValidation() {
     if (this.question.questionTypeId != null) {
       this.questionTypes.forEach(value => {
@@ -446,7 +449,7 @@ export class BoardTestComponent implements OnInit {
           if (value.id == this.question.questionTypeId && value.name == 'Вопрос со свободным ответом') {
             this.answer = this.question.answers[0];
             this.formQuestionCreate.setValue({
-              chaptersSelect: this.question.chapters,
+              chaptersSelect: this.getChapterId(),
               questionTypeId: this.question.questionTypeId,
               question: this.question.question,
               answer: this.answer,
@@ -454,7 +457,7 @@ export class BoardTestComponent implements OnInit {
             })
           } else {
             this.formQuestionCreate.setValue({
-              chaptersSelect: this.question.chapters,
+              chaptersSelect: this.getChapterId(),
               questionTypeId: this.question.questionTypeId,
               question: this.question.question,
               answer: this.question.answers,
@@ -465,7 +468,7 @@ export class BoardTestComponent implements OnInit {
       });
     } else {
       this.formQuestionCreate.setValue({
-        chaptersSelect: this.question.chapters,
+        chaptersSelect: this.getChapterId(),
         questionTypeId: this.question.questionTypeId,
         question: this.question.question,
         answer: this.question.answers,
@@ -474,45 +477,9 @@ export class BoardTestComponent implements OnInit {
     }
   }
 
-  @ViewChild(TreeviewComponent, {static: false})
-  treeViewComponentSelected: TreeviewComponent;
-  selectData: TreeviewItem[];
-  select = TreeviewConfig.create({
-    hasAllCheckBox: false,
-    hasFilter: true,
-    hasCollapseExpand: false,
-    maxHeight: 300
-  });
-  countSelect: number;
-
-  getSelectData(): void {
-    let count = 0;
-    let item;
-    let check = false;
-    this.selectData = [];
-    this.test.chapters.forEach(chapter => {
-      this.question.chapters.forEach(qCh => {
-        if (chapter.id == qCh.id && count <= this.question.chapters.length) {
-          check = true;
-          count = count + 1;
-          item = new TreeviewItem({
-            text: chapter.name,
-            value: chapter.id,
-            checked: true
-          });
-        } else {
-          check = false;
-        }
-      });
-      if (!check) {
-        item = new TreeviewItem({
-          text: chapter.name,
-          value: chapter.id,
-          checked: false
-        });
-      }
-      this.selectData.push(item);
-    })
+  getSelectChapter(): void {
+    this.chapters = this.test.chapters;
+    this.formQuestionCreate.patchValue({chaptersSelect: this.getChapterId()});
   }
 
   clearFormCreateQuestion() {
@@ -553,7 +520,7 @@ export class BoardTestComponent implements OnInit {
         }
         this.answers = buff;
         this.question.answers = buff;
-        this.getSelectData();
+        this.getSelectChapter();
         this.setForValidation();
         this.checkTypeQuestionUI(false);
       },
@@ -573,7 +540,7 @@ export class BoardTestComponent implements OnInit {
     this.question = new QuestionFull();
     if (this.selectQuestions[0] == null) {
       this.clearFormCreateQuestion();
-      this.getSelectData();
+      this.getSelectChapter();
       this.checkTypeQuestionUI(true);
     } else {
       //TODO продумать про множественный выбор
@@ -582,22 +549,20 @@ export class BoardTestComponent implements OnInit {
     }
   }
 
-  onSelectedChangeQuestion(event) {
-    if (this.countSelect > event.length) {
-      this.question.chapters = new Array<ChapterWrap>();
+  onSelectedChapterQuestion(event) {
+    console.log(event.target.value);
+    let id = event.target.value.substring(3);
+    this.question.chapters = new Array<ChapterWrap>();
+    for (let chapter of this.chapters) {
+      if (chapter.id == id) {
+        this.question.chapters.push(new ChapterWrap(chapter));
+        this.formQuestionCreate.get("chaptersSelect").setValue(chapter.id, {
+          onlySelf: true
+        })
+        this.setForValidation();
+        break;
+      }
     }
-    this.test.chapters.forEach(chapter => {
-      event.forEach(ev => {
-        if (chapter.id == ev) {
-          if (!this.question.chapters.find(check => check.id == chapter.id)) {
-            this.question.chapters.push(new ChapterWrap(chapter));
-            this.setForValidation()
-            this.formQuestionCreate.patchValue({chaptersSelect: this.question.chapters})
-          }
-        }
-      })
-    })
-    this.countSelect = event.length;
   }
 
   closeModalCreateQuestion() {
