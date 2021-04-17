@@ -18,10 +18,10 @@
             </div>
 
             <div class="col-12 form-group" data-for="login">
-              <label *ngIf="username.control.value != null && username.control.value != ''">Login</label>
+              <label *ngIf="username.control.value != null && username.control.value != ''">Логин</label>
               <input id="login-form1-u" type="text" name="login" [(ngModel)]="auth.username" required
                      #username="ngModel"
-                     placeholder="Логин" data-form-field="Login" class="form-control">
+                     placeholder="Логин" data-form-field="Логин" class="form-control">
               <div class="alert-danger col-12" role="alert" *ngIf="username.errors && f.submitted">
                 <div *ngIf="username.errors.required">Поле обязательно для заполнения</div>
               </div>
