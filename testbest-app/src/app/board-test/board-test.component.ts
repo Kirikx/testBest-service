@@ -84,6 +84,10 @@ export class BoardTestComponent implements OnInit {
     decoupleChildFromParent: false,
     maxHeight: 700
   });
+
+  chaptersNullQuestion: Array<ChapterFull>;
+  selectNullQuestion = false;
+
   selectIsChapter = false; //выбрали раздел/вопрос(-ы)
   selectChapters = new Array<string>();
   selectQuestions = new Array<string>();
@@ -96,23 +100,37 @@ export class BoardTestComponent implements OnInit {
         this.selectChapters = new Array<string>();
         this.selectQuestions = new Array<string>();
       }
-      let id = checkedItems[0].value;
+      let id = checkedItems[0].value + '';
       this.test.chapters.forEach(chapter => {
-        chapter.questions.forEach(question => {
-          if (question.id === id) {
-            this.selectIsChapter = true;
-            if (this.selectChapters.find(str => str === chapter.id) == null) {
-              this.selectChapters.push(chapter.id);
+        if (id.length < 10) {
+          this.selectNullQuestion = true;
+          for (let buff of this.chaptersNullQuestion) {
+            if (buff.id == chapter.id) {
+              if (buff.questions[0].id == id) {
+                this.selectIsChapter = true;
+                this.selectChapters.push(chapter.id);
+                break;
+              }
             }
-            // //TODO Добавить проверку на то чтобы был выбран только один раздел!!!
-            // if (this.selectChapter.length > 1) {
-            // }
           }
-        });
+        } else {
+          chapter.questions.forEach(question => {
+            if (question.id === id) {
+              this.selectIsChapter = true;
+              if (this.selectChapters.find(str => str === chapter.id) == null) {
+                this.selectChapters.push(chapter.id);
+              }
+              //TODO Добавить проверку на то чтобы был выбран только один раздел!!!
+              // if (this.selectChapter.length > 1) {}
+            }
+          });
+        }
       });
       checkedItems.forEach(item => {
         if (this.selectQuestions.find(str => str === item.value) == null) {
-          this.selectQuestions.push(item.value);
+          if (item.text != 'Добавить вопрос') {
+            this.selectQuestions.push(item.value);
+          }
         }
       })
       this.countTree = checkedItems.length;
@@ -120,6 +138,7 @@ export class BoardTestComponent implements OnInit {
       this.selectChapters = new Array<string>();
       this.selectQuestions = new Array<string>();
       this.selectIsChapter = false;
+      this.selectNullQuestion = false;
       this.countTree = 0;
     }
   }
@@ -128,9 +147,9 @@ export class BoardTestComponent implements OnInit {
   }
 
   getTreeData(): TreeviewItem[] {
+    this.chaptersNullQuestion = new Array<ChapterFull>();
     let chapters: TreeviewItem;
     let questions: TreeviewItem;
-    // let answers: TreeviewItem;
 
     const root = new TreeviewItem({
       text: this.test.name, value: 1, checked: false, children: [
@@ -138,23 +157,36 @@ export class BoardTestComponent implements OnInit {
       ]
     });
 
+    let index: number = 0;
     this.test.chapters.forEach(chapter => {
-      chapters = new TreeviewItem({
-        text: chapter.name, value: chapter.id, checked: false, children: [
-          {text: 'Вопросы', value: 3, checked: false, disabled: true}
-        ]
-      });
+      index++;
+      if (chapter.questions.length > 0) {
+        chapters = new TreeviewItem({
+          text: chapter.name, value: chapter.id, checked: false, children: [
+            {text: 'Вопросы', value: index, checked: false, disabled: true}
+          ]
+        });
+      } else {
+        chapters = new TreeviewItem({
+          text: chapter.name, value: chapter.id, checked: false, children: [
+            {text: 'Добавить вопрос', value: index, checked: false, disabled: false}
+          ]
+        });
+        let questionFull = new QuestionFull();
+        questionFull.id = index + '';
+        questionFull.question = 'Добавить вопрос';
+        let chapterBuff = new ChapterFull();
+        chapterBuff.id = chapter.id;
+        chapterBuff.name = chapter.name;
+        chapterBuff.questions = new Array<QuestionFull>();
+        chapterBuff.questions.push(questionFull);
+        this.chaptersNullQuestion.push(chapterBuff);
+      }
       chapter.questions.forEach(question => {
         questions = new TreeviewItem({
           text: question.question, value: question.id, checked: false
         });
         chapters.children.push(questions);
-
-        // question.answers.forEach(answer => {
-        //   answers = new TreeviewItem({text: answer.answer, value: answer.id, checked: false, disabled: true});
-        //   questions.children.push(answers);
-        // });
-
       });
       root.children.push(chapters);
     });
@@ -330,6 +362,7 @@ export class BoardTestComponent implements OnInit {
     if (this.selectChapters[0] == null) {
       this.clearFormCreateChapter();
     } else {
+      this.selectIsChapter = true;
       this.getChapter(this.test.chapters.find(chapter => chapter.id === this.selectChapters[0]));
     }
   }
@@ -542,6 +575,7 @@ export class BoardTestComponent implements OnInit {
     this.showModalQuestion = true;
     this.question = new QuestionFull();
     if (this.selectQuestions[0] == null) {
+      this.selectIsChapter = false;
       this.clearFormCreateQuestion();
       this.getSelectChapter();
       this.checkTypeQuestionUI(true);
