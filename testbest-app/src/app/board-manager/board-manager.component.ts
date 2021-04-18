@@ -7,6 +7,8 @@ import {TestService} from "../_services/test.service";
 import {TopicService} from "../_services/topic.service";
 import {Topic} from "../_models/createTest/parameters/Topic";
 import {filter} from "rxjs/operators";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {CheckFrom} from "../_helpers/checkFrom";
 
 @Component({
   selector: 'app-board-moderator',
@@ -14,6 +16,8 @@ import {filter} from "rxjs/operators";
   styleUrls: ['./board-manager.component.css'],
 })
 export class BoardManagerComponent implements OnInit {
+  checkForm = new CheckFrom();
+
   //Переменные для Topic
   topic: Topic;
   buff: Topic;
@@ -25,7 +29,7 @@ export class BoardManagerComponent implements OnInit {
   test: TestFull;
   tests: Array<TestFull>;
 
-
+  isSubmitted = true; //нужна валидация форм?
   showModal = false;
   errorMessage: string;
 
@@ -57,11 +61,30 @@ export class BoardManagerComponent implements OnInit {
         window.location.reload();
       } else if (window.location.href.toString().includes("/tests")) {
         window.location.reload();
+      } else if (window.location.href.toString().includes("/admin")) {
+        window.location.reload();
       }
     });
   }
 
   //Обработка вкладки Тематика тестирования
+
+  getNameCreateButton(): string {
+    if (this.topic.id != null) {
+      return "Редактировать";
+    } else {
+      return "Добавить";
+    }
+  }
+
+  getNameUpdateButton(): string {
+    if (this.topic.id != null) {
+      return "Сохранить";
+    } else {
+      return "Создать";
+    }
+  }
+
   getNameTopic(id: String): String {
     return this.topics.find(topic => topic.id === id).name;
   }
@@ -78,10 +101,40 @@ export class BoardManagerComponent implements OnInit {
     this.getTopic(this.topics.find(topic => topic.id === id));
   }
 
+  //Обработка разделов
+  formTopicCreate = new FormGroup({
+    name: new FormControl('', Validators.required),
+    description: new FormControl()
+  });
+
+  get validationTopicForm() {
+    return this.formTopicCreate.controls;
+  }
+
+  changeTopicDescription(event) {
+    this.topic.description = event.target.value;
+  }
+
+  changeTopicName(event) {
+    this.topic.name = event.target.value;
+  }
+
+  clearFormCreateTopic() {
+    this.topic = new Topic();
+    this.formTopicCreate.setValue({
+      name: this.topic.name,
+      description: this.topic.description,
+    })
+  }
+
   getTopic(topic: Topic) {
     this.topicService.getTopic(topic).subscribe(
       data => {
         this.topic = data;
+        this.formTopicCreate.setValue({
+          name: this.topic.name,
+          description: this.topic.description,
+        })
       },
       error => {
         if (error.statusText == "Unknown Error") {
@@ -110,35 +163,39 @@ export class BoardManagerComponent implements OnInit {
   }
 
   createTopic(): void {
-    this.topicService.createTopic(this.topic).subscribe(
-      data => {
-        if (data.id != null && data.id != '') {
-          this.isCreateTopicFailed = false;
-          this.closeModal();
-          this.getTopics();
-          this.topic = new Topic();
-        }
-      },
-      error => {
-        this.isCreateTopicFailed = true;
-        if (error.statusText == "Unknown Error") {
-          this.errorMessage = "Server is not responding";
-        } else {
-          this.errorMessage = error.message;
-        }
+    if (!this.formTopicCreate.valid) {
+      this.isSubmitted = false;
+    } else {
+      if (this.topic.id == null) {
+        this.topicService.createTopic(this.topic).subscribe(
+          data => {
+              this.isCreateTopicFailed = false;
+              this.closeModal();
+              this.getTopics();
+              // this.topic = new Topic();
+          },
+          error => {
+            this.isCreateTopicFailed = true;
+            if (error.statusText == "Unknown Error") {
+              this.errorMessage = "Server is not responding";
+            } else {
+              this.errorMessage = error.message;
+            }
+          }
+        );
+      } else {
+        this.editTopic();
       }
-    );
+    }
   }
 
   editTopic(): void {
     this.topicService.editTopic(this.topic).subscribe(
       data => {
-        if (data.id != null && data.id != '') {
           this.isCreateTopicFailed = false;
           this.closeModal();
           this.getTopics();
-          this.topic = new Topic();
-        }
+          // this.topic = new Topic();
       },
       error => {
         this.isCreateTopicFailed = true;
@@ -193,6 +250,8 @@ export class BoardManagerComponent implements OnInit {
   //Обработка модальных окон
   closeModal() {
     this.showModal = false;
+    this.isSubmitted = true;
+    this.clearFormCreateTopic();
   }
 
   getTestsByTopic(topic: Topic) {

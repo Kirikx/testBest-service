@@ -1,35 +1,36 @@
 <section class="form1 cid-srhA70eCDv mbr-fullscreen mbr-parallax-background" id="form1-u">
   <div class="mbr-overlay" style="opacity: 0.7; background-color: rgb(255, 255, 255);"></div>
-  <div class="align-center container">
+  <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-5 mx-auto mbr-form" data-form-type="formoid">
         <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate
               class="mbr-form form-with-styler" data-form-title="Form Name">
           <div class="dragArea row">
-            <div class="col-12">
+            <div class="col-12 align-center">
               <h2 class="mbr-section-title mb-4 display-2">
                 <strong>Авторизация</strong>
               </h2>
             </div>
-            <div class="col-18">
+            <div class="col-12 align-center">
               <h3 class="mbr-section-title mb-4 display-2">
                 <strong><p>Сервис онлайн тестирования</p></strong>
               </h3>
             </div>
 
             <div class="col-12 form-group" data-for="login">
+              <label *ngIf="username.control.value != null && username.control.value != ''">Логин</label>
               <input id="login-form1-u" type="text" name="login" [(ngModel)]="auth.username" required
                      #username="ngModel"
-                     placeholder="Логин" data-form-field="Login" class="form-control">
+                     placeholder="Логин" data-form-field="Логин" class="form-control">
               <div class="alert-danger col-12" role="alert" *ngIf="username.errors && f.submitted">
                 <div *ngIf="username.errors.required">Поле обязательно для заполнения</div>
               </div>
             </div>
 
             <div class="col-12 form-group" data-for="password">
+              <label *ngIf="password.control.value != null && username.control.value != ''">Пароль</label>
               <input id="password-form1-u" type="password" name="password" [(ngModel)]="auth.password" required
-                     #password="ngModel"
-                     placeholder="Пароль" data-form-field="Password" class="form-control">
+                     #password="ngModel" placeholder="Пароль" data-form-field="Password" class="form-control">
               <div class="alert-danger col-12" role="alert" *ngIf="password.errors && f.submitted">
                 <div *ngIf="password.errors.required">Поле обязательно для заполнения</div>
               </div>

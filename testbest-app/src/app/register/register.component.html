@@ -1,6 +1,6 @@
 <section class="form1 cid-srmGhZz8Eh mbr-fullscreen mbr-parallax-background" id="form1-x">
   <div class="mbr-overlay" style="opacity: 0.7; background-color: rgb(255, 255, 255);"></div>
-  <div class="align-center container">
+  <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-8 mx-auto mbr-form" data-form-type="formoid">
 
@@ -25,36 +25,33 @@
             </div>
 
             <div class="col-md col-sm-12 form-group" data-for="name">
+              <label *ngIf="firstName.control.value != null && firstName.control.value != ''">Фамилия</label>
+              <label *ngIf="lastName.control.value != null && lastName.control.value != ''"></label>
               <input id="name-form5-y" type="text" name="firstName"
                      [(ngModel)]="user.firstName" required minlength="3" maxlength="20" #firstName="ngModel"
                      placeholder="Фамилия" data-form-field="name" class="form-control">
               <div class="alert-danger" *ngIf="firstName.errors && f.submitted">
                 <div *ngIf="firstName.errors.required">Поле обязательно для заполнения</div>
-                <div *ngIf="firstName.errors.minlength">
-                  Данное поле не может содержать меньше 3 символов
-                </div>
-                <div *ngIf="firstName.errors.maxlength">
-                  Данное поле не может содержать больше 20 символов
-                </div>
+                <div *ngIf="firstName.errors.minlength">Данное поле не может содержать меньше 3 символов</div>
+                <div *ngIf="firstName.errors.maxlength">Данное поле не может содержать больше 20 символов</div>
               </div>
             </div>
 
             <div class="col-md col-sm-12 form-group" data-for="surname">
+              <label *ngIf="lastName.control.value != null && lastName.control.value != ''">Имя</label>
+              <label *ngIf="firstName.control.value != null && firstName.control.value != ''"></label>
               <input id="surname-form5-y" type="text" name="lastName"
                      [(ngModel)]="user.lastName" required minlength="3" maxlength="20" #lastName="ngModel"
                      placeholder="Имя" data-form-field="name" class="form-control">
               <div class="alert-danger" *ngIf="lastName.errors && f.submitted">
                 <div *ngIf="lastName.errors.required">Поле обязательно для заполнения</div>
-                <div *ngIf="lastName.errors.minlength">
-                  Данное поле не может содержать меньше 3 символов
-                </div>
-                <div *ngIf="lastName.errors.maxlength">
-                  Данное поле не может содержать больше 20 символов
-                </div>
+                <div *ngIf="lastName.errors.minlength">Данное поле не может содержать меньше 3 символов</div>
+                <div *ngIf="lastName.errors.maxlength">Данное поле не может содержать больше 20 символов</div>
               </div>
             </div>
 
             <div class="col-sm-12 form-group" data-for="email">
+              <label *ngIf="email.control.value != null && email.control.value != ''">Email</label>
               <input id="email-form5-y" type="email" class="form-control" name="email" placeholder="Email"
                      [(ngModel)]="user.email" required email #email="ngModel"/>
               <div class="alert-danger" *ngIf="email.errors && f.submitted">
@@ -64,21 +61,21 @@
             </div>
 
             <div class="col-md col-sm-12 form-group" data-for="login">
+              <label *ngIf="username.control.value != null && username.control.value != ''">Логин</label>
+              <label *ngIf="password.control.value != null && password.control.value != ''"></label>
               <input type="text" name="login" placeholder="Логин" data-form-field="username"
                      class="form-control" value="" id="login-form5-y" [(ngModel)]="user.username"
                      required minlength="3" maxlength="20" #username="ngModel">
               <div class="alert-danger" *ngIf="lastName.errors && f.submitted">
                 <div *ngIf="username.errors.required">Поле обязательно для заполнения</div>
-                <div *ngIf="username.errors.minlength">
-                  Данное поле не может содержать меньше 3 символов
-                </div>
-                <div *ngIf="username.errors.maxlength">
-                  Данное поле не может содержать больше 20 символов
-                </div>
+                <div *ngIf="username.errors.minlength">Данное поле не может содержать меньше 3 символов</div>
+                <div *ngIf="username.errors.maxlength">Данное поле не может содержать больше 20 символов</div>
               </div>
             </div>
 
             <div class="col-md col-sm-12 form-group" data-for="password">
+              <label *ngIf="password.control.value != null && password.control.value != ''">Пароль</label>
+              <label *ngIf="username.control.value != null && username.control.value != ''"></label>
               <input type="password" name="password" placeholder="Пароль" data-form-field="password"
                      class="form-control" value="" id="password-form5-y"
                      [(ngModel)]="user.password" required minlength="6" #password="ngModel">
@@ -89,6 +86,7 @@
             </div>
 
             <div class="col-12 form-group" data-for="repeat">
+              <label *ngIf="repeat.control.value != null && repeat.control.value != ''">Повторите пароль</label>
               <input type="password" name="repeat"  placeholder="Повторите пароль" data-form-field="repeat"
                      [(ngModel)]="user.repeatPassword" #repeat="ngModel" pattern="{{password.value}}" required
                      class="form-control" value="" id="url-form5-y">

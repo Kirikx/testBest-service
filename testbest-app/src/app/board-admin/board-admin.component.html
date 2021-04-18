@@ -4,11 +4,12 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-12 col-md-11">
-        <h3 class="mbr-section-title mb-0 mbr-fonts-style display-2"><strong>Панель
-          администратора</strong></h3>
+        <h3 class="mbr-section-title mb-0 mbr-fonts-style display-2">
+          <strong>Панель администратора</strong>
+        </h3>
       </div>
     </div>
-    <div class="row justify-content-center mt-4">
+    <div class="row justify-content-center">
       <div class="col-12">
         <ul class="nav nav-tabs mb-4" role="tablist">
           <li class="nav-item first mbr-fonts-style">
@@ -54,14 +55,10 @@
 
               <div class="modal-header">
                 <h4 class="modal-title">Редактирование пользователя</h4>
-                <button type="button" class="close" data-dismiss="modal" (click)="closeModal()">
-                  &times;
-                </button>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeModal()">&times;</button>
               </div>
 
-              <form name="form" (ngSubmit)="fUser.form.valid && editUser()"
-                    #fUser="ngForm" (click)="fUser"
-                    novalidate class="mbr-form form-with-styler">
+              <form name="form" (ngSubmit)="fUser.form.valid && editUser()" #fUser="ngForm" (click)="fUser" novalidate>
                 <div class="row modal-body">
 
                   <div class="col-12 form-group" data-for="id">
@@ -73,47 +70,42 @@
                     <div>
                       <label>Роли пользователя:</label>
                       <div class="checkbox" *ngFor="let role of roles">
-                        <label><input type="checkbox"
-                                      [checked]="isActiveRole(role)" (change)="changeRole(role)"> {{ role.name.substring(5) }}</label>
+                        <label><input type="checkbox" [checked]="isActiveRole(role)" (change)="changeRole(role)">
+                           {{ role.name.substring(5) }}</label>
                       </div>
                     </div>
                   </div>
 
                   <div class="col-md form-group" data-for="name">
+                    <label *ngIf="!firstName.errors">Имя</label>
+                    <label *ngIf="firstName.errors" style="color: white">Ф</label>
                     <input id="name-form5-y" type="text" name="firstName"
                            [(ngModel)]="user.firstName" required minlength="3" maxlength="20"
                            #firstName="ngModel"
                            placeholder="Имя" data-form-field="name" class="form-control">
                     <div class="alert-danger" *ngIf="firstName.errors && fUser.submitted">
                       <div *ngIf="firstName.errors.required">Поле обязательно для заполнения</div>
-                      <div *ngIf="firstName.errors.minlength">
-                        Данное поле не может содержать меньше 3 символов
-                      </div>
-                      <div *ngIf="firstName.errors.maxlength">
-                        Данное поле не может содержать больше 20 символов
-                      </div>
+                      <div *ngIf="firstName.errors.minlength">Данное поле не может содержать меньше 3 символов</div>
+                      <div *ngIf="firstName.errors.maxlength">Данное поле не может содержать больше 20 символов</div>
                     </div>
                   </div>
 
                   <div class="col-md form-group" data-for="surname">
-                    <input id="surname-form5-y" type="text" name="lastName"
-                           [(ngModel)]="user.lastName" required minlength="3" maxlength="20"
-                           #lastName="ngModel"
+                    <label *ngIf="!lastName.errors">Фамилия</label>
+                    <label *ngIf="lastName.errors" style="color: white">И</label>
+                    <input id="surname-form5-y" type="text" name="lastName" [(ngModel)]="user.lastName"
+                           required minlength="3" maxlength="20" #lastName="ngModel"
                            placeholder="Фамилия" data-form-field="name" class="form-control">
                     <div class="alert-danger" *ngIf="lastName.errors && fUser.submitted">
                       <div *ngIf="lastName.errors.required">Поле обязательно для заполнения</div>
-                      <div *ngIf="lastName.errors.minlength">
-                        Данное поле не может содержать меньше 3 символов
-                      </div>
-                      <div *ngIf="lastName.errors.maxlength">
-                        Данное поле не может содержать больше 20 символов
-                      </div>
+                      <div *ngIf="lastName.errors.minlength">Данное поле не может содержать меньше 3 символов</div>
+                      <div *ngIf="lastName.errors.maxlength">Данное поле не может содержать больше 20 символов</div>
                     </div>
                   </div>
 
                   <div class="col-sm-12 form-group" data-for="email">
-                    <input id="email-form5-y" type="email" class="form-control" name="email"
-                           placeholder="Email"
+                    <label *ngIf="!email.errors">Email</label>
+                    <input id="email-form5-y" type="email" class="form-control" name="email" placeholder="Email"
                            [(ngModel)]="user.email" required email #email="ngModel"/>
                     <div class="alert-danger" *ngIf="email.errors && fUser.submitted">
                       <div *ngIf="email.errors.required">Поле обязательно для заполнения</div>
@@ -122,42 +114,33 @@
                   </div>
 
                   <div class="col-md col-sm-12 form-group" data-for="login">
+                    <label *ngIf="!username.errors">Логин</label>
                     <input type="text" name="login" placeholder="Логин" data-form-field="username"
                            class="form-control" value="" id="login-form5-y"
                            [(ngModel)]="user.username"
                            required minlength="3" maxlength="20" #username="ngModel">
                     <div class="alert-danger" *ngIf="lastName.errors && fUser.submitted">
                       <div *ngIf="username.errors.required">Поле обязательно для заполнения</div>
-                      <div *ngIf="username.errors.minlength">
-                        Данное поле не может содержать меньше 3 символов
-                      </div>
-                      <div *ngIf="username.errors.maxlength">
-                        Данное поле не может содержать больше 20 символов
-                      </div>
+                      <div *ngIf="username.errors.minlength">Данное поле не может содержать меньше 3 символов</div>
+                      <div *ngIf="username.errors.maxlength">Данное поле не может содержать больше 20 символов</div>
                     </div>
                   </div>
 
                   <div class="alert alert-danger col-12"
-                       *ngIf="fUser.submitted && isEditUserFailed">
-                    Ошибка редактирования пользователя!<br/>{{ errorMessage }}
+                       *ngIf="fUser.submitted && isEditUserFailed">Ошибка редактирования пользователя!<br/>{{ errorMessage }}
                   </div>
 
-                  <div class="col-12 mbr-section-btn modal-footer">
-                    <table class="col-12 form-group align-center">
-                      <tr>
-                        <th scope="col" class="align-middle">
-                          <button type="submit" class="btn btn-success display-4">Сохранить</button>
-                        </th>
-                        <th scope="col" class="align-middle">
-                          <button (click)="deleteUser()" class="btn btn-danger display-4">Удалить</button>
-                        </th>
-                        <th scope="col" class="align-middle">
-                          <button (click)="resetPass()" class="btn btn-danger display-4">Сбросить пароль</button>
-                        </th>
-                      </tr>
-                    </table>
+                  <div class="col-12 modal-footer">
+                    <div class="col-md col-sm-12">
+                      <button type="submit" class="btn btn-full btn-success display-4">Сохранить</button>
+                    </div>
+                    <div class="col-md col-sm-12">
+                      <a (click)="deleteUser()" class="btn btn-danger display-4">Удалить</a>
+                    </div>
+                    <div class="col-md col-sm-12">
+                      <a (click)="resetPass()" class="btn btn-danger display-4">Сбросить пароль</a>
+                    </div>
                   </div>
-
                 </div>
               </form>
 
