@@ -102,7 +102,7 @@
                           (filterChange)="onFilterChangeTest($event)">
             </ngx-treeview>
 
-            <div class="row">
+            <div class="row" *ngIf="!selectNullQuestion">
               <div class="col-md col-sm-12 form-group" data-for="name" style="padding-left: 0px;">
                 <button class="btn btn-success display-6" (click)="openModalChapter()">
                   {{getNameCreateButton()}} раздел
@@ -111,6 +111,18 @@
               <div class="col-md col-sm-12 form-group" data-for="surname">
                 <button class="btn btn-success display-6" (click)="openModalQuestion()">
                   {{getNameCreateButton()}} вопрос
+                </button>
+              </div>
+            </div>
+            <div class="row" *ngIf="selectNullQuestion">
+              <div class="col-md col-sm-12 form-group" data-for="name" style="padding-left: 0px;">
+                <button class="btn btn-success display-6" (click)="openModalChapter()">
+                  Редактировать раздел
+                </button>
+              </div>
+              <div class="col-md col-sm-12 form-group" data-for="surname">
+                <button class="btn btn-success display-6" (click)="openModalQuestion()">
+                  Добавить вопрос
                 </button>
               </div>
             </div>
