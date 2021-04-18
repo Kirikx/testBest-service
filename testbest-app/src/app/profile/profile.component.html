@@ -146,7 +146,7 @@
         <div class="modal-footer">
           <div class="col-sm-12" data-for="password">
             <input type="password" class="form-control" name="password"
-                   placeholder="Подтвердите пароль"
+                   placeholder="Для сохранения подтвердите пароль"
                    [(ngModel)]="auth.password" required #confirmPass="ngModel"/>
             <div class="alert-danger" *ngIf="fUser.submitted">
               <div *ngIf="confirmPass.errors && confirmPass.errors.required">Поле обязательно для

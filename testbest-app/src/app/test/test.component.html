@@ -66,18 +66,21 @@
     </div>
 
     <div *ngIf="startTest">
-      <form [formGroup]="formUserAnswer" (ngSubmit)="saveAnswer(false)" class="mbr-form form-with-styler">
+      <form [formGroup]="formUserAnswer" (ngSubmit)="saveAnswer(false)"
+            class="mbr-form form-with-styler">
         <div class="row">
           <div class="col-12 form-group" data-for="name">
             <h4 class="align-center">{{question.question}}</h4>
           </div>
 
-          <div class="col col-12 form-group" *ngIf="questionType.name == 'Вопрос со свободным ответом'">
+          <div class="col col-12 form-group"
+               *ngIf="questionType.name == 'Вопрос со свободным ответом'">
             <div class="col-12 form-group">
               <h5 class="align-left">Ваш ответ:</h5>
             </div>
             <div class="col-12 form-group">
-              <textarea (change)="changeFreeAnswer($event)" name="answer" placeholder="Ответ в свободной форме"
+              <textarea (change)="changeFreeAnswer($event)" name="answer"
+                        placeholder="Ответ в свободной форме"
                         class="form-control" [value]="freeAnswer"></textarea>
             </div>
           </div>
@@ -87,25 +90,32 @@
               <div class="col-12 form-group">
                 <h5 class="align-left">Варианты ответа:</h5>
               </div>
-              <div *ngFor="let answer of question.answers" class="col-12 form-check">
-                <input id="{{answer.id}}" type="radio" class="form-check-input" value="{{answer.answer}}"
-                       (change)="changeRadioButtonAnswer($event)" name="answer">
-                <label class="form-check-label form-group" for="{{answer.id}}">{{answer.answer}}</label>
+              <div class="col-12 form-group">
+                <div *ngFor="let answer of question.answers" class="col-12 form-check">
+                  <input id="{{answer.id}}" type="radio" class="form-check-input"
+                         value="{{answer.answer}}"
+                         (change)="changeRadioButtonAnswer($event)" name="answer">
+                  <label class="form-check-label form-group"
+                         for="{{answer.id}}">{{answer.answer}}</label>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="col col-sm-12 form-group" *ngIf="questionType.name == 'Множественный'">
+          <div class="col col-12 form-group" *ngIf="questionType.name == 'Множественный'">
             <div class="row">
-              <div class="col-md col-sm-12 form-group">
+              <div class="col-12 form-group">
                 <h7 class="align-center">Варианты ответа:</h7>
               </div>
-              <div class="col-12 form-check" [formGroup]="formCheckboxAnswer">
-                <div *ngFor="let answer of question.answers">
-                  <label>
-                    <input type="checkbox" content="{{answer.id}}" [value]="answer.answer" (change)="changeCheckboxAnswer($event)"/>
-                    {{answer.answer}}
-                  </label>
+              <div class="col-12 form-group">
+                <div class="col-12 form-check" [formGroup]="formCheckboxAnswer">
+                  <div *ngFor="let answer of question.answers">
+                    <label>
+                      <input type="checkbox" class="form-check-input" content="{{answer.id}}" [value]="answer.answer"
+                             (change)="changeCheckboxAnswer($event)"/>
+                      {{answer.answer}}
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
@@ -129,7 +139,10 @@
               </div>
               <div class="text-box">
                 <h4 class="icon-title mbr-black mbr-fonts-style display-7">
-                  <strong>{{timeHours == 0 ? '00': timeHours < 10 ? '0' + timeHours : timeHours }}:{{timeMinute == 0 ? '00': timeMinute < 10 ? '0' + timeMinute : timeMinute}}:{{timeSecond == 0 ? '00': timeSecond < 10 ? '0' + timeSecond : timeSecond }}</strong>
+                  <strong>{{timeHours == 0 ? '00' : timeHours < 10 ? '0' + timeHours : timeHours }}
+                    :{{timeMinute == 0 ? '00' : timeMinute < 10 ? '0' + timeMinute : timeMinute}}
+                    :{{timeSecond == 0 ? '00' : timeSecond < 10 ? '0' + timeSecond
+                      : timeSecond }}</strong>
                 </h4>
               </div>
             </div>
