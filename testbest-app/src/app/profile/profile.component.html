@@ -121,7 +121,7 @@
 
         <div class="modal-footer">
           <div class="col-sm-12 form-group" data-for="password">
-            <label *ngIf="confirmPass.control.value != null && confirmPass.control.value != ''">Подтвердите
+            <label *ngIf="confirmPass.control.value != null && confirmPass.control.value != ''">Для сохранения подтвердите
               пароль</label>
             <input type="password" class="form-control" name="password" placeholder="Подтвердите пароль"
                    [(ngModel)]="auth.password" required #confirmPass="ngModel"/>

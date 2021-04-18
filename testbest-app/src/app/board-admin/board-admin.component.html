@@ -77,12 +77,12 @@
                   </div>
 
                   <div class="col-md form-group" data-for="name">
-                    <label *ngIf="!firstName.errors">Фамилия</label>
+                    <label *ngIf="!firstName.errors">Имя</label>
                     <label *ngIf="firstName.errors" style="color: white">Ф</label>
                     <input id="name-form5-y" type="text" name="firstName"
                            [(ngModel)]="user.firstName" required minlength="3" maxlength="20"
                            #firstName="ngModel"
-                           placeholder="Фамилия" data-form-field="name" class="form-control">
+                           placeholder="Имя" data-form-field="name" class="form-control">
                     <div class="alert-danger" *ngIf="firstName.errors && fUser.submitted">
                       <div *ngIf="firstName.errors.required">Поле обязательно для заполнения</div>
                       <div *ngIf="firstName.errors.minlength">Данное поле не может содержать меньше 3 символов</div>
@@ -91,11 +91,11 @@
                   </div>
 
                   <div class="col-md form-group" data-for="surname">
-                    <label *ngIf="!lastName.errors">Имя</label>
+                    <label *ngIf="!lastName.errors">Фамилия</label>
                     <label *ngIf="lastName.errors" style="color: white">И</label>
                     <input id="surname-form5-y" type="text" name="lastName" [(ngModel)]="user.lastName"
                            required minlength="3" maxlength="20" #lastName="ngModel"
-                           placeholder="Имя" data-form-field="name" class="form-control">
+                           placeholder="Фамилия" data-form-field="name" class="form-control">
                     <div class="alert-danger" *ngIf="lastName.errors && fUser.submitted">
                       <div *ngIf="lastName.errors.required">Поле обязательно для заполнения</div>
                       <div *ngIf="lastName.errors.minlength">Данное поле не может содержать меньше 3 символов</div>
