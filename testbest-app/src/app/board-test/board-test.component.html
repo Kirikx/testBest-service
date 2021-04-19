@@ -97,6 +97,11 @@
           </form>
 
           <div *ngIf="isCreateTest" class="col-12">
+            <div class="row">
+              <div class="col-md col-sm-12 form-group" style="padding-left: 0px;">
+                <button class="btn btn-info display-6" (click)="setFilter()">Фильтр</button>
+              </div>
+            </div>
 
             <ngx-treeview [items]="items" [config]="config" (selectedChange)="onSelectedChangeTest($event)"
                           (filterChange)="onFilterChangeTest($event)">

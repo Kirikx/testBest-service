@@ -78,9 +78,9 @@ export class BoardTestComponent implements OnInit {
   @ViewChild(TreeviewComponent, {static: false}) treeViewComponent: TreeviewComponent;
   items: TreeviewItem[];
   config = TreeviewConfig.create({
-    hasFilter: true,
+    hasFilter: false,
     hasAllCheckBox: false,
-    hasCollapseExpand: true,
+    hasCollapseExpand: false,
     decoupleChildFromParent: false,
     maxHeight: 700
   });
@@ -144,6 +144,10 @@ export class BoardTestComponent implements OnInit {
   }
 
   onFilterChangeTest(event) {
+  }
+
+  setFilter() {
+    this.config.hasFilter = !this.config.hasFilter;
   }
 
   getTreeData(): TreeviewItem[] {
