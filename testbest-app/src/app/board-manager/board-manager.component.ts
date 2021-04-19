@@ -268,11 +268,4 @@ export class BoardManagerComponent implements OnInit {
         }
     )
   }
-
-  getTestsTopicText(tests: Array<TestFull>): string {
-    // TODO сделать как ссылки
-    if (typeof tests !== "undefined") {
-      return tests.map(test => test.name).join(', ');
-    }
-  }
 }

@@ -110,11 +110,14 @@
                   <tr *ngFor="let topic of topics">
                     <td class="align-middle text-center">{{ topic.name }}</td>
                     <td class="align-middle text-center">{{ topic.description }}</td>
-                    <td class="align-middle text-center">{{ getTestsTopicText(topic.tests) }}</td>
+                    <td class="align-middle text-center">
+                        <a *ngFor="let test of topic.tests; let i = index"
+                           routerLink="{{'/test/' + test.id}}">{{test.name}}{{topic.tests.length == i+1 ? '' : ', '}}
+                        </a>
+                    </td>
                     <td class="align-middle text-center">
                       <a class="btn btn-info-outline btn-sm" (click)="openModalEditTopic(topic.id)"
-                         style="white-space: nowrap;"><span class="mobi-mbri-edit-2"
-                                                            aria-hidden="true"></span></a></td>
+                         style="white-space: nowrap;"><span class="mobi-mbri-edit-2" aria-hidden="true"></span></a></td>
                   </tr>
                   </tbody>
                 </table>

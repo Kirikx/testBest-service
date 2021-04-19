@@ -100,6 +100,13 @@
             <h5 class="icon-text mbr-black mbr-fonts-style display-4">Вы ответили правильно: {{passedQuestion}}</h5>
           </div>
         </div>
+        <div class="card-wrapper">
+          <div class="card-box align-left">
+            <div class="mbr-section-btn">
+              <a class="btn btn-primary-outline display-2 myWidth" routerLink="{{'/test/'+test.id+'/user'}}">ПЕРЕПРОЙТИ</a>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div *ngIf="checkFullAnswer()" class="col-12 form-group">
