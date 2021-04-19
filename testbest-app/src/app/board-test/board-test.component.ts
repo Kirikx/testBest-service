@@ -231,7 +231,7 @@ export class BoardTestComponent implements OnInit {
     topicId: new FormControl('', Validators.required),
     name: new FormControl('', Validators.required),
     description: new FormControl(),
-    duration: new FormControl('', [Validators.required, Validators.min(10), Validators.max(300)]),
+    duration: new FormControl('', [Validators.required, Validators.min(1), Validators.max(300)]),
     passScore: new FormControl('', [Validators.required, Validators.min(1)])
   });
 
