@@ -25,9 +25,9 @@ public class TopicRestController {
     }
 
     @GetMapping("/{id}")
-    public TopicDto getTopic(@PathVariable("id") String id) {
+    public TopicDto getTopic(@PathVariable("id") UUID id) {
         log.info("Get topic by id {}", id);
-        return topicService.getTopicById(UUID.fromString(id));
+        return topicService.getTopicById(id);
     }
 
     @PutMapping("/")
@@ -37,9 +37,9 @@ public class TopicRestController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTopics(@PathVariable("id") String id) {
+    public void deleteTopics(@PathVariable("id") UUID id) {
         log.info("Delete topic by id {}", id);
-        topicService.deleteTopicById(UUID.fromString(id));
+        topicService.deleteTopicById(id);
     }
 
     @PostMapping("/create")

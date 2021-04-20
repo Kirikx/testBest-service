@@ -29,9 +29,9 @@ public class QuestionTypeRestController {
     }
 
     @GetMapping("/{id}")
-    public QuestionTypeDto getTypeQuestion(@PathVariable("id") String id) {
+    public QuestionTypeDto getTypeQuestion(@PathVariable("id") UUID id) {
         log.info("Get question type by id {} ", id);
-        return questionTypeDto.getQuestionTypeById(UUID.fromString(id));
+        return questionTypeDto.getQuestionTypeById(id);
     }
 
 }

@@ -38,9 +38,9 @@ public class TestRestController {
     }
 
     @GetMapping("/{id}")
-    public TestDto getTest(@PathVariable("id") String id) {
+    public TestDto getTest(@PathVariable("id") UUID id) {
         log.info("Get test by id {}", id);
-        return testService.getTestById(UUID.fromString(id));
+        return testService.getTestById(id);
     }
 
     @PutMapping
@@ -50,9 +50,9 @@ public class TestRestController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTest(@PathVariable("id") String id) {
+    public void deleteTest(@PathVariable("id") UUID id) {
         log.info("Delete test by id {}", id);
-        testService.deleteTestById(UUID.fromString(id));
+        testService.deleteTestById(id);
     }
 
     @PostMapping("/create")

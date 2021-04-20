@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,21 +27,22 @@ public class UserRestController {
   private final UserServiceImpl userService;
 
   @GetMapping
+  @PreAuthorize("hasRole('ADMIN')")
   public List<UserDetailsDto> getUsers() {
     log.info("Get all users");
     return userService.getUsers();
   }
 
   @GetMapping("/role/{id}")
-  public List<UserDetailsDto> getUsersByRoleId(@PathVariable String id) {
+  public List<UserDetailsDto> getUsersByRoleId(@PathVariable UUID id) {
     log.info("Get all users by roleId {}", id);
-    return userService.getUsersByRoleId(UUID.fromString(id));
+    return userService.getUsersByRoleId(id);
   }
 
   @GetMapping("/{id}")
-  public UserDetailsDto getUser(@PathVariable("id") String id) {
+  public UserDetailsDto getUser(@PathVariable("id") UUID id) {
     log.info("Get user by id {}", id);
-    return userService.getUserById(UUID.fromString(id));
+    return userService.getUserById(id);
   }
 
   @PutMapping
@@ -56,9 +58,9 @@ public class UserRestController {
   }
 
   @DeleteMapping("/{id}")
-  public void deleteUser(@PathVariable("id") String id) {
+  public void deleteUser(@PathVariable("id") UUID id) {
     log.info("Delete user by id {}", id);
-    userService.deleteUserById(UUID.fromString(id));
+    userService.deleteUserById(id);
   }
 
   @PutMapping("/reset")

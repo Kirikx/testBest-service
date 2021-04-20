@@ -34,9 +34,9 @@ public class QuestionRestController {
     }
 
     @GetMapping("/{id}")
-    public QuestionDto getQuestion(@PathVariable("id") String id) {
+    public QuestionDto getQuestion(@PathVariable("id") UUID id) {
         log.info("Get question by id {}", id);
-        return questionService.getQuestionById(UUID.fromString(id));
+        return questionService.getQuestionById(id);
     }
 
     @GetMapping("/full")
@@ -46,9 +46,9 @@ public class QuestionRestController {
     }
 
     @GetMapping("/full/{id}")
-    public QuestionFullDto getFullQuestion(@PathVariable("id") String id) {
+    public QuestionFullDto getFullQuestion(@PathVariable("id") UUID id) {
         log.info("Get full question by id {}", id);
-        return questionService.getQuestionFullById(UUID.fromString(id));
+        return questionService.getQuestionFullById(id);
     }
 
     @PutMapping("/")
@@ -58,9 +58,9 @@ public class QuestionRestController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteQuestion(@PathVariable("id") String id) {
+    public void deleteQuestion(@PathVariable("id") UUID id) {
         log.info("Delete question by id {}", id);
-        questionService.deleteQuestionById(UUID.fromString(id));
+        questionService.deleteQuestionById(id);
     }
 
     @PostMapping("/create")
