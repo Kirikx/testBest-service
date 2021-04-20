@@ -83,13 +83,6 @@ public class AuthController {
         } else {
             strRoles.forEach(role -> {
                 switch (role.getName()) {
-//                    case "ROLE_ADMIN":
-//                      RoleDto adminRole = roleService.getRoleByName("ROLE_ADMIN")
-//                          .orElseThrow(
-//                              () -> new CustomNotFoundException("Error: Role is not found."));
-//                        roles.add(adminRole);
-//
-//                        break;
                     case "ROLE_MANAGER":
                       RoleDto modRole = roleService.getRoleByName("ROLE_MANAGER")
                           .orElseThrow(

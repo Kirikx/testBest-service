@@ -34,9 +34,9 @@ public class ChapterRestController {
     }
 
     @GetMapping("/{id}")
-    public ChapterDto getChapter(@PathVariable("id") String id) {
+    public ChapterDto getChapter(@PathVariable("id") UUID id) {
         log.info("Get chapter by id {}", id);
-        return chapterService.getChapterById(UUID.fromString(id));
+        return chapterService.getChapterById(id);
     }
 
     @PutMapping
@@ -46,9 +46,9 @@ public class ChapterRestController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteChapter(@PathVariable("id") String id) {
+    public void deleteChapter(@PathVariable("id") UUID id) {
         log.info("Delete chapter by id {}", id);
-        chapterService.deleteChapterById(UUID.fromString(id));
+        chapterService.deleteChapterById(id);
     }
 
     @PostMapping("/create")

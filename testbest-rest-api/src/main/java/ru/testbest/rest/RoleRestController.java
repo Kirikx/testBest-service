@@ -28,8 +28,8 @@ public class RoleRestController {
     }
 
     @GetMapping("/{id}")
-    public RoleDto getRole(@PathVariable("id") String id) {
+    public RoleDto getRole(@PathVariable("id") UUID id) {
         log.info("Get role by id {}", id);
-        return roleService.getRoleById(UUID.fromString(id));
+        return roleService.getRoleById(id);
     }
 }

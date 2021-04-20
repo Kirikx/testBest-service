@@ -47,11 +47,11 @@ public class UserTestRestController {
 
   @GetMapping("/test/{id}")
   @ApiOperation(value = "Создает новый пользовательский тест. В карестве параметра принимает id теста", tags = "User test")
-  public UserTestDto startUserTest(@PathVariable("id") String testId,
+  public UserTestDto startUserTest(@PathVariable("id") UUID testId,
       Authentication authentication) {
     UserDetailsDto currentUser = (UserDetailsDto) authentication.getPrincipal();
     log.info("Start user test by testId {} and userId {}", testId, currentUser.getId());
-    return userTestService.startUserTest(UUID.fromString(testId), currentUser.getId());
+    return userTestService.startUserTest(testId, currentUser.getId());
   }
 
   @PostMapping("/create-answer")
@@ -74,10 +74,9 @@ public class UserTestRestController {
 
   @GetMapping("/{id}/fails")
   @ApiOperation(value = "Возвращает список всех неверных пользовательских ответов на тест", tags = "User test")
-  public List<UserTestQuestionDto> getFailQuestionsByUserTestId(
-      @PathVariable("id") String userTestId) {
+  public List<UserTestQuestionDto> getFailQuestionsByUserTestId(@PathVariable("id") UUID userTestId) {
     log.info("Get fails question by userTestId {}", userTestId);
-    return userTestService.getFailQuestionsByUserTestId(UUID.fromString(userTestId));
+    return userTestService.getFailQuestionsByUserTestId(userTestId);
   }
 
   @GetMapping("/{id}")

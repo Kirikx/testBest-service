@@ -45,9 +45,9 @@ public class AnswerRestController {
     }
 
     @GetMapping("/full/{id}")
-    public AnswerFullDto getAnswerFull(@PathVariable String id) {
+    public AnswerFullDto getAnswerFull(@PathVariable UUID id) {
         log.info("Get full answer by id {}", id);
-        return answerService.getAnswerFullById(UUID.fromString(id));
+        return answerService.getAnswerFullById(id);
     }
 
     @GetMapping("/")
@@ -57,14 +57,14 @@ public class AnswerRestController {
     }
 
     @GetMapping("/{id}")
-    public AnswerDto getAnswer(@PathVariable String id) {
+    public AnswerDto getAnswer(@PathVariable UUID id) {
         log.info("Get answer by id {}", id);
-        return answerService.getAnswerById(UUID.fromString(id));
+        return answerService.getAnswerById(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteAnswer(@PathVariable("id") String id) {
+    public void deleteAnswer(@PathVariable("id") UUID id) {
         log.info("Delete answer by id {}", id);
-        answerService.deleteAnswerById(UUID.fromString(id));
+        answerService.deleteAnswerById(id);
     }
 }
